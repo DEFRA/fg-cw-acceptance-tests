@@ -4,12 +4,6 @@ const debug = process.env.DEBUG
 const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
 
-const execArgv = ['--loader', 'esm-module-alias/loader']
-
-if (debug) {
-  execArgv.push('--inspect')
-}
-
 export const config = {
   //
   // ====================
@@ -33,7 +27,7 @@ export const config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ['./test/specs/**/*.e2e.js'],
+  specs: ['./test/features/**/*.feature'],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
@@ -79,7 +73,7 @@ export const config = {
         }
       ],
 
-  execArgv,
+  execArgv: debug ? ['--inspect'] : [],
 
   //
   // ===================
@@ -112,7 +106,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'http://localhost:3000/applications',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
@@ -137,7 +131,7 @@ export const config = {
   //
   // Make sure you have the wdio adapter package for the specific framework installed
   // before running any tests.
-  framework: 'mocha',
+  framework: 'cucumber',
   //
   // The number of times to retry the entire specfile when it fails as a whole
   // specFileRetries: 1,
@@ -157,10 +151,38 @@ export const config = {
     [
       'allure',
       {
-        outputDir: 'allure-results'
+        outputDir: 'allure-results',
+        useCucumberStepReporter: true
       }
     ]
   ],
+
+  cucumberOpts: {
+    // <string[]> (file/dir) require files before executing features
+    require: ['./test/steps/*.js'],
+    // <boolean> show full backtrace for errors
+    backtrace: false,
+    // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    requireModule: [],
+    // <boolean> invoke formatters without executing steps
+    dryRun: false,
+    // <boolean> abort the run on first failure
+    failFast: false,
+    // <string[]> Only execute the scenarios with name matching the expression (repeatable).
+    name: [],
+    // <boolean> hide step definition snippets for pending steps
+    snippets: true,
+    // <boolean> hide source uris
+    source: true,
+    // <boolean> fail if there are any undefined or pending steps
+    strict: false,
+    // <string> (expression) only execute the features or scenarios with tags matching the expression
+    tagExpression: '',
+    // <number> timeout for step definitions
+    timeout: 120000,
+    // <boolean> Enable this config to treat undefined definitions as warnings.
+    ignoreUndefinedDefinitions: false
+  },
 
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
@@ -306,25 +328,26 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  onComplete: function (exitCode, config, capabilities, results) {
-    const reportError = new Error('Could not generate Allure report')
-    const generation = allure(['generate', 'allure-results', '--clean'])
+  // onComplete: function (exitCode, config, capabilities, results) {
+  //   const reportError = new Error('Could not generate Allure report')
+  //   const generation = allure(['generate', 'allure-results', '--clean'])
+  //
+  //   return new Promise((resolve, reject) => {
+  //     const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
+  //
+  //     generation.on('exit', function (exitCode) {
+  //       clearTimeout(generationTimeout)
+  //
+  //       if (exitCode !== 0) {
+  //         return reject(reportError)
+  //       }
+  //
+  //       allure(['open'])
+  //       resolve()
+  //     })
+  //   })
+  // },
 
-    return new Promise((resolve, reject) => {
-      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
-
-      generation.on('exit', function (exitCode) {
-        clearTimeout(generationTimeout)
-
-        if (exitCode !== 0) {
-          return reject(reportError)
-        }
-
-        allure(['open'])
-        resolve()
-      })
-    })
-  }
 
   /**
    * Gets executed when a refresh happens.

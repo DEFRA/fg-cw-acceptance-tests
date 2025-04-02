@@ -1,6 +1,8 @@
 import fs from 'node:fs'
+import { browser } from '@wdio/globals'
 
-const oneMinute = 60 * 1000
+const debug = process.env.DEBUG
+const oneHour = 60 * 60 * 1000
 
 let chromeProxyConfig = {}
 if (process.env.HTTP_PROXY) {
@@ -33,10 +35,10 @@ export const config = {
   port: process.env.CHROMEDRIVER_PORT || 4444,
 
   // Tests to run
-  specs: ['./test/specs/**/*.js'],
+  specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
-  maxInstances: 1,
+  maxInstances: debug ? 1 : 10,
 
   capabilities: [
     {
@@ -64,17 +66,20 @@ export const config = {
     }
   ],
 
-  execArgv: ['--loader', 'esm-module-alias/loader'],
+  execArgv: debug ? ['--inspect'] : [],
 
-  logLevel: 'info',
+  logLevel: debug ? 'debug' : 'info',
 
   // Number of failures before the test suite bails.
   bail: 0,
+  // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
   waitforInterval: 200,
-  connectionRetryTimeout: 6000,
+  // Default timeout in milliseconds for request
+  // if browser driver or grid doesn't send resp
+  connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
-  framework: 'mocha',
+  framework: 'cucumber',
 
   reporters: [
     [
@@ -90,16 +95,44 @@ export const config = {
       // Allure is used to generate the final HTML report
       'allure',
       {
-        outputDir: 'allure-results'
+        outputDir: 'allure-results',
+        useCucumberStepReporter: true
       }
     ]
   ],
-
+  // If you are using Cucumber you need to specify the location of your step definitions.
+  cucumberOpts: {
+    // <string[]> (file/dir) require files before executing features
+    require: ['./test/steps/*.js'],
+    // <boolean> show full backtrace for errors
+    backtrace: false,
+    // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    requireModule: [],
+    // <boolean> invoke formatters without executing steps
+    dryRun: false,
+    // <boolean> abort the run on first failure
+    failFast: false,
+    // <string[]> Only execute the scenarios with name matching the expression (repeatable).
+    name: [],
+    // <boolean> hide step definition snippets for pending steps
+    snippets: true,
+    // <boolean> hide source uris
+    source: true,
+    // <boolean> fail if there are any undefined or pending steps
+    strict: false,
+    // <string> (expression) only execute the features or scenarios with tags matching the expression
+    tagExpression: '',
+    // <number> timeout for step definitions
+    timeout: 120000,
+    // <boolean> Enable this config to treat undefined definitions as warnings.
+    ignoreUndefinedDefinitions: false
+  },
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: oneMinute
+    timeout: debug ? oneHour : 60000,
+    bail: true
   },
   //
   // =====

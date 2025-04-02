@@ -1,2 +1,2 @@
-npm run git:pre-commit-hook
-
+#!/usr/bin/env sh
+. "${0%/*}/h"
