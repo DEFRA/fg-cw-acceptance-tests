@@ -4,7 +4,7 @@
   "type": "module",
   "description": "",
   "engines": {
-    "node": ">=20.11.1"
+    "node": ">=22.13.1"
   },
   "author": "Defra DDTS",
   "license": "OGL-UK-3.0",
@@ -18,6 +18,7 @@
     "test": "npm run clean && wdio run wdio.conf.js",
     "test:local": "npm run clean && wdio run wdio.local.conf.js",
     "test:local:debug": "DEBUG=true npm run test:local",
+    "git:pre-commit-hook": "npm run format:check && npm run lint",
     "format": "prettier --write '**/*.{js,md,json,config.js}'",
     "format:check": "prettier --check '**/*.{js,md,json,config.js}'",
     "lint": "eslint .",
