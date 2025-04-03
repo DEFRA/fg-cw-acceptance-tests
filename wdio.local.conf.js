@@ -11,7 +11,13 @@ export const config = {
   // ====================
   // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: 'local',
-  //
+  // Set a base URL in order to shorten url command calls. If your `url` parameter starts
+  // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
+  // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
+  // gets prepended directly.
+  // baseUrl: 'http://localhost:3000/applications',
+  // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+  baseUrl: `https://fg-cw-frontend.dev.cdp-int.defra.cloud/`,
   // ==================
   // Specify Test Files
   // ==================
@@ -106,7 +112,6 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://localhost:3000/applications',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
@@ -290,7 +295,7 @@ export const config = {
         'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "At least 1 assertion failed"}}'
       )
     }
-  }
+  },
 
   /**
    * Hook that gets executed after the suite has ended
@@ -328,25 +333,25 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  // onComplete: function (exitCode, config, capabilities, results) {
-  //   const reportError = new Error('Could not generate Allure report')
-  //   const generation = allure(['generate', 'allure-results', '--clean'])
-  //
-  //   return new Promise((resolve, reject) => {
-  //     const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
-  //
-  //     generation.on('exit', function (exitCode) {
-  //       clearTimeout(generationTimeout)
-  //
-  //       if (exitCode !== 0) {
-  //         return reject(reportError)
-  //       }
-  //
-  //       allure(['open'])
-  //       resolve()
-  //     })
-  //   })
-  // },
+  onComplete: function (exitCode, config, capabilities, results) {
+    const reportError = new Error('Could not generate Allure report')
+    const generation = allure(['generate', 'allure-results', '--clean'])
+
+    return new Promise((resolve, reject) => {
+      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
+
+      generation.on('exit', function (exitCode) {
+        clearTimeout(generationTimeout)
+
+        if (exitCode !== 0) {
+          return reject(reportError)
+        }
+
+        allure(['open'])
+        resolve()
+      })
+    })
+  },
 
   /**
    * Gets executed when a refresh happens.
@@ -354,4 +359,65 @@ export const config = {
    * @param {string} newSessionId session ID of the new session
    */
   // onReload: function (oldSessionId, newSessionId) {}
+
+  /**
+   * Cucumber Hooks
+   *
+   * Runs before a Cucumber Feature.
+   * @param {string}                   uri      path to feature file
+   * @param {GherkinDocument.IFeature} feature  Cucumber feature object
+   */
+  // beforeFeature: function (uri, feature) {
+  // },
+  /**
+   *
+   * Runs before a Cucumber Scenario.
+   * @param {ITestCaseHookParameter} world    world object containing information on pickle and test step
+   * @param {object}                 context  Cucumber World object
+   */
+  // beforeScenario: function (world, context) {
+  // },
+  /**
+   *
+   * Runs before a Cucumber Step.
+   * @param {Pickle.IPickleStep} step     step data
+   * @param {IPickle}            scenario scenario pickle
+   * @param {object}             context  Cucumber World object
+   */
+  // beforeStep: function (step, scenario, context) {
+  // },
+  /**
+   *
+   * Runs after a Cucumber Step.
+   * @param {Pickle.IPickleStep} step             step data
+   * @param {IPickle}            scenario         scenario pickle
+   * @param {object}             result           results object containing scenario results
+   * @param {boolean}            result.passed    true if scenario has passed
+   * @param {string}             result.error     error stack if scenario failed
+   * @param {number}             result.duration  duration of scenario in milliseconds
+   * @param {object}             context          Cucumber World object
+   */
+  // afterStep: function (step, scenario, result, context) {
+  // },
+  /**
+   *
+   * Runs after a Cucumber Scenario.
+   * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
+   * @param {object}                 result           results object containing scenario results
+   * @param {boolean}                result.passed    true if scenario has passed
+   * @param {string}                 result.error     error stack if scenario failed
+   * @param {number}                 result.duration  duration of scenario in milliseconds
+   * @param {object}                 context          Cucumber World object
+   */
+  afterScenario: async function (world, result, context) {
+    await browser.reloadSession()
+  }
+  /**
+   *
+   * Runs after a Cucumber Feature.
+   * @param {string}                   uri      path to feature file
+   * @param {GherkinDocument.IFeature} feature  Cucumber feature object
+   */
+  // afterFeature: function (uri, feature) {
+  // }
 }
