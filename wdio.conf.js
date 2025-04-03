@@ -77,7 +77,7 @@ export const config = {
   waitforInterval: 200,
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send resp
-  connectionRetryTimeout: 120000,
+  connectionRetryTimeout: 6000,
   connectionRetryCount: 3,
   framework: 'cucumber',
 
