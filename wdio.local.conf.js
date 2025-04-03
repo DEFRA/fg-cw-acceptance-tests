@@ -290,7 +290,7 @@ export const config = {
         'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "At least 1 assertion failed"}}'
       )
     }
-  },
+  }
 
   /**
    * Hook that gets executed after the suite has ended
@@ -347,7 +347,6 @@ export const config = {
   //     })
   //   })
   // },
-
 
   /**
    * Gets executed when a refresh happens.
