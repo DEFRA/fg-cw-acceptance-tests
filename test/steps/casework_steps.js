@@ -7,7 +7,7 @@ Given(/^the user is navigate to ([^"]*)? page$/, async (text) => {
   const actualApplicationText = await HomePage.header()
   await expect(actualApplicationText).toEqual('Applications')
 
-  await HomePage.clickLinkByText('All cases')
+  await HomePage.clickLinkByText()
   const actualText = await HomePage.headerH2()
   await expect(actualText).toEqual('All cases')
 })

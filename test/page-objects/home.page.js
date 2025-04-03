@@ -9,7 +9,7 @@ class HomePage {
     return await h2Element.getText()
   }
 
-  async clickLinkByText(linkText) {
+  async clickLinkByText() {
     const link = await $('#tab_all-cases')
     await link.waitForDisplayed()
     await link.click()
