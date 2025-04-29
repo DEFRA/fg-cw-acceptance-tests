@@ -1,17 +1,30 @@
-import { Given, Then } from '@wdio/cucumber-framework'
+import { Given, Then, When } from '@wdio/cucumber-framework'
 import { browser } from '@wdio/globals'
-import HomePage from '../page-objects/home.page.js'
+import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
+import AllcasesPage from '../page-objects/allcases.page.js'
+import ApplicationPage from '../page-objects/application.page.js'
 
-Given(/^the user is navigate to ([^"]*)? page$/, async (text) => {
+let apiResponse
+Given(/^user is navigate to ([^"]*)? page$/, async (text) => {
   await browser.url(text)
-  const actualApplicationText = await HomePage.header()
+  const actualApplicationText = await AllcasesPage.getHeaderText()
   await expect(actualApplicationText).toEqual('Applications')
+  await AllcasesPage.clickLinkByText('All Cases')
 
-  await HomePage.clickLinkByText()
-  const actualText = await HomePage.headerH2()
-  await expect(actualText).toEqual('All cases')
+  const actualAllCasesText = await AllcasesPage.headerH2()
+  await expect(actualAllCasesText).toEqual('All cases')
 })
-Then(/^user should see all the cases assigned$/, async () => {
-  const rowCount = await HomePage.allCases()
-  await expect(rowCount).toEqual(2)
+
+Given('user submitted a application for {string} grant', async (grantName) => {
+  const payloadPath = `test/payloads/${grantName}.json`
+  apiResponse = await postRequest(`${grantName}/applications`, payloadPath)
+  return apiResponse
+})
+When(/^user open the application from All cases$/, async () => {
+  // console.log('Now searching for clientRef:', generatedClientRef)
+  await AllcasesPage.clickLinkByText(generatedClientRef)
+})
+Then(/^user should the application information$/, async () => {
+  const actualApplicationText = await ApplicationPage.getHeaderText()
+  await expect(actualApplicationText).toEqual('Application')
 })
