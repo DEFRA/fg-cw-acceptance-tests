@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "clientRef": "{{random_client_ref}}",
+    "sbi": "1234567",
+    "frn": "1234567",
+    "crn": "1234567",
+    "defraId": "12345678910",
+    "submittedAt": "{{current_datetime}}"
+  },
+  "answers": {
+    "scheme": "SFI",
+    "year": 2025,
+    "hasCheckedLandIsUpToDate": true,
+    "actionApplications": [
+      {
+        "parcelId": "9238",
+        "sheetId": "SX0679",
+        "code": "CSAM1",
+        "appliedFor": {
+          "unit": "ha",
+          "quantity": 20.23
+        }
+      }
+    ]
+  }
+}

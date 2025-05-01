@@ -1,7 +1,9 @@
-Feature: Casework can visit all cases page and perform the activities
+Feature: Caseworkers can view and manage applications from the All Cases page
 
-  Scenario: Visit all cases page
-    Given the user is navigate to /applications page
-    Then user should see all the cases assigned
+  Scenario: User can view a submitted application on the Casework Portal
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user is navigate to "/applications" page
+    And the user opens the application from the "All cases" list
+    Then the user should see the submitted application information
 
 
