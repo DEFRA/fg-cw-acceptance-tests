@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import Wreck from '@hapi/wreck'
+import { config } from '../../wdio.conf.js'
 
 export let generatedClientRef = ''
 
@@ -9,7 +10,7 @@ export async function postRequest(endpoint, payloadPath, headers = {}) {
 
   // 🔥 Replace placeholders
   payload = replacePlaceholders(payload)
-  const url = `https://fg-gas-backend.dev.cdp-int.defra.cloud/grants/${endpoint}`
+  const url = `${config.gasUrl}${endpoint}`
 
   const wreck = Wreck.defaults({
     headers: {

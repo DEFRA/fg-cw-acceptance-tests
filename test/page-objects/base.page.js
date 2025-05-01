@@ -1,10 +1,12 @@
+import { config } from '../../wdio.conf.js'
+
 export default class BasePage {
   /**
    * Returns text of an element (default: <h1>)
    */
   async getHeaderText(selector = 'h1') {
     const element = await $(selector)
-    await element.waitForDisplayed({ timeout: 5000 })
+    await element.waitForDisplayed({ timeout: config.waitforTimeout })
     return await element.getText()
   }
 
@@ -13,7 +15,7 @@ export default class BasePage {
    */
   async clickLinkByText(text) {
     const link = await $(`=${text}`)
-    await link.waitForClickable({ timeout: 5000 })
+    await link.waitForClickable({ timeout: config.waitforTimeout })
     await link.click()
   }
 
@@ -22,7 +24,7 @@ export default class BasePage {
    */
   async waitUntilVisible(selector) {
     const element = await $(selector)
-    await element.waitForDisplayed({ timeout: 5000 })
+    await element.waitForDisplayed({ timeout: config.waitforTimeout })
   }
 
   /**
@@ -30,7 +32,7 @@ export default class BasePage {
    */
   async enterText(selector, value) {
     const input = await $(selector)
-    await input.waitForEnabled({ timeout: 5000 })
+    await input.waitForEnabled({ timeout: config.waitforTimeout })
     await input.setValue(value)
   }
 

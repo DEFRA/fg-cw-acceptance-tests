@@ -1,9 +1,9 @@
 import BasePage from '../page-objects/base.page.js'
 
 class ApplicationPage extends BasePage {
-  async header() {
-    const h1Element = await $('h1')
-    return await h1Element.getText()
+  async headerH2() {
+    const h2Element = await $('h2')
+    return await h2Element.getText()
   }
 }
 
