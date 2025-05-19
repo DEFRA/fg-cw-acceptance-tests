@@ -32,5 +32,5 @@ When(
 )
 Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
-  await expect(actualApplicationText).toEqual('Application')
+  await expect(actualApplicationText).toEqual('Application Receipt')
 })

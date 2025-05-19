@@ -11,6 +11,7 @@
     "scheme": "SFI",
     "year": 2025,
     "hasCheckedLandIsUpToDate": true,
+    "agreementName": "AT Farming agreement",
     "actionApplications": [
       {
         "parcelId": "9238",
