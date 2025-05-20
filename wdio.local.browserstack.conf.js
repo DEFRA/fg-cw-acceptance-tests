@@ -1,34 +1,23 @@
 import allure from 'allure-commandline'
+// import { browserStackCapabilities } from './wdio.browserstack.capabilities.js'
 
 const oneMinute = 60 * 1000
 
 export const config = {
-  //
-  // ====================
-  // Runner Configuration
-  // ====================
-  // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: 'local',
-  //
-  // Set a base URL in order to shorten url command calls. If your `url` parameter starts
-  // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
-  // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
-  // gets prepended directly.
   baseUrl: `https://fg-cw-frontend.dev.cdp-int.defra.cloud/`,
   gasUrl: `https://fg-gas-backend.dev.cdp-int.defra.cloud/grants/`,
-
-  user: process.env.BROWSERSTACK_USER,
+  user: process.env.BROWSERSTACK_USERNAME,
   key: process.env.BROWSERSTACK_KEY,
-
-  // Tests to run
   specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
   maxInstances: 1,
+  // capabilities: browserStackCapabilities,
 
   commonCapabilities: {
     'bstack:options': {
-      buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}` // configure as required
+      buildName: `fg-cw-acceptance-tests-local` // configure as required
     }
   },
 
@@ -49,10 +38,10 @@ export const config = {
       {
         testObservability: true, // Disable if you do not want to use the browserstack test observer functionality
         testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
+          user: process.env.BROWSERSTACK_USERNAME,
           key: process.env.BROWSERSTACK_KEY,
-          projectName: 'cdp-node-env-test-suite', // should match project in browserstack
-          buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}`
+          projectName: 'fg-cw-acceptance-tests', // should match project in browserstack
+          buildName: `fg-cw-acceptance-tests-local`
         },
         acceptInsecureCerts: true,
         forceLocal: false,
@@ -88,11 +77,38 @@ export const config = {
       // Allure is used to generate the final HTML report
       'allure',
       {
-        outputDir: 'allure-results'
+        outputDir: 'allure-results',
+        useCucumberStepReporter: true
       }
     ]
   ],
 
+  cucumberOpts: {
+    // <string[]> (file/dir) require files before executing features
+    require: ['./test/steps/*.js'],
+    // <boolean> show full backtrace for errors
+    backtrace: false,
+    // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    requireModule: [],
+    // <boolean> invoke formatters without executing steps
+    dryRun: false,
+    // <boolean> abort the run on first failure
+    failFast: false,
+    // <string[]> Only execute the scenarios with name matching the expression (repeatable).
+    name: [],
+    // <boolean> hide step definition snippets for pending steps
+    snippets: true,
+    // <boolean> hide source uris
+    source: true,
+    // <boolean> fail if there are any undefined or pending steps
+    strict: false,
+    // <string> (expression) only execute the features or scenarios with tags matching the expression
+    tagExpression: '',
+    // <number> timeout for step definitions
+    timeout: 120000,
+    // <boolean> Enable this config to treat undefined definitions as warnings.
+    ignoreUndefinedDefinitions: false
+  },
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
   mochaOpts: {

@@ -10,3 +10,8 @@ coverage
 .png
 allure-report/
 allure-results/
+.env
+FAILED
+compare/
+local.log
+logs/
