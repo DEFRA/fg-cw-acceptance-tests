@@ -1,5 +1,5 @@
 import allure from 'allure-commandline'
-// import { browserStackCapabilities } from './wdio.browserstack.capabilities.js'
+import { browserStackCapabilities } from './wdio.browserstack.capabilities.js'
 
 const oneMinute = 60 * 1000
 
@@ -13,24 +13,13 @@ export const config = {
   // Tests to exclude
   exclude: [],
   maxInstances: 1,
-  // capabilities: browserStackCapabilities,
+  capabilities: browserStackCapabilities,
 
   commonCapabilities: {
     'bstack:options': {
-      buildName: `fg-cw-acceptance-tests-local` // configure as required
+      buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}` // configure as required
     }
   },
-
-  capabilities: [
-    {
-      browserName: 'Chrome', // Set as required
-      'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11'
-      }
-    }
-  ],
 
   services: [
     [
@@ -41,7 +30,7 @@ export const config = {
           user: process.env.BROWSERSTACK_USERNAME,
           key: process.env.BROWSERSTACK_KEY,
           projectName: 'fg-cw-acceptance-tests', // should match project in browserstack
-          buildName: `fg-cw-acceptance-tests-local`
+          buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}`
         },
         acceptInsecureCerts: true,
         forceLocal: false,

@@ -53,32 +53,32 @@ export const browserStackCapabilities = [
       osVersion: 'Sequoia'
     }
   },
-  {
-    browserName: 'Safari',
-    'wdio-ics:options': {
-      logName: 'osx-safari'
-    },
-    'bstack:options': {
-      idleTimeout: 300,
-      resolution: '1920x1080',
-      browserVersion: 'latest',
-      os: 'OS X',
-      osVersion: 'Sequoia'
-    }
-  },
-  {
-    browserName: 'Safari',
-    'wdio-ics:options': {
-      logName: 'osx-safari-15.6'
-    },
-    'bstack:options': {
-      idleTimeout: 300,
-      resolution: '1920x1080',
-      browserVersion: '15.6',
-      os: 'OS X',
-      osVersion: 'Monterey'
-    }
-  },
+  // {
+  //   browserName: 'Safari',
+  //   'wdio-ics:options': {
+  //     logName: 'osx-safari'
+  //   },
+  //   'bstack:options': {
+  //     idleTimeout: 300,
+  //     resolution: '1920x1080',
+  //     browserVersion: 'latest',
+  //     os: 'OS X',
+  //     osVersion: 'Sequoia'
+  //   }
+  // },
+  // {
+  //   browserName: 'Safari',
+  //   'wdio-ics:options': {
+  //     logName: 'osx-safari-15.6'
+  //   },
+  //   'bstack:options': {
+  //     idleTimeout: 300,
+  //     resolution: '1920x1080',
+  //     browserVersion: '15.6',
+  //     os: 'OS X',
+  //     osVersion: 'Monterey'
+  //   }
+  // },
   {
     browserName: 'Firefox',
     'wdio-ics:options': {
@@ -115,31 +115,6 @@ export const browserStackCapabilities = [
       deviceOrientation: 'portrait',
       deviceName: 'iPhone 16',
       osVersion: '18'
-    }
-  },
-  // android
-  {
-    browserName: 'Chrome',
-    'wdio-ics:options': {
-      logName: 'android-chrome'
-    },
-    'bstack:options': {
-      idleTimeout: 300,
-      deviceOrientation: 'portrait',
-      deviceName: 'Samsung Galaxy S23',
-      osVersion: '13.0'
-    }
-  },
-  {
-    browserName: 'Samsung',
-    'wdio-ics:options': {
-      logName: 'android-samsung'
-    },
-    'bstack:options': {
-      idleTimeout: 300,
-      deviceOrientation: 'portrait',
-      deviceName: 'Samsung Galaxy S23',
-      osVersion: '13.0'
     }
   }
 ]
