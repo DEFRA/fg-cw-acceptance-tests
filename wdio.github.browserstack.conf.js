@@ -1,6 +1,7 @@
 import allure from 'allure-commandline'
+import { browserStackCapabilities } from './wdio.browserstack.capabilities.js'
 
-const oneMinute = 60 * 1000
+const oneMinute = 180 * 1000
 
 export const config = {
   //
@@ -14,43 +15,32 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: `http://localhost:3000`,
+  baseUrl: `https://fg-cw-frontend.dev.cdp-int.defra.cloud/`,
+  gasUrl: `https://fg-gas-backend.dev.cdp-int.defra.cloud/grants/`,
 
-  user: process.env.BROWSERSTACK_USER,
+  user: process.env.BROWSERSTACK_USERNAME,
   key: process.env.BROWSERSTACK_KEY,
 
   // Tests to run
-  specs: ['./test/specs/**/*.js'],
+  specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
   maxInstances: 1,
-
+  capabilities: browserStackCapabilities,
   commonCapabilities: {
     'bstack:options': {
       buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}` // configure as required
     }
   },
-
-  capabilities: [
-    {
-      browserName: 'Chrome', // Set as required
-      'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11'
-      }
-    }
-  ],
-
   services: [
     [
       'browserstack',
       {
         testObservability: true, // Disable if you do not want to use the browserstack test observer functionality
         testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
+          user: process.env.BROWSERSTACK_USERNAME,
           key: process.env.BROWSERSTACK_KEY,
-          projectName: 'cdp-node-env-test-suite', // should match project in browserstack
+          projectName: 'fg-cw-acceptance-tests', // should match project in browserstack
           buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}`
         },
         acceptInsecureCerts: true,
@@ -66,12 +56,12 @@ export const config = {
 
   // Number of failures before the test suite bails.
   bail: 0,
-  waitforTimeout: 10000,
+  waitforTimeout: 20000,
   waitforInterval: 200,
   connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
 
-  framework: 'mocha',
+  framework: 'cucumber',
 
   reporters: [
     [
@@ -91,6 +81,32 @@ export const config = {
       }
     ]
   ],
+  cucumberOpts: {
+    // <string[]> (file/dir) require files before executing features
+    require: ['./test/steps/*.js'],
+    // <boolean> show full backtrace for errors
+    backtrace: false,
+    // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+    requireModule: [],
+    // <boolean> invoke formatters without executing steps
+    dryRun: false,
+    // <boolean> abort the run on first failure
+    failFast: false,
+    // <string[]> Only execute the scenarios with name matching the expression (repeatable).
+    name: [],
+    // <boolean> hide step definition snippets for pending steps
+    snippets: true,
+    // <boolean> hide source uris
+    source: true,
+    // <boolean> fail if there are any undefined or pending steps
+    strict: false,
+    // <string> (expression) only execute the features or scenarios with tags matching the expression
+    tagExpression: '',
+    // <number> timeout for step definitions
+    timeout: 120000,
+    // <boolean> Enable this config to treat undefined definitions as warnings.
+    ignoreUndefinedDefinitions: false
+  },
 
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
