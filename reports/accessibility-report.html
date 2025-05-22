@@ -1,0 +1,56 @@
+<!DOCTYPE html><html><head>
+  <title>Accessibility Test Run Report</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .stats-chart-row { display: block; height: 25px }
+    .stats-chart-row-label { font-size: 12px; width: 50%; float: left }
+    .stats-chart-row-value { font-size: 12px; float: right; margin-left: 5px }
+    .stats-chart-row-value.color-high { color: #f66 }
+    .stats-chart-row-value.color-medium { color: #eeb943 }
+    .stats-chart-row-value.color-low { color: #60c888 }
+    .stats-chart-row-items { font-size: 12px; float: right }
+    .stats-chart-row-bar { position: relative; float: left; height: 5px; background-color: #4c608d; width: 100%; margin-bottom: 10px }
+    .stats-chart-row-bar-value { position: absolute; top: 0; left: 0; height: 5px }
+    .stats-chart-row-bar-value.color-high { background-color: #f66 }
+    .stats-chart-row-bar-value.color-medium { background-color: #eeb943 }
+    .stats-chart-row-bar-value.color-low { background-color: #60c888 }
+    .block-color { background-color: #334670; }
+    .complaint-text { font-size: 12px; }
+    .light-red { background-color: #FFCCCB; }
+  </style>
+</head>
+<body>
+<h1 class="mt-4 mb-3 text-center">Accessibility Test Run Report</h1>
+<div class="container mt-4 bg-light shadow-lg">
+  <div class="container-fluid p-3">
+    <div class="text-secondary mb-4">Test Run: 2025-05-22T14:06:47.011Z</div>
+    <div class="row mb-3">
+      <div class="col-4">
+        <div class="card">
+          <div class="card-header h6 block-color text-white text-opacity-75">
+            Total Pages
+          </div>
+          <div class="card-body text-center h6" id="total">0</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card">
+          <div class="card-header h6 bg-danger bg-gradient text-white text-opacity-75">
+            Critical Issues
+          </div>
+          <div class="card-body text-center h6" id="critical">0</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card">
+          <div class="card-header h6 bg-warning bg-gradient text-white text-opacity-75">
+            Medium Issues
+          </div>
+          <div class="card-body text-center h6" id="medium">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

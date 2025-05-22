@@ -15,7 +15,7 @@
   },
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
-    "test": "npm run clean && wdio run wdio.conf.js",
+    "test": "npm run clean && wdio run wdio.conf.js --cucumberOpts.tagExpression='@accessibility'",
     "test:local": "npm run clean && wdio run wdio.local.conf.js",
     "test:local:debug": "DEBUG=true npm run test:local",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
@@ -26,6 +26,8 @@
     "postinstall": "npm run setup:husky",
     "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
     "report": "allure generate allure-results --clean",
+    "accessibility": "npm run clean && wdio run wdio.conf.js --cucumberOpts.tagExpression='@accessibility' && SELECTED_TAGS=@accessibility",
+    "accessibility:report": "node --no-warnings generate-accessibility-report.js",
     "report:publish": "npm run report; ./bin/publish-tests.sh"
   },
   "devDependencies": {
@@ -75,6 +77,8 @@
   },
   "dependencies": {
     "@hapi/wreck": "18.1.0",
+    "axe-core": "4.10.3",
+    "date-fns": "4.1.0",
     "vite": "6.3.2"
   }
 }

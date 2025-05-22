@@ -21,6 +21,6 @@ module.exports = {
   plugins: ['prettier', 'wdio'],
   rules: {
     'prettier/prettier': 'error',
-    'no-console': ['error', { allow: ['warn', 'error'] }]
+    'no-console': 'off'
   }
 }

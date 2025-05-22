@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import { browser } from '@wdio/globals'
+import { init, analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
@@ -15,6 +16,7 @@ if (process.env.HTTP_PROXY) {
     }
   }
 }
+const alreadyAnalysed = []
 
 export const config = {
   //
@@ -185,7 +187,10 @@ export const config = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {},
+  before: async function (capabilities, specs) {
+    await browser.url('about:blank')
+    process.env.SELECTED_TAGS === '@accessibility' && (await init())
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
@@ -247,7 +252,27 @@ export const config = {
    * @param {number} result 0 - command success, 1 - command error
    * @param {object} error error object if any
    */
-  // afterCommand: function (commandName, args, result, error) {},
+  afterCommand: async function (commandName, args, result, error) {
+    if (
+      commandName !== 'deleteSession' &&
+      process.env.SELECTED_TAGS === '@accessibility'
+    ) {
+      const actualUrl = await browser.getUrl()
+
+      if (
+        actualUrl !== 'about:blank' &&
+        !/microsoft|ete\.access/.test(actualUrl)
+      ) {
+        const url = new URL(actualUrl)
+        const formattedUrl = `${url.origin}${url.pathname}`
+
+        if (!alreadyAnalysed.includes(formattedUrl)) {
+          alreadyAnalysed.push(formattedUrl)
+          await analyse(browser, '')
+        }
+      }
+    }
+  },
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
    * the test.
@@ -255,7 +280,18 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  // after: function (result, capabilities, specs) {},
+  after: function (result, capabilities, specs) {
+    console.log('in the after hook=======================')
+
+    process.env.SELECTED_TAGS === '@accessibility' &&
+      fs.writeFileSync(
+        `./reports/accessibility/report-${Date.now()}.html`,
+        getHtmlReportByCategory().replace(
+          /<script>, <template> or <div> /g,
+          'script, template or div '
+        )
+      )
+  },
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {object} config wdio configuration object
