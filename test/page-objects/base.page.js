@@ -20,6 +20,15 @@ export default class BasePage {
   }
 
   /**
+   * Clicks a button by exact visible text
+   */
+  async clickButtonByText(text) {
+    const button = await $(`button=${text}`)
+    await button.waitForClickable({ timeout: config.waitforTimeout })
+    await button.click()
+  }
+
+  /**
    * Waits for an element to be visible
    */
   async waitUntilVisible(selector) {
