@@ -15,11 +15,9 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  // baseUrl: 'http://localhost:3000/applications',
-  // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-  baseUrl: `https://fg-cw-frontend.dev.cdp-int.defra.cloud/`,
-  gasUrl: `https://fg-gas-backend.dev.cdp-int.defra.cloud/grants/`,
 
+  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
   // ==================
   // Specify Test Files
   // ==================

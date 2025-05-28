@@ -1,87 +1,55 @@
-import fs from 'node:fs'
-import { browser } from '@wdio/globals'
+import allure from 'allure-commandline'
+import { browserStackCapabilities } from './wdio.browserstack.capabilities.js'
 
-const debug = process.env.DEBUG
-const oneHour = 60 * 60 * 1000
-
-let chromeProxyConfig = {}
-if (process.env.HTTP_PROXY) {
-  const url = new URL(process.env.HTTP_PROXY)
-  chromeProxyConfig = {
-    proxy: {
-      proxyType: 'manual',
-      httpProxy: `${url.host}:${url.port}`,
-      sslProxy: `${url.host}:${url.port}`
-    }
-  }
-}
+const oneMinute = 60 * 1000
 
 export const config = {
-  //
-  // ====================
-  // Runner Configuration
-  // ====================
-  // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: 'local',
-  services: ['chromedriver'],
-
-  //
-  // Set a base URL in order to shorten url command calls. If your `url` parameter starts
-  // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
-  // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
-  // gets prepended directly.
-  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
-
-  // Connection to remote chromedriver
-  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
-  port: process.env.CHROMEDRIVER_PORT || 4444,
-
-  // Tests to run
+  baseUrl: `https://fg-cw-frontend.dev.cdp-int.defra.cloud/`,
+  gasUrl: `https://fg-gas-backend.dev.cdp-int.defra.cloud/grants/`,
+  user: process.env.BROWSERSTACK_USERNAME,
+  key: process.env.BROWSERSTACK_KEY,
   specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
-  maxInstances: debug ? 1 : 10,
+  maxInstances: 1,
+  capabilities: browserStackCapabilities,
 
-  capabilities: [
-    {
-      ...chromeProxyConfig,
-      ...{
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-          args: [
-            '--no-sandbox',
-            '--disable-infobars',
-            '--headless',
-            '--disable-gpu',
-            '--window-size=1920,1080',
-            '--enable-features=NetworkService,NetworkServiceInProcess',
-            '--password-store=basic',
-            '--use-mock-keychain',
-            '--dns-prefetch-disable',
-            '--disable-background-networking',
-            '--disable-remote-fonts',
-            '--ignore-certificate-errors',
-            '--disable-dev-shm-usage'
-          ]
-        }
-      }
+  commonCapabilities: {
+    'bstack:options': {
+      buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}` // configure as required
     }
+  },
+
+  services: [
+    [
+      'browserstack',
+      {
+        testObservability: true, // Disable if you do not want to use the browserstack test observer functionality
+        testObservabilityOptions: {
+          user: process.env.BROWSERSTACK_USERNAME,
+          key: process.env.BROWSERSTACK_KEY,
+          projectName: 'fg-cw-acceptance-tests', // should match project in browserstack
+          buildName: `fg-cw-acceptance-tests-${process.env.ENVIRONMENT}`
+        },
+        acceptInsecureCerts: true,
+        forceLocal: false,
+        browserstackLocal: true
+      }
+    ]
   ],
 
-  execArgv: debug ? ['--inspect'] : [],
+  execArgv: ['--loader', 'esm-module-alias/loader'],
 
-  logLevel: debug ? 'debug' : 'info',
+  logLevel: 'info',
 
   // Number of failures before the test suite bails.
   bail: 0,
-  // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
   waitforInterval: 200,
-  // Default timeout in milliseconds for request
-  // if browser driver or grid doesn't send resp
-  connectionRetryTimeout: 6000,
+  connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
+
   framework: 'cucumber',
 
   reporters: [
@@ -103,7 +71,7 @@ export const config = {
       }
     ]
   ],
-  // If you are using Cucumber you need to specify the location of your step definitions.
+
   cucumberOpts: {
     // <string[]> (file/dir) require files before executing features
     require: ['./test/steps/*.js'],
@@ -134,8 +102,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 60000,
-    bail: true
+    timeout: oneMinute
   },
   //
   // =====
@@ -272,9 +239,26 @@ export const config = {
    * @param {<Object>} results object containing test results
    */
   onComplete: function (exitCode, config, capabilities, results) {
-    // !Do Not Remove! Required for test status to show correctly in portal.
     if (results?.failed && results.failed > 0) {
-      fs.writeFileSync('FAILED', JSON.stringify(results))
+      const reportError = new Error('Could not generate Allure report')
+      const generation = allure(['generate', 'allure-results', '--clean'])
+
+      return new Promise((resolve, reject) => {
+        const generationTimeout = setTimeout(
+          () => reject(reportError),
+          oneMinute
+        )
+
+        generation.on('exit', function (exitCode) {
+          clearTimeout(generationTimeout)
+
+          if (exitCode !== 0) {
+            return reject(reportError)
+          }
+
+          resolve()
+        })
+      })
     }
   }
   /**
