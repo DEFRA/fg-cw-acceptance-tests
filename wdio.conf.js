@@ -23,7 +23,7 @@ export const config = {
   // ====================
   // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: 'local',
-  services: ['chromedriver'],
+  // services: ['chromedriver'],
 
   //
   // Set a base URL in order to shorten url command calls. If your `url` parameter starts
