@@ -17,8 +17,7 @@ Given(
   async (grantName) => {
     const payloadPath = `test/payloads/${grantName}.json`
     apiResponse = await postRequest(`${grantName}/applications`, payloadPath)
-    expect(apiResponse.statusCode).toBe(201)
-    return apiResponse
+    expect(apiResponse.statusCode).toBe(204)
   }
 )
 When(
