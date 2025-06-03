@@ -3,12 +3,11 @@ import { browser } from '@wdio/globals'
 import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
+import TasksPage from '../page-objects/tasks.page.js'
 
 let apiResponse
 Given('the user is navigate to {string} page', async (text) => {
   await browser.url(text)
-  // const actualApplicationText = await AllcasesPage.getHeaderText()
-  // await expect(actualApplicationText).toEqual('Applications')
   await AllcasesPage.clickLinkByText('All Cases')
 })
 
@@ -35,7 +34,7 @@ Then('the user should see the submitted application information', async () => {
   await expect(actualApplicationText).toEqual('Application Receipt')
 })
 When('the user navigates to the Case Details section', async () => {
-  await AllcasesPage.clickLinkByText('Case Details')
+  await TasksPage.clickLinkByText('Case Details')
 })
 Then(
   'the user should see that the application data matches the information displayed in Casework',
