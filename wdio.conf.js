@@ -143,6 +143,10 @@ export const config = {
     }
   },
 
+  afterScenario: async function (world, result, context) {
+    await browser.reloadSession()
+  },
+
   onComplete: function (exitCode, config, capabilities, results) {
     // !Do Not Remove! Required for test status to show correctly in portal.
     if (results?.failed && results.failed > 0) {
