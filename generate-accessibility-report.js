@@ -212,9 +212,10 @@ async function main() {
   }
 
   const outputFilePath = './reports/accessibility-report.html'
+  const goutputFilePath = './reports/gaccessibility-report.html'
 
   await mergeHtmlFilesIntoSingleReport(filePaths, outputFilePath)
-
+  await mergeHtmlFilesIntoSingleReport(filePaths, goutputFilePath)
   assert(criticalIssues === 0, `Found ${criticalIssues} critical issues.`)
   assert(mediumIssues === 0, `Found ${mediumIssues} medium issues.`)
 }
