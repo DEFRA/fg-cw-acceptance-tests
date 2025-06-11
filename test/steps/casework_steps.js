@@ -23,7 +23,38 @@ When(
   'the user opens the application from the {string} list',
   async (pageTitle) => {
     // console.log('Now searching for clientRef:', generatedClientRef)
+    // // 1) Wait until the page has fully loaded
+    // await browser.waitUntil(
+    //   async () =>
+    //     (await browser.execute(() => document.readyState)) === 'complete',
+    //   {
+    //     timeout: 10000,
+    //     timeoutMsg: 'Page did not reach readyState=complete before injection'
+    //   }
+    // )
+    // // 2) Give the SPA a moment to finish client-side rendering
+    // await browser.pause(1500)
 
+    // // 3) Inject a test‐failure <img> (no alt text) so axe/WAVE will flag it:
+    // await browser.execute(() => {
+    //   const img = document.createElement('img')
+    //   img.src = 'https://via.placeholder.com/150'
+    //   // Optionally make it more visible:
+    //   img.style.border = '2px solid red'
+    //   img.style.display = 'block'
+    //   img.style.margin = '20px auto'
+    //   document.body.appendChild(img)
+    // })
+    // console.log('injected ---------')
+    // await browser.pause(15000)
+    // // 4) (Optional) verify it’s in the DOM before continuing
+    // const exists = await browser.execute(
+    //   () =>
+    //     !!document.querySelector('img[src="https://via.placeholder.com/150"]')
+    // )
+    // if (!exists) {
+    //   throw new Error('❌ Failed to inject the test image.')
+    // }
     const actualAllCasesText = await AllcasesPage.headerH2()
     await expect(actualAllCasesText).toEqual(pageTitle)
     await AllcasesPage.clickLinkByText(generatedClientRef)
