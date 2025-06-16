@@ -17,3 +17,4 @@ local.log
 logs/
 reports/
 reports/accessibility-report.html
+browserstack.err

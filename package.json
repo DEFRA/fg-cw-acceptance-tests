@@ -26,7 +26,7 @@
     "postinstall": "npm run setup:husky",
     "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
     "report": "allure generate allure-results --clean",
-    "accessibility": "npm run clean && SELECTED_TAGS='@accessibility' wdio run wdio.conf.js --cucumberOpts.tagExpression='@accessibility'",
+    "accessibility": "npm run clean && SELECTED_TAGS='@accessibility' wdio run wdio.accessibility.conf.js --cucumberOpts.tagExpression='@accessibility'",
     "accessibility:report": "node --no-warnings generate-accessibility-report.js",
     "report:publish": "npm run report; ./bin/publish-tests.sh"
   },
