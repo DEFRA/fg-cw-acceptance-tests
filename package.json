@@ -28,7 +28,15 @@
     "report": "allure generate allure-results --clean",
     "accessibility": "npm run clean && SELECTED_TAGS='@accessibility' wdio run wdio.accessibility.conf.js --cucumberOpts.tagExpression='@accessibility'",
     "accessibility:report": "node --no-warnings generate-accessibility-report.js",
-    "report:publish": "npm run report; ./bin/publish-tests.sh"
+    "report:publish": "npm run report; ./bin/publish-tests.sh",
+    "test:api": "vitest run test/api-tests",
+    "test:api:watch": "vitest test/api-tests",
+    "test:api:coverage": "vitest run test/api-tests --coverage",
+    "test:api:cases": "vitest run test/api-tests/cases",
+    "test:api:users": "vitest run test/api-tests/users",
+    "test:api:roles": "vitest run test/api-tests/roles",
+    "test:api:workflows": "vitest run test/api-tests/workflows",
+    "test:api:connectivity": "vitest run test/api-tests/api-connectivity.test.js"
   },
   "devDependencies": {
     "@babel/cli": "7.26.4",
