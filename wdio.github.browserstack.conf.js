@@ -25,7 +25,7 @@ export const config = {
   specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
-  maxInstances: 1,
+  maxInstances: 5,
   capabilities: browserStackCapabilities,
   commonCapabilities: {
     'bstack:options': {

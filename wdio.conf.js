@@ -43,7 +43,7 @@ export const config = {
   specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
-  maxInstances: debug ? 1 : 10,
+  maxInstances: debug ? 1 : 5,
 
   capabilities: [
     {
