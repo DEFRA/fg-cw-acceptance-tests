@@ -1,8 +1,34 @@
 import allure from 'allure-commandline'
+import fs from 'fs'
+import path from 'path'
+
+// Load environment variables from .env file manually
+try {
+  const envPath = path.join(process.cwd(), '.env')
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8')
+    envContent.split('\n').forEach(line => {
+      const [key, ...valueParts] = line.split('=')
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join('=').trim()
+        if (!process.env[key]) {
+          process.env[key] = value
+        }
+      }
+    })
+  }
+} catch (error) {
+  console.warn('Could not load .env file:', error.message)
+}
 
 const debug = process.env.DEBUG
 const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
+
+// Log the environment being used
+console.log('Environment variables loaded:')
+console.log('ENVIRONMENT:', process.env.ENVIRONMENT)
+console.log('API_URL:', process.env.API_URL)
 
 export const config = {
   //
