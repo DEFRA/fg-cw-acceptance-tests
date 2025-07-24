@@ -1,4 +1,5 @@
 import BasePage from './base.page.js'
+import { config } from '../../wdio.conf.js'
 
 class PigFarmerPage extends BasePage {
   get startNowButton() {
@@ -165,7 +166,7 @@ class PigFarmerPage extends BasePage {
     await browser.pause(2000)
 
     const link = await $(`=${referenceNumber}`)
-    await link.waitForClickable({ timeout: 10000 })
+    await link.waitForClickable({ timeout: config.waitforTimeout })
     await link.click()
   }
 
