@@ -1,11 +1,7 @@
 import { Given, When, Then } from '@wdio/cucumber-framework'
 import { expect } from '@wdio/globals'
 import LandFundingPage from '../page-objects/land-funding.page.js'
-import {
-  setReferenceNumber,
-  getReferenceNumber,
-  setApplicationType
-} from '../utils/shared-data.js'
+import { setReferenceNumber, setApplicationType } from '../utils/shared-data.js'
 
 let referenceNumber
 

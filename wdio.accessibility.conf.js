@@ -8,7 +8,7 @@ try {
   const envPath = path.join(process.cwd(), '.env')
   if (fs.existsSync(envPath)) {
     const envContent = fs.readFileSync(envPath, 'utf8')
-    envContent.split('\n').forEach(line => {
+    envContent.split('\n').forEach((line) => {
       const [key, ...valueParts] = line.split('=')
       if (key && valueParts.length > 0) {
         const value = valueParts.join('=').trim()
