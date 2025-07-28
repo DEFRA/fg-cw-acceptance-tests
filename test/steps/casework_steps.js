@@ -7,7 +7,7 @@ import TasksPage from '../page-objects/tasks.page.js'
 import AssignCasePage from '../page-objects/assignCase.page.js'
 
 let apiResponse
-Given('the user is navigate to {string} page', async (text) => {
+Given('the user is navigates to {string} page', async (text) => {
   await browser.url(text)
   // await AllcasesPage.clickLinkByText('All Cases')
 })
@@ -56,7 +56,7 @@ Then('the {string} page should be displayed', async (pageTitle) => {
   // const actualAssignPageTitle = await AssignCasePage.getHeaderText()
   // await expect(actualAssignPageTitle).toEqual(pageTitle)
 })
-When('the user selects a case worker at random', async function () {
+When('the user selects a random case worker', async function () {
   await AssignCasePage.selectRandomUser()
 })
 When('enters details in the "([^"]*)" section', async function () {})
@@ -68,6 +68,9 @@ Then(
   }
 )
 
-Then('the user should see the Case Assign success message', async function () {
-  AssignCasePage.getConfirmedUser()
-})
+Then(
+  'the user should see a success message confirming case assignment',
+  async function () {
+    await AssignCasePage.getConfirmedUser()
+  }
+)
