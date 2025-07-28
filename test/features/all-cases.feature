@@ -14,8 +14,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user opens the application from the "All cases" list
     And the user Approve the application
     Then the user should see application is successfully approved
-
-  @test
+    
   Scenario: Admin user can Assign a case to users
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user navigates to the "/cases" page
