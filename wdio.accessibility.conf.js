@@ -1,6 +1,26 @@
 import fs from 'node:fs'
+import path from 'path'
 import { browser } from '@wdio/globals'
 import { init, analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
+
+// Load environment variables from .env file manually
+try {
+  const envPath = path.join(process.cwd(), '.env')
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8')
+    envContent.split('\n').forEach((line) => {
+      const [key, ...valueParts] = line.split('=')
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join('=').trim()
+        if (!process.env[key]) {
+          process.env[key] = value
+        }
+      }
+    })
+  }
+} catch (error) {
+  console.warn('Could not load .env file:', error.message)
+}
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
@@ -126,7 +146,7 @@ export const config = {
     // <boolean> fail if there are any undefined or pending steps
     strict: false,
     // <string> (expression) only execute the features or scenarios with tags matching the expression
-    tagExpression: '',
+    tags: '',
     // <number> timeout for step definitions
     timeout: 120000,
     // <boolean> Enable this config to treat undefined definitions as warnings.
