@@ -4,11 +4,12 @@ import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
+import AssignCasePage from '../page-objects/assignCase.page.js'
 
 let apiResponse
 Given('the user is navigate to {string} page', async (text) => {
   await browser.url(text)
-  await AllcasesPage.clickLinkByText('All Cases')
+  // await AllcasesPage.clickLinkByText('All Cases')
 })
 
 Given(
@@ -22,39 +23,6 @@ Given(
 When(
   'the user opens the application from the {string} list',
   async (pageTitle) => {
-    // console.log('Now searching for clientRef:', generatedClientRef)
-    // // 1) Wait until the page has fully loaded
-    // await browser.waitUntil(
-    //   async () =>
-    //     (await browser.execute(() => document.readyState)) === 'complete',
-    //   {
-    //     timeout: 10000,
-    //     timeoutMsg: 'Page did not reach readyState=complete before injection'
-    //   }
-    // )
-    // // 2) Give the SPA a moment to finish client-side rendering
-    // await browser.pause(1500)
-
-    // // 3) Inject a test‐failure <img> (no alt text) so axe/WAVE will flag it:
-    // await browser.execute(() => {
-    //   const img = document.createElement('img')
-    //   img.src = 'https://via.placeholder.com/150'
-    //   // Optionally make it more visible:
-    //   img.style.border = '2px solid red'
-    //   img.style.display = 'block'
-    //   img.style.margin = '20px auto'
-    //   document.body.appendChild(img)
-    // })
-    // console.log('injected ---------')
-    // await browser.pause(15000)
-    // // 4) (Optional) verify it’s in the DOM before continuing
-    // const exists = await browser.execute(
-    //   () =>
-    //     !!document.querySelector('img[src="https://via.placeholder.com/150"]')
-    // )
-    // if (!exists) {
-    //   throw new Error('❌ Failed to inject the test image.')
-    // }
     const actualAllCasesText = await AllcasesPage.headerH2()
     await expect(actualAllCasesText).toEqual(pageTitle)
     await AllcasesPage.clickLinkByText(generatedClientRef)
@@ -77,4 +45,29 @@ When('the user Approve the application', async () => {
 Then('the user should see application is successfully approved', async () => {
   const actualApprovalText = await ApplicationPage.headerH2()
   await expect(actualApprovalText).toEqual('Stage for contract management')
+})
+When('the user selects newly created case', async () => {
+  await AllcasesPage.selectRadioButtonByCaseText(generatedClientRef)
+})
+When('clicks the {string} button', async (buttonText) => {
+  await AllcasesPage.clickButtonByText(buttonText)
+})
+Then('the {string} page should be displayed', async (pageTitle) => {
+  // const actualAssignPageTitle = await AssignCasePage.getHeaderText()
+  // await expect(actualAssignPageTitle).toEqual(pageTitle)
+})
+When('the user selects a case worker at random', async function () {
+  await AssignCasePage.selectRandomUser()
+})
+When('enters details in the "([^"]*)" section', async function () {})
+Then(
+  'the selected case(s) should be assigned to the chosen case worker',
+  async function () {
+    await AllcasesPage.getAssignedUserForACase(generatedClientRef)
+    expect(this.selectedUserText).toEqual(this.caseUserText)
+  }
+)
+
+Then('the user should see the Case Assign success message', async function () {
+  AssignCasePage.getConfirmedUser()
 })
