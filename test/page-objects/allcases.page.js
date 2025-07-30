@@ -1,4 +1,3 @@
-// import { clickLinkByText } from '../page-objects/uiHelper.js'
 import BasePage from '../page-objects/base.page.js'
 
 class AllCasesPage extends BasePage {
@@ -10,6 +9,14 @@ class AllCasesPage extends BasePage {
   async allCases() {
     const rows = await $$(`#all-cases > table > tbody > tr`)
     return rows.length
+  }
+
+  async getAssignedUserForACase(generatedClientRef) {
+    const row = await $(`//tr[td/a[text()="${generatedClientRef}"]]`)
+    const cells = await row.$$('td')
+    const caseUserText = await cells[cells.length - 1].getText()
+    console.log('Case user text:', caseUserText)
+    this.caseUserText = caseUserText
   }
 }
 

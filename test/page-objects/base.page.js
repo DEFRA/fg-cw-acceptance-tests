@@ -34,4 +34,14 @@ export default class BasePage {
     const input = await $(selector)
     return await input.getValue()
   }
+
+  async selectRadioButtonByCaseText(caseText) {
+    const caseLink = await $(
+      "//a[normalize-space(text())='" + caseText + "']/ancestor::tr"
+    )
+    await caseLink.waitForExist()
+
+    const radioButton = await caseLink.$('input[type="radio"]')
+    await radioButton.click()
+  }
 }
