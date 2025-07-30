@@ -1,6 +1,5 @@
 import BasePage from './base.page.js'
 import { config } from '../../wdio.conf.js'
-import { config } from '../../wdio.conf.js'
 
 class PigFarmerPage extends BasePage {
   get startNowButton() {
@@ -130,8 +129,6 @@ class PigFarmerPage extends BasePage {
     await this.referenceNumber.waitForDisplayed()
     const rawText = await this.referenceNumber.getText()
     return rawText.replace(/^=/, '').trim().toLowerCase()
-    const rawText = await this.referenceNumber.getText()
-    return rawText.replace(/^=/, '').trim().toLowerCase()
   }
 
   async isConfirmationPageDisplayed() {
@@ -141,9 +138,7 @@ class PigFarmerPage extends BasePage {
 
   async navigateToCasesPage() {
     const environment = process.env.ENVIRONMENT || 'dev'
-    const environment = process.env.ENVIRONMENT || 'dev'
     await browser.url(
-      `https://fg-cw-frontend.${environment}.cdp-int.defra.cloud/cases/#all-cases`
       `https://fg-cw-frontend.${environment}.cdp-int.defra.cloud/cases/#all-cases`
     )
   }
