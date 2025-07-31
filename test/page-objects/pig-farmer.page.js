@@ -1,8 +1,7 @@
 import BasePage from './base.page.js'
 import fs from 'fs'
 import yaml from 'yaml'
-import { config } from '../../wdio.conf.js'
-
+import { config } from '~/wdio.conf.js'
 
 class PigFarmerPage extends BasePage {
   get startNowButton() {
