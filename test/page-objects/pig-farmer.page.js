@@ -167,6 +167,7 @@ class PigFarmerPage extends BasePage {
 
     const link = await $(`=${referenceNumber}`)
     await link.waitForClickable({ timeout: config.waitforTimeout })
+    await link.waitForClickable({ timeout: config.waitforTimeout })
     await link.click()
   }
 
@@ -180,27 +181,30 @@ class PigFarmerPage extends BasePage {
 
   async verifySubmittedAnswers() {
     const expectedAnswers = {
-      isPigFarmer: 'true',
-      totalPigs: '100',
-      whitePigsCount: '25',
-      britishLandracePigsCount: '25',
-      berkshirePigsCount: '25',
-      otherPigsCount: '25'
+      'Are you a pig farmer?': 'Yes',
+      'Total Pigs': '100',
+      'How many White pigs do you have?': '25',
+      'How many British Landrace pigs do you have?': '25',
+      'How many Berkshire pigs do you have?': '25',
+      'How many Other pigs do you have?': '25'
     }
 
-    // Wait for the Answers table caption to be displayed
-    const answersCaption = await $('caption.govuk-table__caption=Answers')
-    await answersCaption.waitForDisplayed()
+    // Wait for the app page body to be displayed
+    const pageBody = await $('div.govuk-body[data-testid="app-page-body"]')
+    await pageBody.waitForDisplayed()
 
-    for (const [key, value] of Object.entries(expectedAnswers)) {
-      // Use XPath to find the table row that contains the specific key and get its data cell
-      const dataCell = await $(
-        `//tr[@class='govuk-table__row'][th[@class='govuk-table__header govuk-!-width-one-third' and text()='${key}']]/td[@class='govuk-table__cell']`
+    for (const [question, expectedValue] of Object.entries(expectedAnswers)) {
+      // Find the summary list row that contains the specific question and get its value
+      // Using normalize-space() to handle whitespace in the text content
+      const valueCell = await $(
+        `//div[@class='govuk-summary-list__row'][dt[@class='govuk-summary-list__key' and normalize-space(text())='${question}']]/dd[@class='govuk-summary-list__value']`
       )
-      await dataCell.waitForDisplayed()
-      const cellText = await dataCell.getText()
-      if (cellText !== value) {
-        throw new Error(`Expected ${key} to be ${value}, but got ${cellText}`)
+      await valueCell.waitForDisplayed()
+      const cellText = await valueCell.getText()
+      if (cellText.trim() !== expectedValue) {
+        throw new Error(
+          `Expected "${question}" to be "${expectedValue}", but got "${cellText.trim()}"`
+        )
       }
     }
   }
