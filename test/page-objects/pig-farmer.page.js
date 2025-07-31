@@ -157,6 +157,22 @@ class PigFarmerPage extends BasePage {
     return await link.isDisplayed()
   }
 
+  async clickReferenceNumberInTable(referenceNumber) {
+    // First wait for the page to load completely
+    await browser.waitUntil(
+      async () =>
+        (await browser.execute(() => document.readyState)) === 'complete',
+      { timeout: 10000, timeoutMsg: 'Cases page did not load completely' }
+    )
+
+    // Give some time for the table to render
+    await browser.pause(2000)
+
+    const link = await $(`=${referenceNumber}`)
+    await link.waitForClickable({ timeout: config.waitforTimeout })
+    await link.click()
+  }
+
   async clickCaseDetailsTab() {
     const caseDetailsTab = await $(
       'a.govuk-service-navigation__link[href*="/case-details"]'
@@ -230,7 +246,7 @@ class PigFarmerPage extends BasePage {
   }
 
   async clickTaskLink(taskName) {
-    const taskLink = await $(`a.govuk-task-list__link=${taskName}`)
+    const taskLink = await $(`a.govuk-task-list__link = ${taskName}`)
     await taskLink.waitForDisplayed()
     await taskLink.click()
   }
