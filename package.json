@@ -17,6 +17,7 @@
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && wdio run wdio.conf.js --cucumberOpts.tagExpression='@accessibility'",
     "test:local": "npm run clean && wdio run wdio.local.conf.js",
+    "test:tags": "npm run clean && SELECTED_TAGS='@flying-pigs' wdio run wdio.local.conf.js --cucumberOpts.tags='@flying-pigs'",
     "test:local:debug": "DEBUG=true npm run test:local",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
     "format": "prettier --write '**/*.{js,md,json,config.js}'",

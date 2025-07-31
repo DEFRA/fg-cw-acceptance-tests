@@ -1,6 +1,8 @@
 import BasePage from './base.page.js'
 import fs from 'fs'
 import yaml from 'yaml'
+import { config } from '../../wdio.conf.js'
+
 
 class PigFarmerPage extends BasePage {
   get startNowButton() {
@@ -228,7 +230,7 @@ class PigFarmerPage extends BasePage {
   }
 
   async clickTaskLink(taskName) {
-    const taskLink = await $(`a.govuk-task-list__link = ${taskName}`)
+    const taskLink = await $(`a.govuk-task-list__link=${taskName}`)
     await taskLink.waitForDisplayed()
     await taskLink.click()
   }
@@ -248,11 +250,7 @@ class PigFarmerPage extends BasePage {
   async verifyTaskStatus(taskName, expectedStatus) {
     // Use XPath to find the task list item that contains the specific task name and get its status
     const statusElement = await $(
-      `/
-      /
-      li[
-
-      @class='govuk-task-list__item govuk-task-list__item--with-link'][.//a[ @class='govuk-link govuk-task-list__link' and text()='${taskName}']]//strong[ @class='govuk-tag govuk-tag govuk-tag--blue']`
+      `//li[@class='govuk-task-list__item govuk-task-list__item--with-link'][.//a[@class='govuk-link govuk-task-list__link' and text()='${taskName}']]//strong[@class='govuk-tag govuk-tag govuk-tag--blue']`
     )
     await statusElement.waitForDisplayed()
     const status = await statusElement.getText()
@@ -336,10 +334,7 @@ class PigFarmerPage extends BasePage {
       } else if (section.includes('Registration Checks')) {
         sectionHeading = await $('h3.govuk-heading-m=2. Registration checks')
       } else {
-        sectionHeading = await $(`h3.govuk-heading-m
-
-        =
-        ${section}`)
+        sectionHeading = await $(`h3.govuk-heading-m=${section}`)
       }
 
       await sectionHeading.waitForDisplayed()
