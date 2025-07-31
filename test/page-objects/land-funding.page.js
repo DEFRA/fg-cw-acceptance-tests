@@ -222,31 +222,12 @@ class LandFundingPage extends BasePage {
   }
 
   async isReferenceNumberInTable(referenceNumber) {
-    const link = await $(`=${referenceNumber}`)
+    const link = await $(`=
+    ${referenceNumber}`)
     await link.waitForExist({ timeout: 10000 })
     await link.scrollIntoView()
     await browser.pause(500)
     return await link.isDisplayed()
-  }
-
-  async clickReferenceNumberInTable(referenceNumber) {
-    await browser.waitUntil(
-      async () =>
-        (await browser.execute(() => document.readyState)) === 'complete',
-      { timeout: 10000 }
-    )
-    await browser.pause(2000)
-    const link = await $(`=${referenceNumber}`)
-    await link.waitForClickable({ timeout: 10000 })
-    await link.click()
-  }
-
-  async viewCaseDetails() {
-    const caseDetailsTab = await $(
-      'a.govuk-service-navigation__link[href*="/case-details"]'
-    )
-    await caseDetailsTab.waitForDisplayed()
-    await caseDetailsTab.click()
   }
 
   async verifySubmittedAnswers() {
@@ -368,9 +349,7 @@ class LandFundingPage extends BasePage {
   }
 
   async completeTask(taskName) {
-    const taskLink = await $(`a.govuk-task-list__link=${taskName}`)
-    await taskLink.waitForDisplayed()
-    await taskLink.click()
+    await this.clickLinkByText(taskName)
 
     let taskId
     switch (taskName) {
@@ -416,14 +395,8 @@ class LandFundingPage extends BasePage {
     ]
 
     for (const task of tasks) {
-      const statusElement = await $(
-        `//li[@class='govuk-task-list__item govuk-task-list__item--with-link'][.//a[@class='govuk-link govuk-task-list__link' and text()='${task}']]//strong[@class='govuk-tag govuk-tag govuk-tag--blue']`
-      )
-      await statusElement.waitForDisplayed()
-      const status = await statusElement.getText()
-      if (status !== 'Complete') {
-        throw new Error(`Task "${task}" is not marked as Complete`)
-      }
+      const status = await this.getTaskStatusByName(task)
+      expect(status).toBe('Complete')
     }
   }
 
