@@ -7,8 +7,8 @@ import TasksPage from '../page-objects/tasks.page.js'
 import AssignCasePage from '../page-objects/assignCase.page.js'
 
 let apiResponse
-Given('the user navigates to the {string} page', async (text) => {
-  await browser.url(text)
+Given('the user navigates to the {string} page', async (url) => {
+  await browser.url(url)
   // await AllcasesPage.clickLinkByText('All Cases')
 })
 

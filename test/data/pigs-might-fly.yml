@@ -1,0 +1,9 @@
+applicant_details:
+  are_you_a_pig_farmer: 'Yes'
+
+pig_stock_details:
+  total_pigs: 100
+  white_pigs: 25
+  british_landrace_pigs: 25
+  berkshire_pigs: 25
+  other_pigs: 25

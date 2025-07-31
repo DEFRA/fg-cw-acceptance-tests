@@ -5,9 +5,13 @@ class AssignCasePage extends BasePage {
   async selectRandomUser() {
     const options = await $$('select#assignedUserId option:not([value=""])')
     const randomIndex = Math.floor(Math.random() * options.length)
+    console.log(`Random index: ${randomIndex} of ${options.length - 1}`)
     const randomOption = options[randomIndex]
     const selectedUserText = await randomOption.getText()
     const selectedUserValue = await randomOption.getAttribute('value')
+    console.log(
+      `Selected user: ${selectedUserText} (value: ${selectedUserValue})`
+    )
     await $('#assignedUserId').selectByAttribute('value', selectedUserValue)
     console.log(`Selected user: ${selectedUserText}`)
     this.selectedUserText = selectedUserText
@@ -23,8 +27,8 @@ class AssignCasePage extends BasePage {
     const bodyText = await $('<p>').getText()
     console.log('bodyText:', bodyText)
     console.log('Expected user:', this.selectedUserText)
-    expect(bodyText.toLowerCase()).toEqual(
-      'case ' +
+    expect(bodyText).toEqual(
+      'Case ' +
         generatedClientRef +
         ' has been assigned to ' +
         this.selectedUserText

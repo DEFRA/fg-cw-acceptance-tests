@@ -20,8 +20,9 @@ export default class BasePage {
   }
 
   async waitUntilVisible(selector) {
-    const element = await $(selector)
+    const element = await $(`=${selector}`)
     await element.waitForDisplayed({ timeout: config.waitforTimeout })
+    return await element.isDisplayed()
   }
 
   async enterText(selector, value) {
@@ -43,5 +44,21 @@ export default class BasePage {
 
     const radioButton = await caseLink.$('input[type="radio"]')
     await radioButton.click()
+  }
+
+  async getTaskStatusByName(taskName) {
+    const taskElements = await $$('[data-testid="taskList-li"]')
+
+    for (const taskEl of taskElements) {
+      const nameEl = await taskEl.$('.govuk-link')
+      const nameText = await nameEl.getText()
+
+      if (nameText.trim() === taskName) {
+        const statusEl = await taskEl.$('.govuk-task-list__status strong')
+        return await statusEl.getText()
+      }
+    }
+
+    throw new Error(`Task with name "${taskName}" not found`)
   }
 }

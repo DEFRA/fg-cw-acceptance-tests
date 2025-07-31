@@ -1,6 +1,8 @@
 import fs from 'node:fs'
 import { browser } from '@wdio/globals'
-import { init, analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
+import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
+
+import resolveUrl from './test/utils/urlResolver.js'
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
@@ -19,19 +21,8 @@ if (process.env.HTTP_PROXY) {
 const alreadyAnalysed = []
 
 export const config = {
-  //
-  // ====================
-  // Runner Configuration
-  // ====================
-  // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: 'local',
-  // services: ['chromedriver'],
 
-  //
-  // Set a base URL in order to shorten url command calls. If your `url` parameter starts
-  // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
-  // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
-  // gets prepended directly.
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
   gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
 
@@ -139,97 +130,10 @@ export const config = {
     timeout: debug ? oneHour : 60000,
     bail: true
   },
-  //
-  // =====
-  // Hooks
-  // =====
-  // WebdriverIO provides several hooks you can use to interfere with the test process in order to enhance
-  // it and to build services around it. You can either apply a single function or an array of
-  // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
-  // resolved to continue.
-  /**
-   * Gets executed once before all workers get launched.
-   * @param {object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   */
-  // onPrepare: function (config, capabilities) {},
-  /**
-   * Gets executed before a worker process is spawned and can be used to initialise specific service
-   * for that worker as well as modify runtime environments in an async fashion.
-   * @param  {string} cid      capability id (e.g 0-0)
-   * @param  {object} caps     object containing capabilities for session that will be spawn in the worker
-   * @param  {object} specs    specs to be run in the worker process
-   * @param  {object} args     object that will be merged with the main configuration once worker is initialized
-   * @param  {object} execArgv list of string arguments passed to the worker process
-   */
-  // onWorkerStart: function (cid, caps, specs, args, execArgv) {},
-  /**
-   * Gets executed just after a worker process has exited.
-   * @param  {string} cid      capability id (e.g 0-0)
-   * @param  {number} exitCode 0 - success, 1 - fail
-   * @param  {object} specs    specs to be run in the worker process
-   * @param  {number} retries  number of retries used
-   */
-  // onWorkerEnd: function (cid, exitCode, specs, retries) {},
-  /**
-   * Gets executed just before initialising the webdriver session and test framework. It allows you
-   * to manipulate configurations depending on the capability or spec.
-   * @param {object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that are to be run
-   * @param {string} cid worker id (e.g. 0-0)
-   */
-  // beforeSession: function (config, capabilities, specs, cid) {},
-  /**
-   * Gets executed before test execution begins. At this point you can access to all global
-   * variables like `browser`. It is the perfect place to define custom commands.
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs        List of spec file paths that are to be run
-   * @param {object}         browser      instance of created browser/device session
-   */
   before: async function (capabilities, specs) {
     await browser.url('about:blank')
     process.env.SELECTED_TAGS === '@accessibility' && (await init())
   },
-  /**
-   * Runs before a WebdriverIO command gets executed.
-   * @param {string} commandName hook command name
-   * @param {Array} args arguments that command would receive
-   */
-  // beforeCommand: function (commandName, args) {},
-  /**
-   * Hook that gets executed before the suite starts
-   * @param {object} suite suite details
-   */
-  // beforeSuite: function (suite) {},
-  /**
-   * Function to be executed before a test (in Mocha/Jasmine) starts.
-   */
-  // beforeTest: function (test, context) {},
-  /**
-   * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
-   * beforeEach in Mocha)
-   */
-  // beforeHook: function (test, context) {},
-  /**
-   * Hook that gets executed _after_ a hook within the suite starts (e.g. runs after calling
-   * afterEach in Mocha)
-   */
-  // afterHook: function (
-  //   test,
-  //   context,
-  //   { error, result, duration, passed, retries }
-  // ) {},
-  /**
-   * Function to be executed after a test (in Mocha/Jasmine only)
-   * @param {object}  test             test object
-   * @param {object}  context          scope object the test was executed with
-   * @param {Error}   result.error     error object in case the test fails, otherwise `undefined`
-   * @param {*}       result.result    return object of test function
-   * @param {number}  result.duration  duration of test
-   * @param {boolean} result.passed    true if test has passed, otherwise false
-   * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
-   */
   afterTest: async function (
     test,
     context,
@@ -302,11 +206,15 @@ export const config = {
   /**
    * Gets executed after all workers got shut down and the process is about to exit. An error
    * thrown in the onComplete hook will result in the test run failing.
-   * @param {object} exitCode 0 - success, 1 - fail
-   * @param {object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {<Object>} results object containing test results
+   * @param world
    */
+  beforeScenario: async function (world, result, context) {
+    console.log('before scenario')
+    console.log('*****************')
+    const scenarioTags = world.pickle.tags.map((t) => t.name)
+    browser.options.baseUrl = resolveUrl(scenarioTags)
+  },
+
   afterStep: async function (step, scenario, result) {
     if (result.error) {
       await browser.takeScreenshot()
