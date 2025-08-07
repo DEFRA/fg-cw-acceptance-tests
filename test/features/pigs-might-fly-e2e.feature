@@ -1,10 +1,11 @@
-@e2e @flying-pigs @caseworker @happy-path @accessibility
+@e2e @flying-pigs @caseworker @happy-path @accessibility @grantsui
 Feature: Processing a Flying Pigs grant application
 
   As a caseworker
   I want to review and process a submitted Flying Pigs grant application
   So that I can move it through to the Contracted stage
 
+  @grantsui
   Scenario: Review and approve a Flying Pigs grant application
     Given a Flying Pigs application has been submitted by an applicant
     And I am signed in as a caseworker
@@ -35,7 +36,7 @@ Feature: Processing a Flying Pigs grant application
       | Confirm APHA registration                |
     Then all tasks should have status "Complete"
 
-    When I approve the application
+    When I "Confirm Approval" the application
     Then the case stage should be "Contracted"
     And I should see a confirmation of successful approval
     And the timeline should show:

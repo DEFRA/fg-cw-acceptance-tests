@@ -110,7 +110,7 @@ When(
 )
 
 When('the user clicks on the Case Details tab', async () => {
-  await PigFarmerPage.clickCaseDetailsTab()
+  await PigFarmerPage.clickLinkByText('Case Details')
   console.log('Clicked on Case Details tab')
 })
 
@@ -213,21 +213,21 @@ When('I navigate to the Cases page', async () => {
 
 Then('I should see the submitted application listed', async () => {
   const currentRef = getReferenceNumber()
-  const isReferenceInTable =
-    await PigFarmerPage.isReferenceNumberInTable(currentRef)
+  const isReferenceInTable = await PigFarmerPage.waitUntilVisible(currentRef)
+  // const isReferenceInTable =
+  //   await PigFarmerPage.isReferenceNumberInTable(currentRef)
   await expect(isReferenceInTable).toBe(true)
   console.log(`Reference number ${currentRef} found in cases table`)
 })
 
 When('I open the submitted application', async () => {
   const currentRef = getReferenceNumber()
-  await PigFarmerPage.clickReferenceNumberInTable(currentRef)
+  await PigFarmerPage.clickLinkByText(currentRef)
   console.log(`Opened application with reference number: ${currentRef}`)
 })
 
 When('I view the Case Details', async () => {
-  await PigFarmerPage.viewCaseDetails()
-  console.log('Viewed Case Details')
+  await PigFarmerPage.clickLinkByText('Case Details')
 })
 
 Then('I should see the answers submitted by the applicant', async () => {
@@ -284,8 +284,8 @@ Then('all tasks should show status {string}', async (expectedStatus) => {
   console.log(`All tasks have status: ${expectedStatus}`)
 })
 
-When('I approve the application', async () => {
-  await PigFarmerPage.approveApplication()
+When('I {string} the application', async (text) => {
+  await PigFarmerPage.clickButtonByText(text)
   console.log('Approved the application')
 })
 
@@ -405,8 +405,8 @@ Then(
 Then('the case stage should be {string}', async (expectedStage) => {
   const applicationType = getApplicationType()
   if (applicationType === 'pig-farmer') {
-    const stageMatches = await PigFarmerPage.verifyStageIs(expectedStage)
-    await expect(stageMatches).toBe(true)
+    const actualStage = await PigFarmerPage.verifyStageIs()
+    await expect(actualStage).toBe(expectedStage)
   } else if (applicationType === 'land-funding') {
     const stageMatches = await LandFundingPage.verifyStageIs(expectedStage)
     await expect(stageMatches).toBe(true)
