@@ -22,7 +22,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user selects newly created case
     And clicks the "Assign" button
     Then the "Assign" page should be displayed
-    When the user selects a case worker at random
+    When the user selects a random case worker
     And clicks the "Assign" button
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
