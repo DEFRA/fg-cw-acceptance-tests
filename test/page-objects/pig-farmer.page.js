@@ -1,8 +1,6 @@
 import BasePage from './base.page.js'
 import fs from 'fs'
 import yaml from 'yaml'
-import { config } from "~/wdio.conf.js"
-
 
 class PigFarmerPage extends BasePage {
   get startNowButton() {
@@ -230,7 +228,7 @@ class PigFarmerPage extends BasePage {
   }
 
   async clickTaskLink(taskName) {
-    const taskLink = await $(`a.govuk-task-list__link=${taskName}`)
+    const taskLink = await $(`a.govuk-task-list__link = ${taskName}`)
     await taskLink.waitForDisplayed()
     await taskLink.click()
   }
@@ -255,12 +253,6 @@ class PigFarmerPage extends BasePage {
     await statusElement.waitForDisplayed()
     const status = await statusElement.getText()
     return status === expectedStatus
-  }
-
-  async clickConfirmApproval() {
-    const confirmButton = await $('button=Confirm Approval')
-    await confirmButton.waitForDisplayed()
-    await confirmButton.click()
   }
 
   async isContractedStageDisplayed() {
@@ -301,10 +293,6 @@ class PigFarmerPage extends BasePage {
   async navigateToApplicationPage(referenceNumber) {
     await this.navigateToCasesPage()
     await this.clickReferenceNumberInTable(referenceNumber)
-  }
-
-  async viewCaseDetails() {
-    await this.clickCaseDetailsTab()
   }
 
   async completeReviewApplicationDataTask() {
