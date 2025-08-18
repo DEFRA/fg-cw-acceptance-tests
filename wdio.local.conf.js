@@ -155,11 +155,7 @@ export const config = {
   },
 
   beforeScenario: async function (world, result, context) {
-    console.log('before scenario')
-    console.log('*****************')
     const scenarioTags = world.pickle.tags.map((t) => t.name)
-    console.log(resolveUrl(scenarioTags))
-    console.log('**************RESIKSVERER***********')
     browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
   },
