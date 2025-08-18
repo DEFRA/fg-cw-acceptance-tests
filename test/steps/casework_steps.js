@@ -35,7 +35,7 @@ Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
   await expect(actualApplicationText).toEqual('Application Receipt')
 })
-When('the user navigates to the {string} section', async (taskName) => {
+When('user navigates to the {string} section', async (taskName) => {
   await TasksPage.clickLinkByText(taskName)
 })
 Then(
@@ -63,7 +63,7 @@ Then('the {string} page should be displayed', async (pageTitle) => {
 When('the user selects a random case worker', async function () {
   this.assignedUserName = await AssignCasePage.selectRandomUser()
 })
-
+When('enters details in the "([^"]*)" section', async function () {})
 Then(
   'the selected case(s) should be assigned to the chosen case worker',
   async function () {
