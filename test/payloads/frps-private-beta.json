@@ -12,6 +12,68 @@
     "year": 2025,
     "hasCheckedLandIsUpToDate": true,
     "agreementName": "AT Farming agreement",
+    "payment": {
+      "agreementStartDate": "2025-09-01",
+      "agreementEndDate": "2026-08-31",
+      "frequency": "Monthly",
+      "agreementTotalPence": 1200000,
+      "annualTotalPence": 1200000,
+      "parcelItems": {
+        "description": "Main agreement",
+        "annualPaymentPence": 1200000
+      },
+      "agreementLevelItems": {
+        "type": "adminFee",
+        "annualPaymentPence": 10000
+      },
+      "payments": [
+        {
+          "paymentDate": "2025-10-01",
+          "totalPaymentPence": 100000,
+          "lineItems": [
+            {
+              "description": "Monthly lease payment",
+              "paymentPence": 100000
+            }
+          ]
+        },
+        {
+          "paymentDate": "2025-11-01",
+          "totalPaymentPence": 100000,
+          "lineItems": [
+            {
+              "description": "Monthly lease payment",
+              "paymentPence": 100000
+            }
+          ]
+        }
+      ]
+    },
+    "applicant": {
+      "customer": {
+        "name": {
+          "title": "miss",
+          "first": "Jane",
+          "last": "Doe"
+        },
+        "email": { "address": "jane.doe@example.com" },
+        "phone": { "number": "+447700900123" }
+      },
+      "business": {
+        "name": "Doe Industries Ltd",
+        "type": "LTD",
+        "email": { "address": "info@doeindustries.co.uk" },
+        "phone": { "mobile": "00447700900456" },
+        "address": {
+          "street": "123 High Street",
+          "line1": "123 High Street",
+          "line2": "Raod and street",
+          "city": "London",
+          "postalCode": "EC1A 1BB",
+          "country": "UK"
+        }
+      }
+    },
     "actionApplications": [
       {
         "parcelId": "9238",
