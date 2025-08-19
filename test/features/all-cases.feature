@@ -1,4 +1,4 @@
-@cw
+@cw @test
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   @accessibility
@@ -69,4 +69,4 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When click the "Notes" link
     And click the "Add note" link
     And click the "Save" button
-    Then I remain on the Notes page with a "You must enter a note" error message displayed
+    Then user remain on the Notes page with a "You must enter a note" error message displayed

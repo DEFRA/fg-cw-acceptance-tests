@@ -7,6 +7,7 @@ import TasksPage from '../page-objects/tasks.page.js'
 import AssignCasePage from '../page-objects/assignCase.page.js'
 import TimelinePage from '../page-objects/timeline.page.js'
 import { getTodayFormatted } from '../../test/utils/helper.js'
+import NotesPage from '../page-objects/notes.page.js'
 
 let apiResponse
 Given('the user navigates to the {string} page', async (url) => {
@@ -176,11 +177,9 @@ Then('the user can see the previously entered notes', async function () {
   )
 })
 Then(
-  'I remain on the Notes page with a {string} error message displayed',
+  'user remain on the Notes page with a {string} error message displayed',
   async function (message) {
-    const alertBox = await $('div[role="alert"]')
-    const alertText = await alertBox.getText()
-
+    const alertText = await NotesPage.alertText()
     expect(alertText).toContain(message)
   }
 )
