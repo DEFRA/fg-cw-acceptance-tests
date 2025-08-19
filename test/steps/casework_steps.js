@@ -35,7 +35,7 @@ Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
   await expect(actualApplicationText).toEqual('Application Receipt')
 })
-When('user navigates to the {string} section', async (taskName) => {
+When('the user navigates to the {string} section', async (taskName) => {
   await TasksPage.clickLinkByText(taskName)
 })
 Then(
