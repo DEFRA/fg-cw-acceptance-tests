@@ -65,9 +65,9 @@
         "email": { "address": "info@doeindustries.co.uk" },
         "phone": { "mobile": "00447700900456" },
         "address": {
-          "street": "123 High Street",
           "line1": "123 High Street",
-          "line2": "Raod and street",
+          "line2": "Mulberry crescent",
+          "street": "Nottingham",
           "city": "London",
           "postalCode": "EC1A 1BB",
           "country": "UK"

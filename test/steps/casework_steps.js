@@ -35,7 +35,7 @@ Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
   await expect(actualApplicationText).toEqual('Application Receipt')
 })
-When('user navigates to the {string} section', async (taskName) => {
+When('the user navigates to the {string} section', async (taskName) => {
   await TasksPage.clickLinkByText(taskName)
 })
 Then(
@@ -53,7 +53,7 @@ Then('the user should see application is successfully approved', async () => {
 When('the user selects newly created case', async () => {
   await AllcasesPage.selectRadioButtonByCaseText(generatedClientRef)
 })
-When('click the {string} button', async (buttonText) => {
+When('the user click the {string} button', async (buttonText) => {
   await AllcasesPage.clickButtonByText(buttonText)
 })
 Then('the {string} page should be displayed', async (pageTitle) => {
@@ -137,7 +137,7 @@ Then(
     }
   }
 )
-When('click the {string} link', async function (linkText) {
+When('the user click the {string} link', async function (linkText) {
   await TimelinePage.clickLinkByText(linkText)
 })
 Then('the user can see the previously entered notes', async function () {
@@ -177,7 +177,7 @@ Then('the user can see the previously entered notes', async function () {
   )
 })
 Then(
-  'user remain on the Notes page with a {string} error message displayed',
+  'the user remain on the Notes page with a {string} error message displayed',
   async function (message) {
     const alertText = await NotesPage.alertText()
     expect(alertText).toContain(message)
