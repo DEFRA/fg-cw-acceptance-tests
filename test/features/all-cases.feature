@@ -1,4 +1,4 @@
-@cw @test
+@cw
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   @accessibility
@@ -7,7 +7,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user navigates to the "/cases" page
     And the user opens the application from the "All cases" list
     Then the user should see the submitted application information
-    And user navigates to the "Timeline" section
+    And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
       | Case received |
 
