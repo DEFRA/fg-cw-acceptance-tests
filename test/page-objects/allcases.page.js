@@ -16,7 +16,7 @@ class AllCasesPage extends BasePage {
     const cells = await row.$$('td')
     const caseUserText = await cells[cells.length - 1].getText()
     console.log('Case user text:', caseUserText)
-    this.caseUserText = caseUserText
+    return caseUserText
   }
 }
 

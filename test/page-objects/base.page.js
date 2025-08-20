@@ -46,6 +46,11 @@ export default class BasePage {
     await radioButton.click()
   }
 
+  async alertText() {
+    const alertBox = await $('div[role="alert"]')
+    return await alertBox.getText()
+  }
+
   async getTaskStatusByName(taskName) {
     const taskElements = await $$('[data-testid="taskList-li"]')
 
