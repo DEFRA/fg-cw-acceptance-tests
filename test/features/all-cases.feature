@@ -5,6 +5,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user navigates to the "/cases" page
+#    Then the user should see newly created case
+#
+#  |Select |	ID|	Business|	SBI|	Submitted|	Status|	Assignee|
+#  |client21a9a208	[business name]	1234567	26 Aug 2025	New	Not assigned
+
     And the user opens the application from the "All cases" list
     Then the user should see the submitted application information
     And the user navigates to the "Timeline" section
@@ -58,6 +63,29 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
       | Case assigned |
+    When the user click the "View note" link
+    Then the user can see the previously entered notes
+
+  @assignUser @timeline
+  Scenario: User sees the ‘Case unassigned’ message on the timeline and can view the notes
+    Given the user has submitted an application for the "frps-private-beta" grant
+    And the user navigates to the "/cases" page
+    When the user selects newly created case
+    And the user click the "Assign" button
+    Then the "Assign" page should be displayed
+    When the user selects a random case worker
+    And I enter random text into the notes field
+    And the user click the "Assign" button
+    When the user selects newly created case
+    And the user click the "Assign" button
+    When the user select Unassigned from the user dropdown
+    And the user click the "Assign" button
+    Then the user should see a success message confirming case is unassigned
+    And the selected case should be unassigned
+    And the user opens the application from the "All cases" list
+    And the user navigates to the "Timeline" section
+    Then the Timeline should display these messages
+      | Case unassigned |
     When the user click the "View note" link
     Then the user can see the previously entered notes
 

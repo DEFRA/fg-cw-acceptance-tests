@@ -28,6 +28,7 @@ When(
   async (pageTitle) => {
     // const actualAllCasesText = await AllcasesPage.headerH2()
     // await expect(actualAllCasesText).toEqual(pageTitle)
+    await browser.refresh()
     await AllcasesPage.clickLinkByText(generatedClientRef)
   }
 )
@@ -97,7 +98,6 @@ Then(
 
     for (const status of expectedStatuses) {
       let found = false
-
       for (const item of timelineItems) {
         const headerText = (
           await item.$('.timeline__header h2').getText()
@@ -112,7 +112,17 @@ Then(
             found = true
             break
           }
+        } else if (status === 'Case unassigned') {
+          if (headerText.includes(status) && bylineText === 'by System') {
+            found = true
+            break
+          }
         } else if (status === 'Case received') {
+          if (headerText.includes(status) && bylineText === 'by System') {
+            found = true
+            break
+          }
+        } else if (status === 'Application approve') {
           if (headerText.includes(status) && bylineText === 'by System') {
             found = true
             break
@@ -183,3 +193,20 @@ Then(
     expect(alertText).toContain(message)
   }
 )
+When('the user select Unassigned from the user dropdown', async function () {
+  await AssignCasePage.selectUnassignedUser()
+})
+Then(
+  'the user should see a success message confirming case is unassigned',
+  async function () {
+    const bodyText = await AssignCasePage.getConfirmedUser()
+    expect(bodyText).toEqual(
+      'Case ' + generatedClientRef + ' has been assigned to Not assigned'
+    )
+  }
+)
+Then('the selected case should be unassigned', async function () {
+  this.caseUserText =
+    await AllcasesPage.getAssignedUserForACase(generatedClientRef)
+  expect('Not assigned').toEqual(this.caseUserText)
+})
