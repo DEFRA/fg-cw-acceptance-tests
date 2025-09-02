@@ -5,11 +5,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user navigates to the "/cases" page
-#    Then the user should see newly created case
-#
-#  |Select |	ID|	Business|	SBI|	Submitted|	Status|	Assignee|
-#  |client21a9a208	[business name]	1234567	26 Aug 2025	New	Not assigned
-
     And the user opens the application from the "All cases" list
     Then the user should see the submitted application information
     And the user navigates to the "Timeline" section
@@ -49,7 +44,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser @timeline
+  @assignUser @timeline @test1
   Scenario: User sees the ‘Case assigned’ message on the timeline and can view the notes
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user navigates to the "/cases" page
