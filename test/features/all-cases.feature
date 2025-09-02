@@ -1,4 +1,4 @@
-@cw @test
+@cw
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   @accessibility
