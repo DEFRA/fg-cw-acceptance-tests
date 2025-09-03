@@ -66,4 +66,9 @@ export default class BasePage {
 
     throw new Error(`Task with name "${taskName}" not found`)
   }
+
+  async selectRadioByValue(value) {
+    const radio = await $(`input[type="radio"][value="${value}"]`)
+    await radio.click()
+  }
 }

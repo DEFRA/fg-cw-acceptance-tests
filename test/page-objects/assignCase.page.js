@@ -31,6 +31,16 @@ class AssignCasePage extends BasePage {
     return selectedUserText
   }
 
+  async selectUnassignedUser() {
+    const unassignedValue = ''
+    await this.userDropdown.selectByAttribute('value', unassignedValue)
+
+    const selectedText = await this.userDropdown.getText()
+    console.log(`Selected Unassigned option: "${selectedText}"`)
+
+    return selectedText
+  }
+
   async getConfirmedUser() {
     const banner = await $('.govuk-notification-banner__content')
     await banner.waitForDisplayed()

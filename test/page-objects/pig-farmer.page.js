@@ -482,6 +482,55 @@ class PigFarmerPage extends BasePage {
 
     return true
   }
+
+  async enterReason() {
+    const approveReasons = [
+      'Approved: all documents are valid.',
+      'Approval given after review.',
+      'Case approved successfully.'
+    ]
+
+    const rejectReasons = [
+      'Rejected: missing required documents.',
+      'Case rejected due to incorrect details.',
+      'Rejected: insufficient evidence.'
+    ]
+
+    let fieldId, reasons
+
+    // check approve textarea first
+    const approveField = await $('#approve-comment')
+    if (
+      (await approveField.isDisplayed()) &&
+      (await approveField.isEnabled())
+    ) {
+      fieldId = 'approve-comment'
+      reasons = approveReasons
+    } else {
+      // fallback to reject textarea
+      const rejectField = await $('#reject-comment')
+      await expect(rejectField).toBeDisplayed()
+      await expect(rejectField).toBeEnabled()
+
+      fieldId = 'reject-comment'
+      reasons = rejectReasons
+    }
+
+    // pick a random reason from the correct set
+    const randomReason = reasons[Math.floor(Math.random() * reasons.length)]
+
+    // enter text
+    const input = await $(`#${fieldId}`)
+    await input.setValue(randomReason)
+
+    console.log(
+      `✅ Entered ${fieldId.includes('approve') ? 'approve' : 'reject'} reason: ${randomReason}`
+    )
+    return {
+      type: fieldId.includes('approve') ? 'approve' : 'reject',
+      reason: randomReason
+    }
+  }
 }
 
 export default new PigFarmerPage()
