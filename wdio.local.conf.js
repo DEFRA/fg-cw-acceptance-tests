@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { browser } from '@wdio/globals'
 import resolveUrl from './test/utils/urlResolver.js'
+import chromedriver from 'chromedriver'
 
 // Load environment variables from .env file manually
 try {
@@ -35,6 +36,11 @@ console.log('API_URL:', process.env.API_URL)
 export const config = {
   runner: 'local',
 
+  services: [
+    ['chromedriver', { port: 9515 }] // service starts/stops Chromedriver for you
+  ],
+
+  path: '/',
   // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
   // gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
   specs: ['./test/features/**/*.feature'],
@@ -52,12 +58,17 @@ export const config = {
           maxInstances: 1,
           browserName: 'chrome',
           'goog:chromeOptions': {
+            binary:
+              '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', // ✅ quote path
             args: [
               '--no-sandbox',
               '--disable-infobars',
               '--disable-gpu',
               '--window-size=1920,1080'
             ]
+          },
+          'wdio:chromedriverOptions': {
+            binary: chromedriver.path // ✅ use the npm-installed chromedriver
           }
         }
       ],

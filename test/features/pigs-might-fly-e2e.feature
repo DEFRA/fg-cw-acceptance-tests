@@ -17,16 +17,18 @@ Feature: Processing a Flying Pigs grant application
     Then I should see the answers submitted by the applicant
 
     When I complete the "Review application data" task
-    Then the timeline should show the latest item "Task completed"
+    Then the timeline should show the latest item "Task 'Review application data' completed"
 
-    When I accept the application for assessment
+    When I approve the application for assessment
     Then the case stage should be "Assessment"
-    And the timeline should show the latest item "Stage completed"
+    And the timeline should show the latest item "Case approved"
 
     When I view the tasks for the case
     Then I should see the following task sections:
       | Check Application   |
       | Registration Checks |
+      | Review available area checks |
+      | Review intersecting data layers |
 
     When I complete all of the following tasks:
       | Check application and documents          |
@@ -34,11 +36,29 @@ Feature: Processing a Flying Pigs grant application
       | Check on RPS (Dual Funding)              |
       | Confirm farm has a CPH                   |
       | Confirm APHA registration                |
-    Then all tasks should have status "Complete"
+      | SFI available area check 1               |
+      | SFI available area check 2               |
+      | Confirm available area check             |
+      | SFI intersecting layers check 1          |
+      | SFI intersecting layers check 2          |
+      | Confirm available area check             |
 
-    When I "Confirm Approval" the application
+
+    Then all tasks should have status "Complete"
+    When I confirm the decision as approval of the application
     Then the case stage should be "Contracted"
     And I should see a confirmation of successful approval
     And the timeline should show:
-      | Task completed   | 6 |
-      | Stage completed  | 2 |
+      | Task 'Check application and documents' completed | 1 |
+      | Task 'Check on Find farm and land payment data' completed | 1 |
+      | Task 'Check on RPS (Dual Funding)' completed | 1 |
+      | Task 'Confirm farm has a CPH' completed | 1 |
+      | Task 'Confirm APHA registration' completed | 1 |
+      | Task 'SFI available area check 1' completed | 1 |
+      | Task 'SFI available area check 2' completed | 1 |
+      | Task 'Confirm available area check' completed | 2 |
+      | Task 'SFI intersecting layers check 1' completed | 1 |
+      | Task 'SFI intersecting layers check 2' completed | 1 |
+      | Task 'Review application data' completed | 1 |
+      | Stage 'Application Received' outcome (approve) | 1 |
+      | Stage 'Assessment' outcome (approve) | 1 |

@@ -55,7 +55,7 @@
     "allure-commandline": "2.32.2",
     "aws4": "^1.13.2",
     "babel-plugin-module-resolver": "5.0.2",
-    "chromedriver": "^138.0.0",
+    "chromedriver": "140.0.3",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-standard": "17.1.0",

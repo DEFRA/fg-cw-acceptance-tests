@@ -262,6 +262,11 @@ When('I accept the application for assessment', async () => {
   console.log('Accepted application for assessment')
 })
 
+When('I approve the application for assessment', async () => {
+  await PigFarmerPage.approveApplicationForAssessment()
+  console.log('Approved application for assessment')
+})
+
 Then('the case stage should be updated to {string}', async (expectedStage) => {
   const stageMatches = await PigFarmerPage.verifyStageIs(expectedStage)
   await expect(stageMatches).toBe(true)
@@ -286,6 +291,11 @@ Then('all tasks should show status {string}', async (expectedStatus) => {
 
 When('I {string} the application', async (text) => {
   await PigFarmerPage.clickButtonByText(text)
+  console.log('Approved the application')
+})
+
+When('I confirm the decision as approval of the application', async () => {
+  await PigFarmerPage.approveTheDecision()
   console.log('Approved the application')
 })
 
