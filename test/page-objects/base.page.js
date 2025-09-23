@@ -53,17 +53,24 @@ export default class BasePage {
 
   async getTaskStatusByName(taskName) {
     const taskElements = await $$('[data-testid="taskList-li"]')
+    const foundTasks = []
 
     for (const taskEl of taskElements) {
-      const nameEl = await taskEl.$('.govuk-link')
+      const nameEl = await taskEl.$('.govuk-task-list__link')
       const nameText = await nameEl.getText()
+      const cleanName = nameText.trim()
 
-      if (nameText.trim() === taskName) {
+      // Store found tasks for debugging
+      foundTasks.push(cleanName)
+
+      if (cleanName === taskName) {
         const statusEl = await taskEl.$('.govuk-task-list__status strong')
         return await statusEl.getText()
       }
     }
 
+    console.log(`Looking for task: "${taskName}"`)
+    console.log(`Found tasks:`, foundTasks)
     throw new Error(`Task with name "${taskName}" not found`)
   }
 
