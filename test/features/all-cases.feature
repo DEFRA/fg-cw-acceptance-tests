@@ -5,19 +5,12 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user navigates to the "/cases" page
+    Then the case status should be "New"
     And the user opens the application from the "All cases" list
     Then the user should see the submitted application information
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
       | Case received |
-
-  @accessibility
-  Scenario: Submitted application data should be the same on the Casework portal
-    Given the user has submitted an application for the "frps-private-beta" grant
-    And the user navigates to the "/cases" page
-    When the user opens the application from the "All cases" list
-    And the user Approve the application
-    Then the user should see application is successfully approved
 
   @assignUser
   Scenario: Admin user can assign a case to users
@@ -95,3 +88,23 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Add note" link
     And the user click the "Save" button
     Then the user remain on the Notes page with a "You must enter a note" error message displayed
+
+  Scenario: User can view Agreements details after the case is approved
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user navigates to the "/cases" page
+    And the user opens the application from the "All cases" list
+    Then the user should see below "frps-private-beta" tasks details
+      | Simple Review | Incomplete |
+    And the user complete "Simple Review" task
+    And the user Approve the application with a comment
+    And the user click the "Save" button
+    Then the user should see application is successfully approved
+    And the user should see "Agreements" tab
+    When the user click the "Agreements" link
+    Then the user should see Agreements page is displayed
+    And the user should see case agreements details
+      | Reference | Date  | View                   | Status  |
+      | REFERENCE | TODAY | Internal Copy external | Offered |
+    When the user click the "Back to cases" link
+    Then the case status should be "Review"
+

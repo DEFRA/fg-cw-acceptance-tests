@@ -36,6 +36,11 @@ export default class BasePage {
     return await input.getValue()
   }
 
+  async headerH2() {
+    const h2Element = await $('h2')
+    return h2Element.getText()
+  }
+
   async selectRadioButtonByCaseText(caseText) {
     const caseLink = await $(
       "//a[normalize-space(text())='" + caseText + "']/ancestor::tr"
@@ -77,5 +82,15 @@ export default class BasePage {
   async selectRadioByValue(value) {
     const radio = await $(`input[type="radio"][value="${value}"]`)
     await radio.click()
+  }
+
+  async setCheckbox(selector) {
+    const checkbox = await $(
+      `#task-${selector.trim().toLowerCase().replace(/\s+/g, '-')}`
+    )
+    await checkbox.click()
+
+    // verify
+    await expect(checkbox).toBeSelected()
   }
 }
