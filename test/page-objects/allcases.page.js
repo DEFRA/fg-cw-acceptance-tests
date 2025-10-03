@@ -18,6 +18,14 @@ class AllCasesPage extends BasePage {
     console.log('Case user text:', caseUserText)
     return caseUserText
   }
+
+  async getStatusForACase(generatedClientRef) {
+    const row = await $(`//tr[td/a[text()="${generatedClientRef}"]]`)
+    const cells = await row.$$('td')
+    const caseStatusText = await cells[cells.length - 2].getText()
+    console.log('Case user text:', caseStatusText)
+    return caseStatusText
+  }
 }
 
 export default new AllCasesPage()

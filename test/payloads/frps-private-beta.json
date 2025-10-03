@@ -1,9 +1,9 @@
 {
   "metadata": {
     "clientRef": "{{random_client_ref}}",
-    "sbi": "1234567",
+    "sbi": "106284736",
     "frn": "1234567",
-    "crn": "1234567",
+    "crn": "1102838829  ",
     "defraId": "12345678910",
     "submittedAt": "{{current_datetime}}"
   },
@@ -12,6 +12,7 @@
     "year": 2025,
     "hasCheckedLandIsUpToDate": true,
     "agreementName": "AT Farming agreement",
+    "applicationValidationRunId": "SFI grants",
     "payment": {
       "agreementStartDate": "2025-09-01",
       "agreementEndDate": "2026-08-31",

@@ -8,6 +8,7 @@ import AssignCasePage from '../page-objects/assignCase.page.js'
 import TimelinePage from '../page-objects/timeline.page.js'
 import { getTodayFormatted } from '../../test/utils/helper.js'
 import NotesPage from '../page-objects/notes.page.js'
+import AgreementsPage from '../page-objects/agreements.page.js'
 
 let apiResponse
 Given('the user navigates to the {string} page', async (url) => {
@@ -45,11 +46,11 @@ Then(
 )
 When('the user Approve the application', async () => {
   // button is diabled so commenting for now
-  // await AllcasesPage.clickButtonByText('Approve')
+  await AllcasesPage.clickButtonByText('approve')
 })
 Then('the user should see application is successfully approved', async () => {
-  // const actualApprovalText = await ApplicationPage.headerH2()
-  // await expect(actualApprovalText).toEqual('Stage for contract management')
+  const actualApprovalText = await ApplicationPage.headerH2()
+  await expect(actualApprovalText).toEqual('Stage for contract management')
 })
 When('the user selects newly created case', async () => {
   await AllcasesPage.selectRadioButtonByCaseText(generatedClientRef)
@@ -209,4 +210,80 @@ Then('the selected case should be unassigned', async function () {
   this.caseUserText =
     await AllcasesPage.getAssignedUserForACase(generatedClientRef)
   expect('Not assigned').toEqual(this.caseUserText)
+})
+Then('the user should see Agreements details', async function () {
+  const title = await AgreementsPage.headerH2()
+  expect(title).toEqual('Case grant funding agreement')
+})
+Then(
+  'the user should see below {string} tasks details',
+  async function (listName, dataTable) {
+    const rows = dataTable.raw()
+
+    for (const [taskName, expectedStatus] of rows) {
+      const taskElement = await $(`li > div > a`)
+      const actualTaskName = await taskElement.getText()
+      const statusElement = await $(`li > div >strong`)
+      const actualStatusName = await statusElement.getText()
+      await expect(actualTaskName).toEqual(taskName)
+      await expect(actualStatusName).toEqual(expectedStatus)
+    }
+  }
+)
+Then('the user complete {string} task', async function (taskName) {
+  await TasksPage.clickLinkByText(taskName)
+  await TasksPage.setCheckbox(taskName)
+  await TasksPage.clickButtonByText('Save and continue')
+})
+Then('the user Approve the application with a comment', async function () {
+  await AllcasesPage.selectRadioByValue('approve')
+  await TasksPage.approvalNotes()
+})
+Then('the case status should be {string}', async function (status) {
+  const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
+  expect(caseStatus).toEqual(status)
+})
+Then('the user should see {string} tab', async function (link) {
+  await TasksPage.waitForLink(link)
+})
+Then('the user should see Agreements page is displayed', async function () {
+  const agreementsPageTitle = await AgreementsPage.headerH2()
+  expect(agreementsPageTitle).toEqual('Case grant funding agreement')
+})
+Then('the user should see case agreements details', async function (dataTable) {
+  const rows = dataTable.raw()
+  const tableRows = await $$('table tr')
+
+  for (let i = 0; i < rows.length; i++) {
+    const expectedRow = rows[i]
+    const rowElement = tableRows[i]
+    const actualCells = await rowElement.$$('th, td')
+
+    const actualTexts = []
+    for (const cell of actualCells) {
+      actualTexts.push((await cell.getText()).trim())
+    }
+
+    for (let j = 0; j < expectedRow.length; j++) {
+      const expectedValue = expectedRow[j].trim()
+      const actualValue = actualTexts[j]
+
+      if (i === 0) {
+        await expect(actualValue).toEqual(expectedValue)
+        continue
+      }
+
+      if (expectedValue.toUpperCase() === 'TODAY') {
+        const now = new Date()
+        const options = { day: 'numeric', month: 'short', year: 'numeric' }
+        const expectedDate = now.toLocaleDateString('en-GB', options)
+        await expect(actualValue).toEqual(expectedDate)
+      } else if (expectedValue.toUpperCase() === 'REFERENCE') {
+        const refRegex = /^SFI\d{9}$/
+        await expect(actualValue).toMatch(refRegex)
+      } else {
+        await expect(actualValue).toEqual(expectedValue)
+      }
+    }
+  }
 })
