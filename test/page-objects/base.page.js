@@ -65,7 +65,6 @@ export default class BasePage {
       const nameText = await nameEl.getText()
       const cleanName = nameText.trim()
 
-      // Store found tasks for debugging
       foundTasks.push(cleanName)
 
       if (cleanName === taskName) {
@@ -92,5 +91,22 @@ export default class BasePage {
 
     // verify
     await expect(checkbox).toBeSelected()
+  }
+
+  async waitForElement(text, timeout = 30000, interval = 3000) {
+    await browser.waitUntil(
+      async () => {
+        await browser.refresh()
+        const link = await $(`//a[normalize-space(.)="${text}"]`)
+        return await link.isDisplayed()
+      },
+      {
+        timeout,
+        interval,
+        timeoutMsg: `Text "${text}" not found after ${timeout}ms`
+      }
+    )
+
+    return await $(`//a[normalize-space(.)="${text}"]`)
   }
 }

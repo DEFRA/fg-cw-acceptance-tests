@@ -1,6 +1,11 @@
 import BasePage from '../page-objects/base.page.js'
 
 class AllCasesPage extends BasePage {
+  async serviceNameHeader() {
+    const serviceName = await $('[data-testid="defra-heading-service-name"]')
+    return await serviceName.getText()
+  }
+
   async headerH2() {
     const h2Element = await $('#all-cases > h2')
     return await h2Element.getText()

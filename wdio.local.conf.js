@@ -4,6 +4,7 @@ import path from 'path'
 import { browser } from '@wdio/globals'
 import resolveUrl from './test/utils/urlResolver.js'
 import chromedriver from 'chromedriver'
+import { entraLogin } from './test/utils/loginHelper.js'
 
 // Load environment variables from .env file manually
 try {
@@ -41,8 +42,6 @@ export const config = {
   ],
 
   path: '/',
-  // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-  // gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
   specs: ['./test/features/**/*.feature'],
   // Patterns to exclude.
   exclude: [
@@ -169,6 +168,29 @@ export const config = {
     const scenarioTags = world.pickle.tags.map((t) => t.name)
     browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
+
+    const tags = world.pickle.tags.map((t) => t.name)
+    console.log(`Running scenario with tags: ${tags.join(', ')}`)
+
+    let username, password
+
+    if (tags.includes('@admin')) {
+      username = process.env.ENTRA_ID_ADMIN_USER
+      password = process.env.ENTRA_ID_USER_PASSWORD
+    } else if (tags.includes('@reader')) {
+      username = process.env.ENTRA_ID_READER_USER
+      password = process.env.ENTRA_ID_USER_PASSWORD
+    } else if (tags.includes('@writer')) {
+      username = process.env.ENTRA_ID_WRITER_USER
+      password = process.env.ENTRA_ID_USER_PASSWORD
+    }
+
+    if (username && password) {
+      console.log(`Performing Entra ID login for: ${username}`)
+      await entraLogin(username, password)
+    } else {
+      console.log('No role tag detected — skipping login.')
+    }
   },
 
   afterScenario: async function (world, result, context) {
