@@ -28,15 +28,27 @@ export const config = {
 
   capabilities: [
     {
-      maxInstances: 1,
       browserName: 'chrome',
+      proxy: {
+        proxyType: 'manual',
+        httpProxy: 'localhost:3128',
+        sslProxy: 'localhost:3128'
+      },
       'goog:chromeOptions': {
         args: [
           '--no-sandbox',
           '--disable-infobars',
           '--headless',
           '--disable-gpu',
-          '--window-size=1920,1080'
+          '--window-size=1920,1080',
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--password-store=basic',
+          '--use-mock-keychain',
+          '--dns-prefetch-disable',
+          '--disable-background-networking',
+          '--disable-remote-fonts',
+          '--ignore-certificate-errors',
+          '--disable-dev-shm-usage'
         ]
       }
     }
