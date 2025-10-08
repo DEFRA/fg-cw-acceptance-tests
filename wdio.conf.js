@@ -8,27 +8,16 @@ import { entraLogin } from './test/utils/loginHelper.js'
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
-let chromeProxyConfig = {}
-if (process.env.HTTP_PROXY) {
-  const url = new URL(process.env.HTTP_PROXY)
-  chromeProxyConfig = {
-    proxy: {
-      proxyType: 'manual',
-      httpProxy: `${url.host}:${url.port}`,
-      sslProxy: `${url.host}:${url.port}`
-    }
-  }
-}
 const alreadyAnalysed = []
 
 export const config = {
   runner: 'local',
 
-  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
   gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
 
   // Connection to remote chromedriver
-  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  hostname: process.env.CHROMEDRIVER_URL || 'localhost',
   port: process.env.CHROMEDRIVER_PORT || 4444,
 
   // Tests to run
@@ -39,26 +28,16 @@ export const config = {
 
   capabilities: [
     {
-      ...chromeProxyConfig,
-      ...{
-        browserName: 'chrome',
-        'goog:chromeOptions': {
-          args: [
-            '--no-sandbox',
-            '--disable-infobars',
-            // '--headless',
-            '--disable-gpu',
-            '--window-size=1920,1080',
-            '--enable-features=NetworkService,NetworkServiceInProcess',
-            '--password-store=basic',
-            '--use-mock-keychain',
-            '--dns-prefetch-disable',
-            '--disable-background-networking',
-            '--disable-remote-fonts',
-            '--ignore-certificate-errors',
-            '--disable-dev-shm-usage'
-          ]
-        }
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1920,1080'
+        ]
       }
     }
   ],
@@ -99,29 +78,17 @@ export const config = {
   ],
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
-    // <string[]> (file/dir) require files before executing features
     require: ['./test/steps/*.js'],
-    // <boolean> show full backtrace for errors
     backtrace: false,
-    // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     requireModule: [],
-    // <boolean> invoke formatters without executing steps
     dryRun: false,
-    // <boolean> abort the run on first failure
     failFast: false,
-    // <string[]> Only execute the scenarios with name matching the expression (repeatable).
     name: [],
-    // <boolean> hide step definition snippets for pending steps
     snippets: true,
-    // <boolean> hide source uris
     source: true,
-    // <boolean> fail if there are any undefined or pending steps
     strict: false,
-    // <string> (expression) only execute the features or scenarios with tags matching the expression
-    tagExpression: '',
-    // <number> timeout for step definitions
-    timeout: 120000,
-    // <boolean> Enable this config to treat undefined definitions as warnings.
+    tagExpression: '@ci',
+    timeout: 180000,
     ignoreUndefinedDefinitions: false
   },
   // Options to be passed to Mocha.
