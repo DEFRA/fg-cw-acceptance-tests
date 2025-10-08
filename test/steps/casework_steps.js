@@ -1,5 +1,4 @@
 import { Given, Then, When } from '@wdio/cucumber-framework'
-import { browser } from '@wdio/globals'
 import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
@@ -11,10 +10,6 @@ import NotesPage from '../page-objects/notes.page.js'
 import AgreementsPage from '../page-objects/agreements.page.js'
 
 let apiResponse
-Given('the user navigates to the {string} page', async (url) => {
-  await browser.url(url)
-  // await AllcasesPage.clickLinkByText('All Cases')
-})
 
 Given(
   'the user has submitted an application for the {string} grant',
@@ -27,9 +22,6 @@ Given(
 When(
   'the user opens the application from the {string} list',
   async (pageTitle) => {
-    // const actualAllCasesText = await AllcasesPage.headerH2()
-    // await expect(actualAllCasesText).toEqual(pageTitle)
-    await browser.refresh()
     await AllcasesPage.clickLinkByText(generatedClientRef)
   }
 )
@@ -45,7 +37,6 @@ Then(
   async () => {}
 )
 When('the user Approve the application', async () => {
-  // button is diabled so commenting for now
   await AllcasesPage.clickButtonByText('approve')
 })
 Then('the user should see application is successfully approved', async () => {
@@ -65,7 +56,7 @@ Then('the {string} page should be displayed', async (pageTitle) => {
 When('the user selects a random case worker', async function () {
   this.assignedUserName = await AssignCasePage.selectRandomUser()
 })
-When('enters details in the "([^"]*)" section', async function () {})
+
 Then(
   'the selected case(s) should be assigned to the chosen case worker',
   async function () {
@@ -87,9 +78,12 @@ Then(
     )
   }
 )
-When('I enter random text into the notes field', async function () {
-  this.assignedUserNotes = await AssignCasePage.enterNotes()
-})
+When(
+  'the user enters random text into the Assign case Notes field',
+  async function () {
+    this.assignedUserNotes = await AssignCasePage.enterNotes()
+  }
+)
 Then(
   'the Timeline should display these messages',
   async function (timelineMessage) {
@@ -244,7 +238,7 @@ Then('the case status should be {string}', async function (status) {
   expect(caseStatus).toEqual(status)
 })
 Then('the user should see {string} tab', async function (link) {
-  await TasksPage.waitForLink(link)
+  await TasksPage.waitForElement(link)
 })
 Then('the user should see Agreements page is displayed', async function () {
   const agreementsPageTitle = await AgreementsPage.headerH2()
@@ -286,4 +280,51 @@ Then('the user should see case agreements details', async function (dataTable) {
       }
     }
   }
+})
+When(
+  'the user waits for the case to appear on the Casework Portal',
+  async function () {
+    const serviceName = await AllcasesPage.serviceNameHeader()
+    await expect(serviceName).toEqual('Manage rural grant applications')
+    await AllcasesPage.waitForElement(generatedClientRef)
+  }
+)
+When('the user enters random text into the Add Notes field', async function () {
+  this.assignedUserNotes = await NotesPage.enterNotes()
+})
+Then('user should see a note of type {string}', async function (noteType) {
+  const expectedDate = getTodayFormatted()
+  console.log(`Expected date: ${expectedDate}`)
+
+  const rows = await $$('tbody > tr')
+  expect(rows.length).toBeGreaterThan(0)
+
+  let matchingRowFound = false
+
+  for (const row of rows) {
+    const cells = await row.$$('td')
+    const dateText = (await cells[0].getText()).trim()
+    const typeText = (await cells[1].getText()).trim()
+    const noteText = (await cells[2].getText()).trim()
+    const byText = (await cells[3].getText()).trim()
+
+    console.log(
+      `Row Data → Date: "${dateText}", Type: "${typeText}", Note: "${noteText}", By: "${byText}"`
+    )
+
+    if (dateText === expectedDate && typeText === noteType) {
+      matchingRowFound = true
+
+      expect(typeText).toEqual(noteType)
+      expect(noteText).toEqual(this.assignedUserNotes)
+      expect(byText).toEqual('System')
+
+      break
+    }
+  }
+
+  expect(matchingRowFound).toBe(
+    true,
+    `Expected to find a row with date "${expectedDate}" but did not`
+  )
 })
