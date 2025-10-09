@@ -28,12 +28,14 @@ export const config = {
 
   capabilities: [
     {
+      ...(process.env.HTTP_PROXY && {
+        proxy: {
+          proxyType: 'manual',
+          httpProxy: new URL(process.env.HTTP_PROXY).host,
+          sslProxy: new URL(process.env.HTTP_PROXY).host
+        }
+      }),
       browserName: 'chrome',
-      proxy: {
-        proxyType: 'manual',
-        httpProxy: 'localhost:3128',
-        sslProxy: 'localhost:3128'
-      },
       'goog:chromeOptions': {
         args: [
           '--no-sandbox',
