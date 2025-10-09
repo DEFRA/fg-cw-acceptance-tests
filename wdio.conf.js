@@ -6,7 +6,6 @@ import resolveUrl from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
 
 const debug = process.env.DEBUG
-const oneHour = 60 * 60 * 1000
 
 const alreadyAnalysed = []
 
@@ -28,12 +27,14 @@ export const config = {
 
   capabilities: [
     {
+      ...(process.env.HTTP_PROXY && {
+        proxy: {
+          proxyType: 'manual',
+          httpProxy: new URL(process.env.HTTP_PROXY).host,
+          sslProxy: new URL(process.env.HTTP_PROXY).host
+        }
+      }),
       browserName: 'chrome',
-      proxy: {
-        proxyType: 'manual',
-        httpProxy: 'localhost:3128',
-        sslProxy: 'localhost:3128'
-      },
       'goog:chromeOptions': {
         args: [
           '--no-sandbox',
@@ -57,21 +58,15 @@ export const config = {
   execArgv: debug ? ['--inspect'] : [],
 
   logLevel: debug ? 'debug' : 'info',
-
-  // Number of failures before the test suite bails.
   bail: 0,
-  // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
   waitforInterval: 200,
-  // Default timeout in milliseconds for request
-  // if browser driver or grid doesn't send resp
   connectionRetryTimeout: 6000,
   connectionRetryCount: 3,
   framework: 'cucumber',
 
   reporters: [
     [
-      // Spec reporter provides rolling output to the logger so you can see it in-progress
       'spec',
       {
         addConsoleLogs: true,
@@ -80,7 +75,6 @@ export const config = {
       }
     ],
     [
-      // Allure is used to generate the final HTML report
       'allure',
       {
         outputDir: 'allure-results',
@@ -88,7 +82,6 @@ export const config = {
       }
     ]
   ],
-  // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
     require: ['./test/steps/*.js'],
     backtrace: false,
@@ -103,13 +96,7 @@ export const config = {
     timeout: 180000,
     ignoreUndefinedDefinitions: false
   },
-  // Options to be passed to Mocha.
-  // See the full list at http://mochajs.org/
-  mochaOpts: {
-    ui: 'bdd',
-    timeout: debug ? oneHour : 60000,
-    bail: true
-  },
+
   before: async function (capabilities, specs) {
     await browser.url('about:blank')
     process.env.SELECTED_TAGS === '@accessibility' && (await init())
@@ -124,18 +111,6 @@ export const config = {
     }
   },
 
-  /**
-   * Hook that gets executed after the suite has ended
-   * @param {object} suite suite details
-   */
-  // afterSuite: function (suite) {},
-  /**
-   * Runs after a WebdriverIO command gets executed
-   * @param {string} commandName hook command name
-   * @param {Array} args arguments that command would receive
-   * @param {number} result 0 - command success, 1 - command error
-   * @param {object} error error object if any
-   */
   afterCommand: async function (commandName, args, result, error) {
     if (
       commandName !== 'deleteSession' &&
@@ -157,13 +132,7 @@ export const config = {
       }
     }
   },
-  /**
-   * Gets executed after all tests are done. You still have access to all global variables from
-   * the test.
-   * @param {number} result 0 - test pass, 1 - test fail
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that ran
-   */
+
   after: function (result, capabilities, specs) {
     console.log('in the after hook=======================')
 
@@ -176,18 +145,6 @@ export const config = {
         )
       )
   },
-  /**
-   * Gets executed right after terminating the webdriver session.
-   * @param {object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that ran
-   */
-  // afterSession: function (config, capabilities, specs) {},
-  /**
-   * Gets executed after all workers got shut down and the process is about to exit. An error
-   * thrown in the onComplete hook will result in the test run failing.
-   * @param world
-   */
 
   beforeScenario: async function (world, result, context) {
     const scenarioTags = world.pickle.tags.map((t) => t.name)
@@ -234,10 +191,4 @@ export const config = {
       fs.writeFileSync('FAILED', JSON.stringify(results))
     }
   }
-  /**
-   * Gets executed when a refresh happens.
-   * @param {string} oldSessionId session ID of the old session
-   * @param {string} newSessionId session ID of the new session
-   */
-  // onReload: function (oldSessionId, newSessionId) {}
 }
