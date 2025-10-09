@@ -1,10 +1,10 @@
-import allure from 'allure-commandline'
 import fs from 'fs'
-import path from 'path'
 import { browser } from '@wdio/globals'
 import resolveUrl from './test/utils/urlResolver.js'
-import chromedriver from 'chromedriver'
 import { entraLogin } from './test/utils/loginHelper.js'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { exec } from 'child_process'
 
 // Load environment variables from .env file manually
 try {
@@ -25,9 +25,11 @@ try {
   console.warn('Could not load .env file:', error.message)
 }
 
+// Fix for ESM environments (since __dirname is undefined)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const debug = process.env.DEBUG
-const oneMinute = 60 * 1000
-const oneHour = 60 * 60 * 1000
 
 // Log the environment being used
 console.log('Environment variables loaded:')
@@ -37,106 +39,61 @@ console.log('API_URL:', process.env.API_URL)
 export const config = {
   runner: 'local',
 
-  services: [
-    ['chromedriver', { port: 9515 }] // service starts/stops Chromedriver for you
-  ],
+  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
+  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
 
-  path: '/',
-  specs: ['./test/features/**/*.feature'],
-  // Patterns to exclude.
-  exclude: [
-    // 'path/to/excluded/files'
+  capabilities: [
+    {
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--headless=new',
+          '--disable-infobars',
+          '--disable-gpu',
+          '--window-size=1920,1080'
+        ]
+      }
+    }
   ],
-  //
+  specs: ['./test/features/**/*.feature'],
+  exclude: [],
   maxInstances: 1,
 
-  capabilities: debug
-    ? [{ browserName: 'chrome' }]
-    : [
-        {
-          maxInstances: 1,
-          browserName: 'chrome',
-          'goog:chromeOptions': {
-            binary:
-              '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', // ✅ quote path
-            args: [
-              '--no-sandbox',
-              '--disable-infobars',
-              '--disable-gpu',
-              '--window-size=1920,1080'
-            ]
-          },
-          'wdio:chromedriverOptions': {
-            binary: chromedriver.path // ✅ use the npm-installed chromedriver
-          }
-        }
-      ],
-
   execArgv: debug ? ['--inspect'] : [],
-
-  //
-  // ===================
-  // Test Configurations
-  // ===================
-
-  // Level of logging verbosity: trace | debug | info | warn | error | silent
   logLevel: debug ? 'debug' : 'info',
   bail: 1,
   waitforTimeout: 10000,
   waitforInterval: 200,
-  //
-  // Default timeout in milliseconds for request
-  // if browser driver or grid doesn't send response
   connectionRetryTimeout: 120000,
-  //
-  // Default request retries count
   connectionRetryCount: 3,
-
   framework: 'cucumber',
-
   reporters: [
-    'spec',
     [
       'allure',
       {
         outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+        disableMochaHooks: true,
         useCucumberStepReporter: true
       }
     ]
   ],
 
   cucumberOpts: {
-    // <string[]> (file/dir) require files before executing features
     require: ['./test/steps/*.js'],
-    // <boolean> show full backtrace for errors
     backtrace: false,
-    // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     requireModule: [],
-    // <boolean> invoke formatters without executing steps
     dryRun: false,
-    // <boolean> abort the run on first failure
     failFast: false,
-    // <string[]> Only execute the scenarios with name matching the expression (repeatable).
     name: [],
-    // <boolean> hide step definition snippets for pending steps
     snippets: true,
-    // <boolean> hide source uris
     source: true,
-    // <boolean> fail if there are any undefined or pending steps
     strict: false,
-    // <string> (expression) only execute the features or scenarios with tags matching the expression
     tagExpression: '',
-    // <number> timeout for step definitions
-    timeout: 120000,
-    // <boolean> Enable this config to treat undefined definitions as warnings.
+    timeout: 180000,
     ignoreUndefinedDefinitions: false
-  },
-
-  // Options to be passed to Mocha.
-  // See the full list at http://mochajs.org/
-  mochaOpts: {
-    ui: 'bdd',
-    timeout: debug ? oneHour : 60000
   },
 
   afterStep: async function (step, scenario, result) {
@@ -144,21 +101,20 @@ export const config = {
       await browser.takeScreenshot()
     }
   },
-  onComplete: function (exitCode, config, capabilities, results) {
+
+  onComplete: function () {
     const reportError = new Error('Could not generate Allure report')
-    const generation = allure(['generate', 'allure-results', '--clean'])
+    const resultsDir = path.resolve(__dirname, 'allure-results')
+    const command = `npx allure generate "${resultsDir}" --clean && npx allure open`
 
     return new Promise((resolve, reject) => {
-      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
-
-      generation.on('exit', function (exitCode) {
-        clearTimeout(generationTimeout)
-
-        if (exitCode !== 0) {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
           return reject(reportError)
         }
-
-        allure(['open'])
+        console.log(stdout)
+        console.log('Allure report generated and opened successfully.')
         resolve()
       })
     })
