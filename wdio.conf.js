@@ -17,7 +17,7 @@ export const config = {
   gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
 
   // Connection to remote chromedriver
-  hostname: process.env.CHROMEDRIVER_URL || 'localhost',
+  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
   port: process.env.CHROMEDRIVER_PORT || 4444,
 
   // Tests to run
@@ -28,13 +28,12 @@ export const config = {
 
   capabilities: [
     {
-      ...(process.env.HTTP_PROXY && {
-        proxy: {
-          proxyType: 'manual',
-          httpProxy: new URL(process.env.HTTP_PROXY).host,
-          sslProxy: new URL(process.env.HTTP_PROXY).host
-        }
-      }),
+      // Outbound calls must go via the proxy
+      proxy: {
+        proxyType: 'manual',
+        httpProxy: 'localhost:3128',
+        sslProxy: 'localhost:3128'
+      },
       browserName: 'chrome',
       'goog:chromeOptions': {
         args: [
