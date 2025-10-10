@@ -1,10 +1,14 @@
-import allure from 'allure-commandline'
 import fs from 'fs'
-import path from 'path'
 import { browser } from '@wdio/globals'
 import resolveUrl from './test/utils/urlResolver.js'
 import chromedriver from 'chromedriver'
 import { entraLogin } from './test/utils/loginHelper.js'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { exec } from 'child_process'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Load environment variables from .env file manually
 try {
@@ -26,7 +30,6 @@ try {
 }
 
 const debug = process.env.DEBUG
-const oneMinute = 60 * 1000
 const oneHour = 60 * 60 * 1000
 
 // Log the environment being used
@@ -63,11 +66,19 @@ export const config = {
               '--no-sandbox',
               '--disable-infobars',
               '--disable-gpu',
-              '--window-size=1920,1080'
+              '--window-size=1920,1080',
+              '--enable-features=NetworkService,NetworkServiceInProcess',
+              '--password-store=basic',
+              '--use-mock-keychain',
+              '--dns-prefetch-disable',
+              '--disable-background-networking',
+              '--disable-remote-fonts',
+              '--ignore-certificate-errors',
+              '--disable-dev-shm-usage'
             ]
           },
           'wdio:chromedriverOptions': {
-            binary: chromedriver.path // ✅ use the npm-installed chromedriver
+            binary: chromedriver.path
           }
         }
       ],
@@ -100,6 +111,9 @@ export const config = {
       'allure',
       {
         outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+        disableMochaHooks: true,
         useCucumberStepReporter: true
       }
     ]
@@ -144,21 +158,20 @@ export const config = {
       await browser.takeScreenshot()
     }
   },
-  onComplete: function (exitCode, config, capabilities, results) {
+
+  onComplete: function () {
     const reportError = new Error('Could not generate Allure report')
-    const generation = allure(['generate', 'allure-results', '--clean'])
+    const resultsDir = path.resolve(__dirname, 'allure-results')
+    const command = `npx allure generate "${resultsDir}" --clean && npx allure open`
 
     return new Promise((resolve, reject) => {
-      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
-
-      generation.on('exit', function (exitCode) {
-        clearTimeout(generationTimeout)
-
-        if (exitCode !== 0) {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
           return reject(reportError)
         }
-
-        allure(['open'])
+        console.log(stdout)
+        console.log('Allure report generated and opened successfully.')
         resolve()
       })
     })

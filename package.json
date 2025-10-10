@@ -15,7 +15,7 @@
   },
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
-    "test": "npm run clean && wdio run wdio.conf.js --logLevel trace --cucumberOpts.tagExpression='@test'",
+    "test": "npm run clean && wdio run wdio.conf.js --logLevel trace --cucumberOpts.tagExpression='@cw'",
     "test:local": "npm run clean && wdio run wdio.local.conf.js --cucumberOpts.tags='@test'",
     "test:tags": "npm run clean && SELECTED_TAGS='@flying-pigs' wdio run wdio.local.conf.js --cucumberOpts.tags='@flying-pigs'",
     "test:local:debug": "DEBUG=true npm run test:local",
