@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import { browser } from '@wdio/globals'
 import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
 
-import resolveUrl from './test/utils/urlResolver.js'
+import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
 
 const debug = process.env.DEBUG
@@ -14,7 +14,7 @@ export const config = {
   runner: 'local',
 
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
-  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
+  gasUrl: `http://localhost:3002/grants/`,
 
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
@@ -25,6 +25,8 @@ export const config = {
   // Tests to exclude
   exclude: [],
   maxInstances: debug ? 1 : 5,
+
+  services: ['shared-store'],
 
   capabilities: [
     {
@@ -198,18 +200,23 @@ export const config = {
     const tags = world.pickle.tags.map((t) => t.name)
     console.log(`🎯 Running scenario with tags: ${tags.join(', ')}`)
 
-    let username, password
+    let username, password, role
 
     if (tags.includes('@admin')) {
       username = process.env.ENTRA_ID_ADMIN_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
+      role = 'SA-FGCW ADMIN (Equal Experts)'
     } else if (tags.includes('@reader')) {
       username = process.env.ENTRA_ID_READER_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
+      role = 'fgcw reader (Equal Experts)'
     } else if (tags.includes('@writer')) {
       username = process.env.ENTRA_ID_WRITER_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
+      role = 'SA-FGCW WRITER (Equal Experts)'
     }
+
+    await browser.sharedStore.set('currentUser', { username, role })
 
     if (username && password) {
       console.log(`Performing Entra ID login for: ${username}`)
@@ -235,10 +242,4 @@ export const config = {
       fs.writeFileSync('FAILED', JSON.stringify(results))
     }
   }
-  /**
-   * Gets executed when a refresh happens.
-   * @param {string} oldSessionId session ID of the old session
-   * @param {string} newSessionId session ID of the new session
-   */
-  // onReload: function (oldSessionId, newSessionId) {}
 }
