@@ -149,6 +149,8 @@ When('the user click the {string} link', async function (linkText) {
   await TimelinePage.clickLinkByText(linkText)
 })
 Then('the user can see the previously entered notes', async function () {
+  const currentUser = await browser.sharedStore.get('currentUser')
+  console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
   const expectedDate = getTodayFormatted()
   console.log(`Expected date: ${expectedDate}`)
 
@@ -173,7 +175,7 @@ Then('the user can see the previously entered notes', async function () {
 
       expect(typeText).toEqual('Assignment')
       expect(noteText).toEqual(this.assignedUserNotes)
-      expect(byText).toEqual('System')
+      expect(byText).toEqual(currentUser.role)
 
       break
     }
