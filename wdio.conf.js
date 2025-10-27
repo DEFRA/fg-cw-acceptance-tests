@@ -14,7 +14,7 @@ export const config = {
   runner: 'local',
 
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
-  gasUrl: `http://localhost:3002/grants/`,
+  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
 
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',

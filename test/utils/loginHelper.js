@@ -37,7 +37,7 @@ async function performLogin(username, password) {
   await emailField.setValue(username)
   await (await $('#idSIButton9')).click() // Next
 
-  const passwordField = await $('#password')
+  const passwordField = await $('#i0118')
   await passwordField.waitForDisplayed({ timeout: 15000 })
   await passwordField.setValue(password)
 
