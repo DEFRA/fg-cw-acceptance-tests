@@ -39,7 +39,7 @@ console.log('API_URL:', process.env.API_URL)
 
 export const config = {
   runner: 'local',
-  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
+  // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
   gasUrl: `http://localhost:3002/grants/`,
 
   services: [

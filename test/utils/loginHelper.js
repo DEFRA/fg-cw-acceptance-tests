@@ -26,7 +26,7 @@ export async function performLocalLogin(username, password) {
   await passwordField.waitForDisplayed({ timeout: 15000 })
   await passwordField.setValue(password)
 
-  clickButtonByText('Login')
+  await clickButtonByText('Login')
 }
 /**
  * Performs the base login steps (enter email, password, click sign in).
