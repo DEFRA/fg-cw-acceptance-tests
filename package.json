@@ -16,6 +16,7 @@
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && wdio run wdio.conf.js --logLevel trace --cucumberOpts.tagExpression='@cw'",
+    "test:local-env": "npm run clean && wdio run wdio.local.env.conf.js --cucumberOpts.tags='@test'",
     "test:local": "npm run clean && wdio run wdio.local.conf.js --cucumberOpts.tags='@test'",
     "test:tags": "npm run clean && SELECTED_TAGS='@flying-pigs' wdio run wdio.local.conf.js --cucumberOpts.tags='@flying-pigs'",
     "test:local:debug": "DEBUG=true npm run test:local",
@@ -50,6 +51,7 @@
     "@wdio/globals": "9.10.1",
     "@wdio/local-runner": "9.10.1",
     "@wdio/mocha-framework": "9.10.1",
+    "@wdio/shared-store-service": "9.20.0",
     "@wdio/spec-reporter": "9.10.1",
     "ajv": "^8.17.1",
     "allure-commandline": "2.32.2",

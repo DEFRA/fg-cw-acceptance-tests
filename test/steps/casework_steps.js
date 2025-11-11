@@ -87,6 +87,9 @@ When(
 Then(
   'the Timeline should display these messages',
   async function (timelineMessage) {
+    const currentUser = await browser.sharedStore.get('currentUser')
+    console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
+
     const expectedStatuses = timelineMessage.raw().flat()
 
     const timelineItems = await $$('.timeline__item')
@@ -108,7 +111,7 @@ Then(
             break
           }
         } else if (status === 'Case unassigned') {
-          if (headerText.includes(status) && bylineText === 'by System') {
+          if (headerText.includes(status) && bylineText === currentUser.role) {
             found = true
             break
           }
@@ -118,7 +121,7 @@ Then(
             break
           }
         } else if (status === 'Application approve') {
-          if (headerText.includes(status) && bylineText === 'by System') {
+          if (headerText.includes(status) && bylineText === currentUser.role) {
             found = true
             break
           }
@@ -146,6 +149,8 @@ When('the user click the {string} link', async function (linkText) {
   await TimelinePage.clickLinkByText(linkText)
 })
 Then('the user can see the previously entered notes', async function () {
+  const currentUser = await browser.sharedStore.get('currentUser')
+  console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
   const expectedDate = getTodayFormatted()
   console.log(`Expected date: ${expectedDate}`)
 
@@ -170,7 +175,7 @@ Then('the user can see the previously entered notes', async function () {
 
       expect(typeText).toEqual('Assignment')
       expect(noteText).toEqual(this.assignedUserNotes)
-      expect(byText).toEqual('System')
+      expect(byText).toEqual(currentUser.role)
 
       break
     }
@@ -293,6 +298,9 @@ When('the user enters random text into the Add Notes field', async function () {
   this.assignedUserNotes = await NotesPage.enterNotes()
 })
 Then('user should see a note of type {string}', async function (noteType) {
+  const currentUser = await browser.sharedStore.get('currentUser')
+  console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
+
   const expectedDate = getTodayFormatted()
   console.log(`Expected date: ${expectedDate}`)
 
@@ -317,7 +325,7 @@ Then('user should see a note of type {string}', async function (noteType) {
 
       expect(typeText).toEqual(noteType)
       expect(noteText).toEqual(this.assignedUserNotes)
-      expect(byText).toEqual('System')
+      expect(byText).toEqual(currentUser.role)
 
       break
     }

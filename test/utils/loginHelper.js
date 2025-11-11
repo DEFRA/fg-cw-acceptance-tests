@@ -7,6 +7,27 @@ export async function entraLogin(username, password) {
   await waitForAppLoadOrRetry(expectedDomain, username, password)
   console.log(`Entra ID login successful for ${username}`)
 }
+
+export async function entraLocalLogin(username, password) {
+  await performLocalLogin(username, password)
+  // await waitForAppLoadOrRetry(expectedDomain, username, password)
+  console.log(`Entra ID login successful for ${username}`)
+}
+
+/**
+ * Preform login locally
+ */
+export async function performLocalLogin(username, password) {
+  const emailField = await $('#username')
+  await emailField.waitForDisplayed({ timeout: 15000 })
+  await emailField.setValue(username)
+
+  const passwordField = await $('#password')
+  await passwordField.waitForDisplayed({ timeout: 15000 })
+  await passwordField.setValue(password)
+
+  await clickButtonByText('Login')
+}
 /**
  * Performs the base login steps (enter email, password, click sign in).
  */
@@ -118,4 +139,10 @@ async function clickSignInWithRetry(maxRetries = 3) {
   }
 
   throw new Error('Login stuck on password page after multiple retries.')
+}
+
+async function clickButtonByText(text) {
+  const button = await $(`button=${text}`)
+  await button.waitForClickable({ timeout: 10000 })
+  await button.click()
 }

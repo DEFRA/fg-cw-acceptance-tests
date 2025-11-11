@@ -1,46 +1,18 @@
-import fs from 'fs'
 import { browser } from '@wdio/globals'
+
 import { resolveUrl } from './test/utils/urlResolver.js'
+import { entraLogin } from './test/utils/loginHelper.js'
 import chromedriver from 'chromedriver'
-import { entraLocalLogin } from './test/utils/loginHelper.js'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import { exec } from 'child_process'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Load environment variables from .env file manually
-try {
-  const envPath = path.join(process.cwd(), '.env')
-  if (fs.existsSync(envPath)) {
-    const envContent = fs.readFileSync(envPath, 'utf8')
-    envContent.split('\n').forEach((line) => {
-      const [key, ...valueParts] = line.split('=')
-      if (key && valueParts.length > 0) {
-        const value = valueParts.join('=').trim()
-        if (!process.env[key]) {
-          process.env[key] = value
-        }
-      }
-    })
-  }
-} catch (error) {
-  console.warn('Could not load .env file:', error.message)
-}
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
-// Log the environment being used
-console.log('Environment variables loaded:')
-console.log('ENVIRONMENT:', process.env.ENVIRONMENT)
-console.log('API_URL:', process.env.API_URL)
-
 export const config = {
   runner: 'local',
-  // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
-  gasUrl: `http://localhost:3002/grants/`,
+  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
+  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
 
   services: [
     'shared-store',
@@ -208,7 +180,7 @@ export const config = {
 
     if (username && password) {
       console.log(`Performing Entra ID login for: ${username}`)
-      await entraLocalLogin(username, password)
+      await entraLogin(username, password)
     } else {
       console.log('No role tag detected — skipping login.')
     }
