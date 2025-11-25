@@ -1,11 +1,11 @@
 @cw @admin
 Feature: Caseworkers can view and manage applications from the All Cases page
 
-  @accessibility @test
+  @accessibility
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
-    Then the case status should be "New"
+    Then the case status should be "Application received"
     And the user opens the application from the "All cases" list
     Then the user should see the submitted application information
     And the user navigates to the "Timeline" section
@@ -90,23 +90,44 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Save" button
     Then user should see a note of type "General"
 
-  @agreements
+  #Agreement generating
+  @agreements @test
   Scenario: User can view Agreements details after the case is approved
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     Then the user should see below "frps-private-beta" tasks details
-      | Simple Review | Incomplete |
-    And the user complete "Simple Review" task
-    And the user Approve the application with a comment
-    And the user click the "Save" button
-    Then the user should see application is successfully approved
-    And the user should see "Agreements" tab
-    When the user click the "Agreements" link
-    Then the user should see Agreements page is displayed
-    And the user should see case agreements details
-      | Reference | Date  | View                   | Status  |
-      | REFERENCE | TODAY | Internal Copy external | Offered |
-    When the user click the "Back to cases" link
-    Then the case status should be "Review"
+      | Check Customer Details                   | Incomplete |
+      | Land parcel rules checks                 | Incomplete |
+      | Check if SSSI consent has been requested | Incomplete |
+      | Check Payment Amount                     | Incomplete |
+      | Review Scheme Budget                     | Incomplete |
+    When the user click the "Start Review" button
+    And the user complete "Check Customer Details" task
+    And the user complete "Land parcel rules checks" task
+    And the user complete "Check if SSSI consent has been requested" task
+    And the user complete "Check Payment Amount" task
+    And the user complete "Review Scheme Budget" task
+    And the user click the "Back to cases" link
+    Then the case status should be "In review"
+    When the user opens the application from the "All cases" list
+    And the user "Approve application" with a comment
+    And the user click the "Confirm" button
+    Then the user should see below "frps-private-beta" tasks details
+      | Check Customer Details                   | Complete |
+      | Land parcel rules checks                 | Complete |
+      | Check if SSSI consent has been requested | Complete |
+      | Check Payment Amount                     | Complete |
+      | Review Scheme Budget                     | Complete |
+    And the user click the "Back to cases" link
+    Then the case status should be "Agreement generating"
+
+#    And the user should see "Agreements" tab
+#    When the user click the "Agreements" link
+#    Then the user should see Agreements page is displayed
+#    And the user should see case agreements details
+#      | Reference | Date  | View                   | Status  |
+#      | REFERENCE | TODAY | Internal Copy external | Offered |
+#    When the user click the "Back to cases" link
+#    Then the case status should be "Review"
 

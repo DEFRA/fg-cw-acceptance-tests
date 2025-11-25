@@ -50,7 +50,11 @@ export function generateRandomClientRef() {
 }
 
 function getCurrentDatetimeISO() {
-  return new Date().toISOString() // "2025-04-14T13:43:38.341Z" format
+  return new Date().toISOString()
+}
+
+function generateFRN() {
+  return Math.floor(1_000_000_000 + Math.random() * 9_000_000_000).toString()
 }
 
 function requestPayload(payload) {
@@ -59,6 +63,7 @@ function requestPayload(payload) {
   const replaced = stringifies
     .replace(/{{random_client_ref}}/g, generateRandomClientRef())
     .replace(/{{current_datetime}}/g, getCurrentDatetimeISO())
+    .replace(/{{random_frn}}/g, generateFRN())
 
   return JSON.parse(replaced)
 }
