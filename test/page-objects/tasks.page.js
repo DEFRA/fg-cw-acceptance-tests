@@ -1,9 +1,17 @@
 import BasePage from '../page-objects/base.page.js'
 
 class TasksPage extends BasePage {
-  async approvalNotes() {
-    const commentBox = await $('#approve-comment')
-    await commentBox.setValue('This is my approval comment.')
+  async approvalNotes(actionCode) {
+    const selector = `#${actionCode}-comment`
+    const commentBox = await $(selector)
+
+    await commentBox.waitForDisplayed()
+    await commentBox.setValue(`#${actionCode}-comment`)
+  }
+
+  async acceptedNotes(notes) {
+    const commentBox = await $('#comment')
+    await commentBox.setValue(notes)
   }
 }
 

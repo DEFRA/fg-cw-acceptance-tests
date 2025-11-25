@@ -27,7 +27,7 @@ When(
 )
 Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
-  await expect(actualApplicationText).toEqual('Application Receipt')
+  await expect(actualApplicationText).toEqual('Review Application')
 })
 When('the user navigates to the {string} section', async (taskName) => {
   await TasksPage.clickLinkByText(taskName)
@@ -214,16 +214,21 @@ Then('the user should see Agreements details', async function () {
   const title = await AgreementsPage.headerH2()
   expect(title).toEqual('Case grant funding agreement')
 })
+
 Then(
   'the user should see below {string} tasks details',
   async function (listName, dataTable) {
     const rows = dataTable.raw()
 
-    for (const [taskName, expectedStatus] of rows) {
-      const taskElement = await $(`li > div > a`)
+    for (let i = 0; i < rows.length; i++) {
+      const [taskName, expectedStatus] = rows[i]
+
+      const taskElement = await $(`li:nth-of-type(${i + 1}) > div > a`)
+      const statusElement = await $(`li:nth-of-type(${i + 1}) > div > strong`)
+
       const actualTaskName = await taskElement.getText()
-      const statusElement = await $(`li > div >strong`)
       const actualStatusName = await statusElement.getText()
+
       await expect(actualTaskName).toEqual(taskName)
       await expect(actualStatusName).toEqual(expectedStatus)
     }
@@ -231,12 +236,14 @@ Then(
 )
 Then('the user complete {string} task', async function (taskName) {
   await TasksPage.clickLinkByText(taskName)
-  await TasksPage.setCheckbox(taskName)
+  await TasksPage.selectRadioByValue('ACCEPTED')
+  await TasksPage.acceptedNotes(taskName)
   await TasksPage.clickButtonByText('Save and continue')
 })
-Then('the user Approve the application with a comment', async function () {
-  await AllcasesPage.selectRadioByValue('approve')
-  await TasksPage.approvalNotes()
+Then('the user {string} with a comment', async function (applicationDecision) {
+  const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+  await AllcasesPage.selectRadioByValue(code)
+  await TasksPage.approvalNotes(code)
 })
 Then('the case status should be {string}', async function (status) {
   const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
