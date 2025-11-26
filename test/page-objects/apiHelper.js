@@ -14,6 +14,7 @@ export async function postRequest(endpoint, payloadPath, headers = {}) {
   const wreck = Wreck.defaults({
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.GAS_KEY}`,
       ...headers
     }
   })
