@@ -186,13 +186,7 @@ Then('the user can see the previously entered notes', async function () {
     `Expected to find a row with date "${expectedDate}" but did not`
   )
 })
-Then(
-  'the user remain on the Notes page with a {string} error message displayed',
-  async function (message) {
-    const alertText = await NotesPage.alertText()
-    expect(alertText).toContain(message)
-  }
-)
+
 When('the user select Unassigned from the user dropdown', async function () {
   await AssignCasePage.selectUnassignedUser()
 })
@@ -240,11 +234,14 @@ Then('the user complete {string} task', async function (taskName) {
   await TasksPage.acceptedNotes(taskName)
   await TasksPage.clickButtonByText('Save and continue')
 })
-Then('the user {string} with a comment', async function (applicationDecision) {
-  const code = applicationDecision.toUpperCase().replace(/ /g, '_')
-  await AllcasesPage.selectRadioByValue(code)
-  await TasksPage.approvalNotes(code)
-})
+Then(
+  'the user selects {string} for the case with a comment',
+  async function (applicationDecision) {
+    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+    await AllcasesPage.selectRadioByValue(code)
+    await TasksPage.approvalNotes(code)
+  }
+)
 Then('the case status should be {string}', async function (status) {
   const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
   expect(caseStatus).toEqual(status)
@@ -343,3 +340,43 @@ Then('user should see a note of type {string}', async function (noteType) {
     `Expected to find a row with date "${expectedDate}" but did not`
   )
 })
+When(
+  'the user click {string} the case with a comment',
+  async function (button) {
+    await TasksPage.approvalNotes(button.toUpperCase())
+    await TasksPage.clickButtonByText(button)
+  }
+)
+Then(
+  'user should see a message indicating that the task cannot be started',
+  async function () {
+    const el = await $(
+      `//p[normalize-space()="Tasks cannot be edited in the current status"]`
+    )
+    expect(await el.isDisplayed()).toBe(true)
+  }
+)
+When(
+  'the user selects {string} for the case',
+  async function (applicationDecision) {
+    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+    await AllcasesPage.selectRadioByValue(code)
+  }
+)
+When(
+  'the user select {string} to complete {string} task',
+  async function (option, taskName) {
+    await TasksPage.clickLinkByText(taskName)
+    await TasksPage.selectRadioByValue(option.toUpperCase())
+    await TasksPage.acceptedNotes(taskName)
+    await TasksPage.clickButtonByText('Save and continue')
+  }
+)
+Then(
+  /^the user remain on the Notes page with a "([^"]*)" error message displayed$/,
+  async function (message) {
+    const alertText = await NotesPage.alertText()
+    expect(alertText).toContain('There is a problem')
+    expect(alertText).toContain(message)
+  }
+)

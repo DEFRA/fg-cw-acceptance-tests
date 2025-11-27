@@ -3,7 +3,7 @@
     "clientRef": "{{random_client_ref}}",
     "sbi": "106284736",
     "frn": "{{random_frn}}",
-    "crn": "1102838829  ",
+    "crn": "1102838829",
     "defraId": "12345678910",
     "submittedAt": "{{current_datetime}}"
   },
@@ -12,7 +12,7 @@
       "id": 2979,
       "message": "Application validated successfully",
       "valid": true,
-      "date": "2025-11-21T10:10:43.673Z"
+      "date": "{{current_datetime}}"
     },
     "scheme": "SFI",
     "applicant": {
