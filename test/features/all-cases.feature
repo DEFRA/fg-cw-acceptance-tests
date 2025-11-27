@@ -24,7 +24,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser @test
+  @assignUser
   Scenario: Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -191,6 +191,14 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user opens the application from the "All cases" list
     When the user click the "Check Customer Details" link
     Then user should see a message indicating that the task cannot be started
+
+  Scenario: User cannot Confirm without select an option
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    When the user click the "Start Review" button
+    And the user click the "Confirm" button
+    Then the user remain on the Notes page with a "Choose an option" error message displayed
 
 
 

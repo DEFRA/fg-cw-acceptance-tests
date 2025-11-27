@@ -12,7 +12,7 @@
       "id": 2979,
       "message": "Application validated successfully",
       "valid": true,
-      "date": "2025-11-21T10:10:43.673Z"
+      "date": "{{current_datetime}}"
     },
     "scheme": "SFI",
     "applicant": {
