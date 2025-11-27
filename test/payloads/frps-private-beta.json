@@ -3,7 +3,7 @@
     "clientRef": "{{random_client_ref}}",
     "sbi": "106284736",
     "frn": "{{random_frn}}",
-    "crn": "1102838829  ",
+    "crn": "1102838829",
     "defraId": "12345678910",
     "submittedAt": "{{current_datetime}}"
   },
