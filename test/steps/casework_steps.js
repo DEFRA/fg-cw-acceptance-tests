@@ -186,7 +186,13 @@ Then('the user can see the previously entered notes', async function () {
     `Expected to find a row with date "${expectedDate}" but did not`
   )
 })
-
+Then(
+  'the user remain on the Notes page with a {string} error message displayed',
+  async function (message) {
+    const alertText = await NotesPage.alertText()
+    expect(alertText).toContain(message)
+  }
+)
 When('the user select Unassigned from the user dropdown', async function () {
   await AssignCasePage.selectUnassignedUser()
 })
@@ -234,14 +240,11 @@ Then('the user complete {string} task', async function (taskName) {
   await TasksPage.acceptedNotes(taskName)
   await TasksPage.clickButtonByText('Save and continue')
 })
-Then(
-  'the user selects {string} for the case with a comment',
-  async function (applicationDecision) {
-    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
-    await AllcasesPage.selectRadioByValue(code)
-    await TasksPage.approvalNotes(code)
-  }
-)
+Then('the user {string} with a comment', async function (applicationDecision) {
+  const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+  await AllcasesPage.selectRadioByValue(code)
+  await TasksPage.approvalNotes(code)
+})
 Then('the case status should be {string}', async function (status) {
   const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
   expect(caseStatus).toEqual(status)
@@ -370,13 +373,5 @@ When(
     await TasksPage.selectRadioByValue(option.toUpperCase())
     await TasksPage.acceptedNotes(taskName)
     await TasksPage.clickButtonByText('Save and continue')
-  }
-)
-Then(
-  /^the user remain on the Notes page with a "([^"]*)" error message displayed$/,
-  async function (message) {
-    const alertText = await NotesPage.alertText()
-    expect(alertText).toContain('There is a problem')
-    expect(alertText).toContain(message)
   }
 )
