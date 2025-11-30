@@ -27,7 +27,10 @@ When(
 )
 Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
-  await expect(actualApplicationText).toEqual('Review Application')
+  await expect(actualApplicationText).toEqual('Tasks')
+  await expect(await ApplicationPage.headerH3()).toEqual(
+    'Application review tasks'
+  )
 })
 When('the user navigates to the {string} section', async (taskName) => {
   await TasksPage.clickLinkByText(taskName)
@@ -100,7 +103,9 @@ Then(
         const headerText = (
           await item.$('.timeline__header h2').getText()
         ).trim()
-        const bylineText = (await item.$('.timeline__byline').getText()).trim()
+        const bylineText = (await item.$('.timeline__byline').getText())
+          .replace(/^by\s+/i, '')
+          .trim()
 
         if (status === 'Case assigned') {
           if (
@@ -116,7 +121,7 @@ Then(
             break
           }
         } else if (status === 'Case received') {
-          if (headerText.includes(status) && bylineText === 'by System') {
+          if (headerText.includes(status) && bylineText === 'System') {
             found = true
             break
           }
@@ -344,15 +349,10 @@ When(
     await TasksPage.clickButtonByText(button)
   }
 )
-Then(
-  'user should see a message indicating that the task cannot be started',
-  async function () {
-    const el = await $(
-      `//p[normalize-space()="Tasks cannot be edited in the current status"]`
-    )
-    expect(await el.isDisplayed()).toBe(true)
-  }
-)
+Then('user should not options to confirm the task', async function () {
+  const el = await $(`//p[normalize-space()="Outcome"]`)
+  expect(await el.isDisplayed()).toBe(false)
+})
 When(
   'the user selects {string} for the case',
   async function (applicationDecision) {
@@ -365,12 +365,12 @@ When(
   async function (option, taskName) {
     await TasksPage.clickLinkByText(taskName)
     await TasksPage.selectRadioByValue(option.toUpperCase())
-    await TasksPage.acceptedNotes(taskName)
-    await TasksPage.clickButtonByText('Save and continue')
+    await TasksPage.approvalNotes(option)
+    await TasksPage.clickButtonByText('Confirm')
   }
 )
 Then(
-  /^the user remain on the Notes page with a "([^"]*)" error message displayed$/,
+  /^the user remain on the page with a "([^"]*)" error message displayed$/,
   async function (message) {
     const alertText = await NotesPage.alertText()
     expect(alertText).toContain('There is a problem')
