@@ -377,3 +377,12 @@ Then(
     expect(alertText).toContain(message)
   }
 )
+
+Then(
+  'the user selects {string} for the case with a comment',
+  async function (applicationDecision) {
+    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+    await AllcasesPage.selectRadioByValue(code)
+    await TasksPage.approvalNotes(code)
+  }
+)
