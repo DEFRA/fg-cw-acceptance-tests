@@ -87,69 +87,87 @@ When(
     this.assignedUserNotes = await AssignCasePage.enterNotes()
   }
 )
-Then(
-  'the Timeline should display these messages',
-  async function (timelineMessage) {
-    const currentUser = await browser.sharedStore.get('currentUser')
-    console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
 
-    const expectedStatuses = timelineMessage.raw().flat()
+Then(/^the Timeline should display these messages$/, async function (table) {
+  const currentUser = await browser.sharedStore.get('currentUser')
+  console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
 
-    const timelineItems = await $$('.timeline__item')
+  const expectedStatuses = table.raw().map((row) => row[0])
+  const timelineItems = await $$('.timeline__item')
 
-    for (const status of expectedStatuses) {
-      let found = false
-      for (const item of timelineItems) {
-        const headerText = (
-          await item.$('.timeline__header h2').getText()
-        ).trim()
-        const bylineText = (await item.$('.timeline__byline').getText())
-          .replace(/^by\s+/i, '')
-          .trim()
+  for (const status of expectedStatuses) {
+    let found = false
 
-        if (status === 'Case assigned') {
-          if (
-            headerText.includes(status) &&
-            headerText.includes(this.assignedUserName)
-          ) {
-            found = true
-            break
-          }
-        } else if (status === 'Case unassigned') {
-          if (headerText.includes(status) && bylineText === currentUser.role) {
-            found = true
-            break
-          }
-        } else if (status === 'Case received') {
-          if (headerText.includes(status) && bylineText === 'System') {
-            found = true
-            break
-          }
-        } else if (status === 'Application approve') {
-          if (headerText.includes(status) && bylineText === currentUser.role) {
-            found = true
-            break
-          }
-        } else {
-          if (headerText.includes(status)) {
-            found = true
-            break
-          }
+    for (const item of timelineItems) {
+      const headerText = (await item.$('.timeline__header h2').getText()).trim()
+
+      const bylineText = (await item.$('.timeline__byline').getText())
+        .replace(/^by\s+/i, '')
+        .trim()
+
+      // const hasNoteLink = await item.$('a=View note').isExisting()
+
+      if (status === 'Case assigned') {
+        if (
+          headerText.includes(status) &&
+          headerText.includes(this.assignedUserName)
+        ) {
+          found = true
+          break
+        }
+      } else if (status === 'Case unassigned') {
+        if (headerText.includes(status) && bylineText === currentUser.role) {
+          found = true
+          break
+        }
+      } else if (status === 'Case received') {
+        if (headerText.includes(status) && bylineText === 'System') {
+          found = true
+          break
+        }
+      } else if (status.startsWith('Stage')) {
+        if (
+          headerText.includes(status) &&
+          (bylineText === currentUser.role || bylineText === 'System')
+        ) {
+          found = true
+          break
+        }
+      } else if (status.startsWith('Task')) {
+        if (headerText.includes(status) && bylineText === currentUser.role) {
+          found = true
+          break
+        }
+      } else {
+        if (headerText.includes(status)) {
+          found = true
+          break
         }
       }
+    }
 
-      expect(found).toBe(
-        true,
-        `Expected to find timeline entry for "${status}"` +
-          (status === 'Case assigned'
-            ? ` with user "${this.assignedUserName}"`
-            : '') +
-          (status === 'Case received' ? ` with byline "by System"` : '') +
-          ` but it was missing.`
-      )
+    const failureMessage = [
+      `\n Timeline entry NOT found:`,
+      `   "${status}"`,
+      status === 'Case assigned'
+        ? `Expected assigned user: ${this.assignedUserName}`
+        : '',
+      status === 'Case unassigned'
+        ? `Expected byline: ${currentUser.role}`
+        : '',
+      status === 'Case received' ? `Expected byline: System` : '',
+      status.startsWith('Task') ? `Expected byline: ${currentUser.role}` : '',
+      ''
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    if (!found) {
+      throw new Error(failureMessage)
     }
   }
-)
+})
+
 When('the user click the {string} link', async function (linkText) {
   await TimelinePage.clickLinkByText(linkText)
 })
@@ -384,5 +402,16 @@ Then(
     const code = applicationDecision.toUpperCase().replace(/ /g, '_')
     await AllcasesPage.selectRadioByValue(code)
     await TasksPage.approvalNotes(code)
+  }
+)
+Then(/^the user should see "([^"]*)" message$/, async function (message) {
+  await TasksPage.headerH2()
+  expect(await TasksPage.headerH2()).toEqual(message)
+})
+Then(
+  'the timeline should show {string}{string}',
+  async function (expectedTitle, notePart) {
+    const expectNoteLink = notePart.trim() === ' with a note'
+    await TimelinePage.validateTimelineEntry(expectedTitle, expectNoteLink)
   }
 )

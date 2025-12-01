@@ -77,6 +77,42 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user click the "View note" link
     Then user should see a note of type "Assignment"
 
+  @agreements @timeline
+  Scenario: User can see Timeline is updated with each action
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    When the user click the "Start" button
+    And the user select "Accepted" to complete "Check customer details" task
+    And the user select "Accepted" to complete "Review land parcel rule checks" task
+    And the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
+    And the user select "Accepted" to complete "Check payment amount" task
+    When the user select "Accepted" to complete "Review scheme budget as a finance officer" task
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+    When the user select "Confirm" to complete "Check draft funding agreement" task
+    When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+    And the user selects "Agreement sent" for the case
+    When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
+    When the user click the "Timeline" link
+    Then the Timeline should display these messages
+      | Case received                                                 |
+      | Stage 'Tasks' outcome (Start)                                 |
+      | Task 'Check customer details' completed                       |
+      | Task 'Review land parcel rule checks' completed               |
+      | Task 'Check if any land parcels are within an SSSI' completed |
+      | Task 'Check payment amount' completed                         |
+      | Task 'Review scheme budget as a finance officer' completed    |
+      | Stage 'Tasks' outcome (Approve)                               |
+      | Task 'Check draft funding agreement' completed                |
+      | Task 'Notify customer that agreement is ready' completed      |
+      | Stage 'Tasks' outcome (Agreement sent)                        |
+      | Status changed to 'Review Offer'                              |
+      | Stage 'Tasks' completed                                       |
+
+
   @addnotes
   Scenario: User can add notes to the case
     Given the user has submitted an application for the "frps-private-beta" grant
@@ -90,7 +126,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Save" button
     Then user should see a note of type "General"
 
-  #Agreement generating
   @agreements
   Scenario: User can view Agreements details after the case is approved
     Given the user has submitted an application for the "frps-private-beta" grant
@@ -131,7 +166,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user click the "Back to applications" link
     Then the case status should be "Review offer"
 
-
   @agreements
   Scenario: User can view Agreements details after the case is approved
     Given the user has submitted an application for the "frps-private-beta" grant
@@ -165,6 +199,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user select "Confirm" to complete "Notify customer that agreement is ready" task
     And the user selects "Agreement sent" for the case
     When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
     When the user click the "Back to applications" link
     Then the case status should be "Agreement offer made"
 
