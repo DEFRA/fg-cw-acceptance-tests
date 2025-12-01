@@ -5,7 +5,10 @@ import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
 import AssignCasePage from '../page-objects/assignCase.page.js'
 import TimelinePage from '../page-objects/timeline.page.js'
-import { getTodayFormatted } from '../../test/utils/helper.js'
+import {
+  getSingleTodayFormatted,
+  getTodayFormatted
+} from '../../test/utils/helper.js'
 import NotesPage from '../page-objects/notes.page.js'
 import AgreementsPage from '../page-objects/agreements.page.js'
 
@@ -325,7 +328,7 @@ Then('user should see a note of type {string}', async function (noteType) {
   const currentUser = await browser.sharedStore.get('currentUser')
   console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
 
-  const expectedDate = getTodayFormatted()
+  const expectedDate = getSingleTodayFormatted()
   console.log(`Expected date: ${expectedDate}`)
 
   const rows = await $$('tbody > tr')
