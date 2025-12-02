@@ -5,7 +5,10 @@ import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
 import AssignCasePage from '../page-objects/assignCase.page.js'
 import TimelinePage from '../page-objects/timeline.page.js'
-import { getTodayFormatted } from '../../test/utils/helper.js'
+import {
+  getSingleTodayFormatted,
+  getTodayFormatted
+} from '../../test/utils/helper.js'
 import NotesPage from '../page-objects/notes.page.js'
 import AgreementsPage from '../page-objects/agreements.page.js'
 
@@ -27,7 +30,10 @@ When(
 )
 Then('the user should see the submitted application information', async () => {
   const actualApplicationText = await ApplicationPage.headerH2()
-  await expect(actualApplicationText).toEqual('Review Application')
+  await expect(actualApplicationText).toEqual('Tasks')
+  await expect(await ApplicationPage.headerH3()).toEqual(
+    'Application review tasks'
+  )
 })
 When('the user navigates to the {string} section', async (taskName) => {
   await TasksPage.clickLinkByText(taskName)
@@ -84,67 +90,87 @@ When(
     this.assignedUserNotes = await AssignCasePage.enterNotes()
   }
 )
-Then(
-  'the Timeline should display these messages',
-  async function (timelineMessage) {
-    const currentUser = await browser.sharedStore.get('currentUser')
-    console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
 
-    const expectedStatuses = timelineMessage.raw().flat()
+Then(/^the Timeline should display these messages$/, async function (table) {
+  const currentUser = await browser.sharedStore.get('currentUser')
+  console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
 
-    const timelineItems = await $$('.timeline__item')
+  const expectedStatuses = table.raw().map((row) => row[0])
+  const timelineItems = await $$('.timeline__item')
 
-    for (const status of expectedStatuses) {
-      let found = false
-      for (const item of timelineItems) {
-        const headerText = (
-          await item.$('.timeline__header h2').getText()
-        ).trim()
-        const bylineText = (await item.$('.timeline__byline').getText()).trim()
+  for (const status of expectedStatuses) {
+    let found = false
 
-        if (status === 'Case assigned') {
-          if (
-            headerText.includes(status) &&
-            headerText.includes(this.assignedUserName)
-          ) {
-            found = true
-            break
-          }
-        } else if (status === 'Case unassigned') {
-          if (headerText.includes(status) && bylineText === currentUser.role) {
-            found = true
-            break
-          }
-        } else if (status === 'Case received') {
-          if (headerText.includes(status) && bylineText === 'by System') {
-            found = true
-            break
-          }
-        } else if (status === 'Application approve') {
-          if (headerText.includes(status) && bylineText === currentUser.role) {
-            found = true
-            break
-          }
-        } else {
-          if (headerText.includes(status)) {
-            found = true
-            break
-          }
+    for (const item of timelineItems) {
+      const headerText = (await item.$('.timeline__header h2').getText()).trim()
+
+      const bylineText = (await item.$('.timeline__byline').getText())
+        .replace(/^by\s+/i, '')
+        .trim()
+
+      // const hasNoteLink = await item.$('a=View note').isExisting()
+
+      if (status === 'Case assigned') {
+        if (
+          headerText.includes(status) &&
+          headerText.includes(this.assignedUserName)
+        ) {
+          found = true
+          break
+        }
+      } else if (status === 'Case unassigned') {
+        if (headerText.includes(status) && bylineText === currentUser.role) {
+          found = true
+          break
+        }
+      } else if (status === 'Case received') {
+        if (headerText.includes(status) && bylineText === 'System') {
+          found = true
+          break
+        }
+      } else if (status.startsWith('Stage')) {
+        if (
+          headerText.includes(status) &&
+          (bylineText === currentUser.role || bylineText === 'System')
+        ) {
+          found = true
+          break
+        }
+      } else if (status.startsWith('Task')) {
+        if (headerText.includes(status) && bylineText === currentUser.role) {
+          found = true
+          break
+        }
+      } else {
+        if (headerText.includes(status)) {
+          found = true
+          break
         }
       }
+    }
 
-      expect(found).toBe(
-        true,
-        `Expected to find timeline entry for "${status}"` +
-          (status === 'Case assigned'
-            ? ` with user "${this.assignedUserName}"`
-            : '') +
-          (status === 'Case received' ? ` with byline "by System"` : '') +
-          ` but it was missing.`
-      )
+    const failureMessage = [
+      `\n Timeline entry NOT found:`,
+      `   "${status}"`,
+      status === 'Case assigned'
+        ? `Expected assigned user: ${this.assignedUserName}`
+        : '',
+      status === 'Case unassigned'
+        ? `Expected byline: ${currentUser.role}`
+        : '',
+      status === 'Case received' ? `Expected byline: System` : '',
+      status.startsWith('Task') ? `Expected byline: ${currentUser.role}` : '',
+      ''
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    if (!found) {
+      throw new Error(failureMessage)
     }
   }
-)
+})
+
 When('the user click the {string} link', async function (linkText) {
   await TimelinePage.clickLinkByText(linkText)
 })
@@ -234,14 +260,11 @@ Then('the user complete {string} task', async function (taskName) {
   await TasksPage.acceptedNotes(taskName)
   await TasksPage.clickButtonByText('Save and continue')
 })
-Then(
-  'the user selects {string} for the case with a comment',
-  async function (applicationDecision) {
-    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
-    await AllcasesPage.selectRadioByValue(code)
-    await TasksPage.approvalNotes(code)
-  }
-)
+Then('the user {string} with a comment', async function (applicationDecision) {
+  const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+  await AllcasesPage.selectRadioByValue(code)
+  await TasksPage.approvalNotes(code)
+})
 Then('the case status should be {string}', async function (status) {
   const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
   expect(caseStatus).toEqual(status)
@@ -305,7 +328,7 @@ Then('user should see a note of type {string}', async function (noteType) {
   const currentUser = await browser.sharedStore.get('currentUser')
   console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
 
-  const expectedDate = getTodayFormatted()
+  const expectedDate = getSingleTodayFormatted()
   console.log(`Expected date: ${expectedDate}`)
 
   const rows = await $$('tbody > tr')
@@ -347,15 +370,10 @@ When(
     await TasksPage.clickButtonByText(button)
   }
 )
-Then(
-  'user should see a message indicating that the task cannot be started',
-  async function () {
-    const el = await $(
-      `//p[normalize-space()="Tasks cannot be edited in the current status"]`
-    )
-    expect(await el.isDisplayed()).toBe(true)
-  }
-)
+Then('user should not options to confirm the task', async function () {
+  const el = await $(`//p[normalize-space()="Outcome"]`)
+  expect(await el.isDisplayed()).toBe(false)
+})
 When(
   'the user selects {string} for the case',
   async function (applicationDecision) {
@@ -368,15 +386,35 @@ When(
   async function (option, taskName) {
     await TasksPage.clickLinkByText(taskName)
     await TasksPage.selectRadioByValue(option.toUpperCase())
-    await TasksPage.acceptedNotes(taskName)
-    await TasksPage.clickButtonByText('Save and continue')
+    await TasksPage.approvalNotes(option)
+    await TasksPage.clickButtonByText('Confirm')
   }
 )
 Then(
-  /^the user remain on the Notes page with a "([^"]*)" error message displayed$/,
+  /^the user remain on the page with a "([^"]*)" error message displayed$/,
   async function (message) {
     const alertText = await NotesPage.alertText()
     expect(alertText).toContain('There is a problem')
     expect(alertText).toContain(message)
+  }
+)
+
+Then(
+  'the user selects {string} for the case with a comment',
+  async function (applicationDecision) {
+    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+    await AllcasesPage.selectRadioByValue(code)
+    await TasksPage.approvalNotes(code)
+  }
+)
+Then(/^the user should see "([^"]*)" message$/, async function (message) {
+  await TasksPage.headerH2()
+  expect(await TasksPage.headerH2()).toEqual(message)
+})
+Then(
+  'the timeline should show {string}{string}',
+  async function (expectedTitle, notePart) {
+    const expectNoteLink = notePart.trim() === ' with a note'
+    await TimelinePage.validateTimelineEntry(expectedTitle, expectNoteLink)
   }
 )

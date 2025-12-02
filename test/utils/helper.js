@@ -5,3 +5,11 @@ export function getTodayFormatted() {
   const year = today.getFullYear()
   return `${day} ${month} ${year}`
 }
+
+export function getSingleTodayFormatted() {
+  const today = new Date()
+  const day = today.getDate()
+  const month = today.toLocaleString('en-GB', { month: 'short' })
+  const year = today.getFullYear()
+  return `${day} ${month} ${year}`
+}

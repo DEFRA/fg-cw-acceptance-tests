@@ -2,7 +2,7 @@ import BasePage from '../page-objects/base.page.js'
 
 class TasksPage extends BasePage {
   async approvalNotes(actionCode) {
-    const selector = `#${actionCode}-comment`
+    const selector = `#${actionCode.toUpperCase()}-comment`
     const commentBox = await $(selector)
 
     await commentBox.waitForDisplayed()
