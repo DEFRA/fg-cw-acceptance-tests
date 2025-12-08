@@ -244,7 +244,9 @@ Then(
       const [taskName, expectedStatus] = rows[i]
 
       const taskElement = await $(`li:nth-of-type(${i + 1}) > div > a`)
-      const statusElement = await $(`li:nth-of-type(${i + 1}) > div > strong`)
+      const statusElement = await $(
+        `//li[${i + 1}]/div/*[self::strong or self::span]`
+      )
 
       const actualTaskName = await taskElement.getText()
       const actualStatusName = await statusElement.getText()

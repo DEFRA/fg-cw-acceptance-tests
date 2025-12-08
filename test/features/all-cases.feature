@@ -109,7 +109,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Task 'Check draft funding agreement' completed                |
       | Task 'Notify customer that agreement is ready' completed      |
       | Stage 'Tasks' outcome (Agreement sent)                        |
-      | Status changed to 'Review Offer'                              |
       | Stage 'Tasks' completed                                       |
 
 
@@ -127,7 +126,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then user should see a note of type "General"
 
   @agreements
-  Scenario: User can view Agreements details after the case is approved
+  Scenario: User can view Agreements details after the case task are is Accepted
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
@@ -149,11 +148,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see below "frps-private-beta" tasks details
-      | Check customer details                       | Complete |
-      | Review land parcel rule checks               | Complete |
-      | Check if any land parcels are within an SSSI | Complete |
-      | Check payment amount                         | Complete |
-      | Review scheme budget as a finance officer    | Complete |
+      | Check customer details                       | Accepted |
+      | Review land parcel rule checks               | Accepted |
+      | Check if any land parcels are within an SSSI | Accepted |
+      | Check payment amount                         | Accepted |
+      | Review scheme budget as a finance officer    | Accepted |
     And the user click the "Back to applications" link
     Then the case status should be "Agreement generating"
     When the user opens the application from the "All cases" list
@@ -164,7 +163,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Reference | Date  | View     | Status  |
       | REFERENCE | TODAY | Internal | Offered |
     When the user click the "Back to applications" link
-    Then the case status should be "Review offer"
+    Then the case status should be "Agreement drafted"
 
   @agreements
   Scenario: User can view Agreements details after the case is approved
@@ -189,19 +188,22 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see below "frps-private-beta" tasks details
-      | Check customer details                       | Complete |
-      | Review land parcel rule checks               | Complete |
-      | Check if any land parcels are within an SSSI | Complete |
-      | Check payment amount                         | Complete |
-      | Review scheme budget as a finance officer    | Complete |
+      | Check customer details                       | Accepted |
+      | Review land parcel rule checks               | Accepted |
+      | Check if any land parcels are within an SSSI | Accepted |
+      | Check payment amount                         | Accepted |
+      | Review scheme budget as a finance officer    | Accepted |
     Then the user should see "Agreements" tab
     When the user select "Confirm" to complete "Check draft funding agreement" task
     When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+    Then the user should see below "frps-private-beta" tasks details
+      | Check draft funding agreement           | Confirmed |
+      | Notify customer that agreement is ready | Confirmed |
     And the user selects "Agreement sent" for the case
     When the user click the "Confirm" button
     Then the user should see "Customer Agreement Review" message
     When the user click the "Back to applications" link
-    Then the case status should be "Agreement offer made"
+    Then the case status should be "Agreement offered"
 
   @case-status
   Scenario: Reject decision is no longer available when the case is ON_HOLD in the REVIEW_APPLICATION stage
