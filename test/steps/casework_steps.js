@@ -244,7 +244,9 @@ Then(
       const [taskName, expectedStatus] = rows[i]
 
       const taskElement = await $(`li:nth-of-type(${i + 1}) > div > a`)
-      const statusElement = await $(`li:nth-of-type(${i + 1}) > div > strong`)
+      const statusElement = await $(
+        `//li[${i + 1}]/div/*[self::strong or self::span]`
+      )
 
       const actualTaskName = await taskElement.getText()
       const actualStatusName = await statusElement.getText()
@@ -366,7 +368,13 @@ Then('user should see a note of type {string}', async function (noteType) {
 When(
   'the user click {string} the case with a comment',
   async function (button) {
-    await TasksPage.approvalNotes(button.toUpperCase())
+    let formatted = button.toUpperCase()
+
+    if (formatted.trim().includes(' ')) {
+      formatted = formatted.replace(/\s+/g, '_')
+    }
+
+    await TasksPage.approvalNotes(formatted)
     await TasksPage.clickButtonByText(button)
   }
 )
@@ -385,8 +393,8 @@ When(
   'the user select {string} to complete {string} task',
   async function (option, taskName) {
     await TasksPage.clickLinkByText(taskName)
-    await TasksPage.selectRadioByValue(option.toUpperCase())
-    await TasksPage.approvalNotes(option)
+    await TasksPage.selectRadioAndEnterText(option, taskName)
+    // await TasksPage.approvalNotes(option)
     await TasksPage.clickButtonByText('Confirm')
   }
 )
