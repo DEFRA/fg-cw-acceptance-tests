@@ -83,11 +83,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
-    And the user select "Accepted" to complete "Check customer details" task
-    And the user select "Accepted" to complete "Review land parcel rule checks" task
-    And the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
-    And the user select "Accepted" to complete "Check payment amount" task
-    And the user select "Accepted" to complete "Review scheme budget as a finance officer" task
+    And the user select "Accept" to complete "Check customer details" task
+    And the user select "Accept" to complete "Review land parcel rule checks" task
+    And the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    And the user select "Accept" to complete "Check payment amount" task
+    And the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see "Agreements" tab
@@ -137,11 +137,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check payment amount                         | Incomplete |
       | Review scheme budget as a finance officer    | Incomplete |
     When the user click the "Start" button
-    When the user select "Accepted" to complete "Check customer details" task
-    When the user select "Accepted" to complete "Review land parcel rule checks" task
-    When the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
-    When the user select "Accepted" to complete "Check payment amount" task
-    When the user select "Accepted" to complete "Review scheme budget as a finance officer" task
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Back to applications" link
     Then the case status should be "In review"
     When the user opens the application from the "All cases" list
@@ -177,11 +177,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check payment amount                         | Incomplete |
       | Review scheme budget as a finance officer    | Incomplete |
     When the user click the "Start" button
-    When the user select "Accepted" to complete "Check customer details" task
-    When the user select "Accepted" to complete "Review land parcel rule checks" task
-    When the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
-    When the user select "Accepted" to complete "Check payment amount" task
-    When the user select "Accepted" to complete "Review scheme budget as a finance officer" task
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Back to applications" link
     Then the case status should be "In review"
     When the user opens the application from the "All cases" list
@@ -217,6 +217,21 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the case status should be "On hold"
     When the user opens the application from the "All cases" list
     And the user click "Resume" the case with a comment
+    And the user click the "Back to applications" link
+    Then the case status should be "In review"
+
+  @case-status @reject
+  Scenario: User can Reject and reinstate a case and status should update accordingly
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    When the user click the "Start" button
+    And the user selects "Reject Application" for the case with a comment
+    And the user click the "Confirm" button
+    And the user click the "Back to applications" link
+    Then the case status should be "Rejected"
+    When the user opens the application from the "All cases" list
+    And the user click "Reinstate Application" the case with a comment
     And the user click the "Back to applications" link
     Then the case status should be "In review"
 
@@ -280,11 +295,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
-    When the user select "Accepted" to complete "Check customer details" task
-    When the user select "Accepted" to complete "Review land parcel rule checks" task
-    When the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
-    When the user select "Accepted" to complete "Check payment amount" task
-    When the user select "Accepted" to complete "Review scheme budget as a finance officer" task
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Confirm" button
     Then the user remain on the page with a "Choose an option" error message displayed
     And the user selects "Approve application" for the case with a comment
@@ -299,7 +314,20 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user remain on the page with a "Choose an option" error message displayed
 
 
-
-
-
+  Scenario: Task remains incomplete unless the user selects Accept
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    When the user click the "Start" button
+    And the user select "Request information from customer" to complete "Check customer details" task
+    And the user select "Pause for internal investigation" to complete "Review land parcel rule checks" task
+    And the user select "Cannot complete" to complete "Check if any land parcels are within an SSSI" task
+    And the user select "Accept" to complete "Check payment amount" task
+    And the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    Then the user should see below "frps-private-beta" tasks details
+      | Check customer details                       | Information requested  |
+      | Review land parcel rule checks               | Internal investigation |
+      | Check if any land parcels are within an SSSI | Cannot complete        |
+      | Check payment amount                         | Accepted               |
+      | Review scheme budget as a finance officer    | Accepted               |
 

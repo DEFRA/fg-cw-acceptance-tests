@@ -83,6 +83,30 @@ export default class BasePage {
     await radio.click()
   }
 
+  async selectRadioByLabel(labelText) {
+    const locator = `//label[normalize-space()="${labelText}"]`
+
+    const label = await $(locator)
+
+    await label.waitForExist({ timeout: 5000 })
+    await label.scrollIntoView()
+    await label.click()
+  }
+
+  async selectRadioAndEnterText(labelText, text) {
+    const radioLabel = await $(`//label[normalize-space()="${labelText}"]`)
+    await radioLabel.waitForClickable({ timeout: 5000 })
+    await radioLabel.click()
+
+    const inputId = await radioLabel.getAttribute('for')
+    const conditionalPanel = await $(`#conditional-${inputId}`)
+
+    const textarea = await conditionalPanel.$('textarea')
+    await textarea.waitForEnabled({ timeout: 5000 })
+
+    await textarea.setValue(text)
+  }
+
   async setCheckbox(selector) {
     const checkbox = await $(
       `#task-${selector.trim().toLowerCase().replace(/\s+/g, '-')}`
