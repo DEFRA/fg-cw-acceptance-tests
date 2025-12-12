@@ -173,6 +173,7 @@ Then(/^the Timeline should display these messages$/, async function (table) {
 
 When('the user click the {string} link', async function (linkText) {
   await TimelinePage.clickLinkByText(linkText)
+  await browser.refresh()
 })
 Then('the user can see the previously entered notes', async function () {
   const currentUser = await browser.sharedStore.get('currentUser')
@@ -276,44 +277,7 @@ Then('the user should see {string} tab', async function (link) {
 })
 Then('the user should see Agreements page is displayed', async function () {
   const agreementsPageTitle = await AgreementsPage.headerH2()
-  expect(agreementsPageTitle).toEqual('Case grant funding agreement')
-})
-Then('the user should see case agreements details', async function (dataTable) {
-  const rows = dataTable.raw()
-  const tableRows = await $$('table tr')
-
-  for (let i = 0; i < rows.length; i++) {
-    const expectedRow = rows[i]
-    const rowElement = tableRows[i]
-    const actualCells = await rowElement.$$('th, td')
-
-    const actualTexts = []
-    for (const cell of actualCells) {
-      actualTexts.push((await cell.getText()).trim())
-    }
-
-    for (let j = 0; j < expectedRow.length; j++) {
-      const expectedValue = expectedRow[j].trim()
-      const actualValue = actualTexts[j]
-
-      if (i === 0) {
-        await expect(actualValue).toEqual(expectedValue)
-        continue
-      }
-
-      if (expectedValue.toUpperCase() === 'TODAY') {
-        const now = new Date()
-        const options = { day: 'numeric', month: 'short', year: 'numeric' }
-        const expectedDate = now.toLocaleDateString('en-GB', options)
-        await expect(actualValue).toEqual(expectedDate)
-      } else if (expectedValue.toUpperCase() === 'REFERENCE') {
-        const refRegex = /^SFI\d{9}$/
-        await expect(actualValue).toMatch(refRegex)
-      } else {
-        await expect(actualValue).toEqual(expectedValue)
-      }
-    }
-  }
+  expect(agreementsPageTitle).toEqual('Funding agreement')
 })
 When(
   'the user waits for the case to appear on the Casework Portal',
@@ -424,5 +388,39 @@ Then(
   async function (expectedTitle, notePart) {
     const expectNoteLink = notePart.trim() === ' with a note'
     await TimelinePage.validateTimelineEntry(expectedTitle, expectNoteLink)
+  }
+)
+
+Then('the user should see case agreements details', async function (dataTable) {
+  await AgreementsPage.validateSummaryListFromTable(dataTable)
+})
+When(/^the user waits for the agreements message$/, async function () {
+  await browser.refresh()
+})
+
+Then(
+  'the user waits until the agreements message {string} is displayed',
+  async function (expectedMessage) {
+    const timeoutMs = 30000
+    const pollInterval = 2000
+    const startTime = Date.now()
+
+    while (true) {
+      const elements = await $$('dl > div > dd')
+      const actualText = (await elements[0].getText()).trim()
+
+      if (actualText === expectedMessage) {
+        return
+      }
+
+      if (Date.now() - startTime > timeoutMs) {
+        throw new Error(
+          `Timeout: expected agreements message "${expectedMessage}" but got "${actualText}"`
+        )
+      }
+
+      await browser.refresh()
+      await browser.pause(pollInterval)
+    }
   }
 )
