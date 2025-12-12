@@ -330,7 +330,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check payment amount                         | Accepted               |
       | Review scheme budget as a finance officer    | Accepted               |
 
-  @withdrawn
+  @withdrawn @timeline
   Scenario: Casework can withdrawn application pre-agreement
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -340,6 +340,13 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
     Then the case status should be "Withdrawn"
+    When the user opens the application from the "All cases" list
+    When the user click the "Timeline" link
+    Then the Timeline should display these messages
+      | Case received                                   |
+      | Stage 'Tasks' outcome (Withdraw)                |
+      | Status changed to 'Withdrawn'                   |
+
 
   @withdrawn
   Scenario: Casework can withdrawn application post-agreement

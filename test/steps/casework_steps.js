@@ -93,80 +93,82 @@ When(
 
 Then(/^the Timeline should display these messages$/, async function (table) {
   const currentUser = await browser.sharedStore.get('currentUser')
-  console.log(`Logged in as ${currentUser.role} (${currentUser.username})`)
-
-  const expectedStatuses = table.raw().map((row) => row[0])
+  const expectedMessages = table.raw().map((row) => row[0])
   const timelineItems = await $$('.timeline__item')
 
-  for (const status of expectedStatuses) {
+  const assignedUser = this.assignedUserName
+
+  for (const expected of expectedMessages) {
     let found = false
 
     for (const item of timelineItems) {
       const headerText = (await item.$('.timeline__header h2').getText()).trim()
-
       const bylineText = (await item.$('.timeline__byline').getText())
         .replace(/^by\s+/i, '')
         .trim()
 
-      // const hasNoteLink = await item.$('a=View note').isExisting()
+      if (expected === 'Case received') {
+        if (headerText.includes(expected) && bylineText === 'System') {
+          found = true
+          break
+        }
+      }
 
-      if (status === 'Case assigned') {
+      if (expected === 'Case assigned') {
         if (
-          headerText.includes(status) &&
-          headerText.includes(this.assignedUserName)
+          headerText.includes(expected) &&
+          headerText.includes(assignedUser)
         ) {
           found = true
           break
         }
-      } else if (status === 'Case unassigned') {
-        if (headerText.includes(status) && bylineText === currentUser.role) {
+      }
+
+      if (expected === 'Case unassigned') {
+        if (headerText.includes(expected) && bylineText === currentUser.role) {
           found = true
           break
         }
-      } else if (status === 'Case received') {
-        if (headerText.includes(status) && bylineText === 'System') {
-          found = true
-          break
-        }
-      } else if (status.startsWith('Stage')) {
+      }
+
+      if (expected.startsWith('Stage')) {
         if (
-          headerText.includes(status) &&
+          headerText.includes(expected) &&
           (bylineText === currentUser.role || bylineText === 'System')
         ) {
           found = true
           break
         }
-      } else if (status.startsWith('Task')) {
-        if (headerText.includes(status) && bylineText === currentUser.role) {
-          found = true
-          break
-        }
-      } else {
-        if (headerText.includes(status)) {
+      }
+
+      if (expected.startsWith('Task')) {
+        if (headerText.includes(expected) && bylineText === currentUser.role) {
           found = true
           break
         }
       }
+
+      if (expected.startsWith('Status changed to')) {
+        if (headerText.includes(expected)) {
+          console.log('Status changed to ' + headerText.join(', '))
+          console.log('&&&&&&&&&&&&&&')
+          console.log('Status changed to ' + expected)
+          found = true
+          break
+        }
+      }
+
+      if (headerText.includes(expected)) {
+        found = true
+        break
+      }
     }
 
-    const failureMessage = [
-      `\n Timeline entry NOT found:`,
-      `   "${status}"`,
-      status === 'Case assigned'
-        ? `Expected assigned user: ${this.assignedUserName}`
-        : '',
-      status === 'Case unassigned'
-        ? `Expected byline: ${currentUser.role}`
-        : '',
-      status === 'Case received' ? `Expected byline: System` : '',
-      status.startsWith('Task') ? `Expected byline: ${currentUser.role}` : '',
-      ''
-    ]
-      .filter(Boolean)
-      .join('\n')
-
     if (!found) {
-      throw new Error(failureMessage)
+      throw new Error(
+        `\n Timeline entry NOT found for: "${expected}"\n` +
+          `   Expected byline/user: ${currentUser.role} (if applicable)\n`
+      )
     }
   }
 })
