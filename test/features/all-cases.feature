@@ -154,14 +154,14 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check payment amount                         | Accepted |
       | Review scheme budget as a finance officer    | Accepted |
     And the user click the "Back to applications" link
-    Then the case status should be "Agreement generating"
+    Then the case status should be "Agreement drafted"
     When the user opens the application from the "All cases" list
     Then the user should see "Agreements" tab
     When the user click the "Agreements" link
     Then the user should see Agreements page is displayed
     And the user should see case agreements details
-      | Reference | Date  | View     | Status  |
-      | REFERENCE | TODAY | Internal | Offered |
+      | Agreement status | Reference    | Date created | Date accepted | Start date  | View           |
+      | Offered          | SFI843094265 | Date         | Not accepted  | Not started | View agreement |
     When the user click the "Back to applications" link
     Then the case status should be "Agreement drafted"
 
@@ -313,7 +313,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Confirm" button
     Then the user remain on the page with a "Choose an option" error message displayed
 
-
   Scenario: Task remains incomplete unless the user selects Accept
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -330,4 +329,48 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check if any land parcels are within an SSSI | Cannot complete        |
       | Check payment amount                         | Accepted               |
       | Review scheme budget as a finance officer    | Accepted               |
+
+  @withdrawn @timeline
+  Scenario: Casework can withdrawn application pre-agreement
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+    And the user selects "Withdraw application" for the case with a comment
+    And the user click the "Confirm" button
+    And the user click the "Back to applications" link
+    Then the case status should be "Withdrawn"
+    When the user opens the application from the "All cases" list
+    When the user click the "Timeline" link
+    Then the Timeline should display these messages
+      | Case received                                   |
+      | Stage 'Tasks' outcome (Withdraw)                |
+      | Status changed to 'Withdrawn'                   |
+
+
+  @withdrawn
+  Scenario: Casework can withdrawn application post-agreement
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+    And the user selects "Withdraw application" for the case with a comment
+    And the user click the "Confirm" button
+    When the user click the "Agreements" link
+    And the user waits until the agreements message "Withdrawn" is displayed
+    And the user waits for the agreements message
+    And the user should see case agreements details
+      | Agreement status | Reference    | Date created | Date accepted | Start date  | View           |
+      | Withdrawn        | SFI843094265 | Date         | Not accepted  | Not started | View agreement |
+    And the user click the "Back to applications" link
+    Then the case status should be "Withdrawn"
+
 
