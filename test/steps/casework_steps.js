@@ -150,9 +150,6 @@ Then(/^the Timeline should display these messages$/, async function (table) {
 
       if (expected.startsWith('Status changed to')) {
         if (headerText.includes(expected)) {
-          console.log('Status changed to ' + headerText.join(', '))
-          console.log('&&&&&&&&&&&&&&')
-          console.log('Status changed to ' + expected)
           found = true
           break
         }
