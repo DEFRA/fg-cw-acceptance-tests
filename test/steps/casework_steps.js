@@ -232,7 +232,7 @@ Then('the selected case should be unassigned', async function () {
 })
 Then('the user should see Agreements details', async function () {
   const title = await AgreementsPage.headerH2()
-  expect(title).toEqual('Case grant funding agreement')
+  expect(title).toEqual('Funding agreement')
 })
 
 Then(
