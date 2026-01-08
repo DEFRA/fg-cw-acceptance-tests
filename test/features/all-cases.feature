@@ -1,4 +1,4 @@
-@cw @admin
+@cw @reader
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   @accessibility
@@ -343,9 +343,9 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user opens the application from the "All cases" list
     When the user click the "Timeline" link
     Then the Timeline should display these messages
-      | Case received                                   |
-      | Stage 'Tasks' outcome (Withdraw)                |
-      | Status changed to 'Withdrawn'                   |
+      | Case received                    |
+      | Stage 'Tasks' outcome (Withdraw) |
+      | Status changed to 'Withdrawn'    |
 
 
   @withdrawn
@@ -373,4 +373,20 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Back to applications" link
     Then the case status should be "Withdrawn"
 
+  @taskNotes
+  Scenario: User cannot continue without adding Notes on Task Options
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+    When the user clicks Confirm on the task without notes and sees "Explain this outcome is required"
+      | Check customer details                       |
+      | Review land parcel rule checks               |
+      | Check if any land parcels are within an SSSI |
+      | Check payment amount                         |
+      | Review scheme budget as a finance officer    |
 
+
+
+
+# accessibility, run calculation, timeline

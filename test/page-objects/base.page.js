@@ -133,4 +133,16 @@ export default class BasePage {
 
     return await $(`//a[normalize-space(.)="${text}"]`)
   }
+
+  async selectRandomRadioButton() {
+    const radios = await $$('input[type="radio"]:enabled')
+
+    if (radios.length === 0) {
+      throw new Error('No radio buttons found on the page')
+    }
+
+    const randomIndex = Math.floor(Math.random() * radios.length)
+    await radios[randomIndex].scrollIntoView()
+    await radios[randomIndex].click()
+  }
 }

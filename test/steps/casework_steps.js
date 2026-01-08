@@ -423,3 +423,22 @@ Then(
     }
   }
 )
+When(
+  'the user clicks Confirm on the task without notes and sees {string}',
+  async function (errorMessage, dataTable) {
+    const tasks = dataTable.raw()
+
+    for (const task of tasks) {
+      console.log(task)
+      console.log('TASK IS')
+      await TasksPage.clickLinkByText(task)
+      await TasksPage.selectRandomRadioButton()
+      await TasksPage.clickButtonByText('Confirm')
+
+      const alertText = await TasksPage.alertText()
+      expect(alertText).toContain('There is a problem\n' + errorMessage)
+
+      await TasksPage.clickLinkByText('Tasks')
+    }
+  }
+)
