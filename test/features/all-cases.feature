@@ -154,6 +154,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check payment amount                         | Accepted |
       | Review scheme budget as a finance officer    | Accepted |
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
     When the user opens the application from the "All cases" list
     Then the user should see "Agreements" tab
