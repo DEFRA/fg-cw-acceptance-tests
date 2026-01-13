@@ -442,3 +442,6 @@ When(
     }
   }
 )
+When(/^the user waits for the case status to be updated$/, async function () {
+  await browser.refresh()
+})

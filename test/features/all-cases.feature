@@ -163,6 +163,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Agreement status | Reference    | Date created | Date accepted | Start date  | View           |
       | Offered          | SFI843094265 | Date         | Not accepted  | Not started | View agreement |
     When the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
 
   @agreements
@@ -203,6 +204,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user click the "Confirm" button
     Then the user should see "Customer Agreement Review" message
     When the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "Agreement offered"
 
   @case-status
@@ -214,10 +216,12 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Put on hold" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "On hold"
     When the user opens the application from the "All cases" list
     And the user click "Resume" the case with a comment
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "In review"
 
   @case-status @reject
@@ -229,10 +233,12 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Reject Application" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "Rejected"
     When the user opens the application from the "All cases" list
     And the user click "Reinstate Application" the case with a comment
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "In review"
 
   Scenario:User cannot start task without clicking the start button
@@ -371,6 +377,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Agreement status | Reference    | Date created | Date accepted | Start date  | View           |
       | Withdrawn        | SFI843094265 | Date         | Not accepted  | Not started | View agreement |
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"
 
   @taskNotes
@@ -385,8 +392,3 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check if any land parcels are within an SSSI |
       | Check payment amount                         |
       | Review scheme budget as a finance officer    |
-
-
-
-
-# accessibility, run calculation, timeline
