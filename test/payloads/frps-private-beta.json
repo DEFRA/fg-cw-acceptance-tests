@@ -4,7 +4,6 @@
     "sbi": "106284736",
     "frn": "{{random_frn}}",
     "crn": "1102838829",
-    "defraId": "12345678910",
     "submittedAt": "{{current_datetime}}"
   },
   "answers": {
@@ -18,12 +17,9 @@
     "applicant": {
       "business": {
         "reference": "1101091126",
-        "email": {
-          "address": "texelshirecontractingg@gnitcartnocerihslexeto.com.test"
-        },
-        "phone": {
-          "mobile": "01234816251"
-        },
+        "email": "texelshirecontractingg@gnitcartnocerihslexeto.com.test",
+        "mobilePhoneNumber": "07713973104",
+        "landlinePhoneNumber": "01235863957",
         "name": "Texels Hire & Contracting",
         "address": {
           "line1": "Benbrigge House",

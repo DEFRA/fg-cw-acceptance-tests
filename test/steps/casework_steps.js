@@ -11,6 +11,7 @@ import {
 } from '../../test/utils/helper.js'
 import NotesPage from '../page-objects/notes.page.js'
 import AgreementsPage from '../page-objects/agreements.page.js'
+import CalculationsPage from '../page-objects/calculations.page.js'
 
 let apiResponse
 
@@ -444,4 +445,9 @@ When(
 )
 When(/^the user waits for the case status to be updated$/, async function () {
   await browser.refresh()
+})
+Then(/^the user can view Land parcel calculations page$/, async function () {
+  expect(await CalculationsPage.getHeaderText()).toEqual(
+    'Land parcel calculations'
+  )
 })
