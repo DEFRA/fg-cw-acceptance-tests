@@ -393,3 +393,13 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check if any land parcels are within an SSSI |
       | Check payment amount                         |
       | Review scheme budget as a finance officer    |
+
+
+    Scenario: User can view and run Land parcel calculations
+      Given the user has submitted an application for the "frps-private-beta" grant
+      When the user waits for the case to appear on the Casework Portal
+      And the user opens the application from the "All cases" list
+      And the user click the "Calculations" link
+  #defect raised
+#      Then the user can view Land parcel calculations page
+

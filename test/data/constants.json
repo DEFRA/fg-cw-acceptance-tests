@@ -1,0 +1,20 @@
+{
+  "headers": {
+    "adminPage": "Users and roles",
+    "usersPage": "Users"
+  },
+  "labels": {
+    "submitButton": "Submit",
+    "cancelButton": "Cancel",
+    "assignButton": "Assign",
+    "startButton": "Start",
+    "rejectRadioButton": "Reject",
+    "putOnHold": "Put on Hold",
+    "withdraw": "Withdraw",
+    "confirm": "Confirm"
+  },
+  "messages": {
+    "success": "",
+    "error": ""
+  }
+}
