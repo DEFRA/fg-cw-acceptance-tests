@@ -143,10 +143,11 @@ export const config = {
     timeout: debug ? oneHour : 60000,
     bail: true
   },
-  before: async function (capabilities, specs) {
-    await browser.url('about:blank')
+  before: async function () {
+    console.log('in the before hook=======================')
     if (isAccessibilityRun) {
-      await init()
+      // IMPORTANT: pass the browser/session so the lib can inject/attach to the page context
+      await init(browser)
     }
   },
   afterTest: async function (
@@ -171,24 +172,29 @@ export const config = {
    * @param {number} result 0 - command success, 1 - command error
    * @param {object} error error object if any
    */
-  afterCommand: async function (commandName, args, result, error) {
-    if (commandName !== 'deleteSession' && isAccessibilityRun) {
-      const actualUrl = await browser.getUrl()
+  afterCommand: async function (commandName) {
+    if (!isAccessibilityRun) return
+    if (commandName === 'deleteSession') return
 
-      if (
-        actualUrl !== 'about:blank' &&
-        !/microsoft|ete\.access/.test(actualUrl)
-      ) {
-        const url = new URL(actualUrl)
-        const formattedUrl = `${url.origin}${url.pathname}`
-
-        if (!alreadyAnalysed.includes(formattedUrl)) {
-          alreadyAnalysed.push(formattedUrl)
-          await analyse(browser, '')
-        }
-      }
+    let actualUrl
+    try {
+      actualUrl = await browser.getUrl()
+    } catch {
+      return // session already dying
     }
+
+    if (actualUrl === 'about:blank' || /microsoft|ete\.access/.test(actualUrl))
+      return
+
+    const url = new URL(actualUrl)
+    const formattedUrl = `${url.origin}${url.pathname}`
+
+    if (alreadyAnalysed.includes(formattedUrl)) return
+
+    alreadyAnalysed.push(formattedUrl)
+    await analyse(browser, '')
   },
+
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
    * the test.
@@ -284,6 +290,7 @@ export const config = {
   },
 
   afterScenario: async function (world, result, context) {
+    if (isAccessibilityRun) return // DO NOT reload sessions during a11y collection
     await browser.reloadSession()
   },
 
