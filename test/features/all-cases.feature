@@ -12,7 +12,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the Timeline should display these messages
       | Case received |
 
-  @assignUser
+  @assignUser @accessibility
   Scenario: Admin user can assign a case to users
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
