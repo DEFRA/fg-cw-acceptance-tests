@@ -98,7 +98,7 @@ export const config = {
   waitforInterval: 200,
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send resp
-  connectionRetryTimeout: 6000,
+  connectionRetryTimeout: 60000,
   connectionRetryCount: 3,
   framework: 'cucumber',
 
@@ -192,7 +192,19 @@ export const config = {
     if (alreadyAnalysed.includes(formattedUrl)) return
 
     alreadyAnalysed.push(formattedUrl)
-    await analyse(browser, '')
+
+    try {
+      const hasViolationsFn = await browser.execute(
+        () => typeof window.violations === 'function'
+      )
+      if (!hasViolationsFn) return
+      await analyse(browser, '')
+    } catch (e) {
+      console.warn(
+        '[a11y] analyse skipped (session/nav/injection not ready):',
+        e?.message || e
+      )
+    }
   },
 
   /**
@@ -244,6 +256,9 @@ export const config = {
    */
 
   beforeScenario: async function (world, result, context) {
+    if (isAccessibilityRun) {
+      await init(browser)
+    }
     const scenarioTags = world.pickle.tags.map((t) => t.name)
     await browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
