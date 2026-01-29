@@ -195,24 +195,18 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  after: function () {
-    if (!isAccessibilityRun) return
+  after: function (result, capabilities, specs) {
+    console.log('in the after hook=======================')
 
-    const outDir = './reports/accessibility'
-    fs.mkdirSync(outDir, { recursive: true })
-
-    fs.writeFileSync(
-      `${outDir}/index.html`,
-      getHtmlReportByCategory().replace(
-        /<script>, <template> or <div> /g,
-        'script, template or div '
+    if (isAccessibilityRun) {
+      fs.writeFileSync(
+        `./reports/accessibility/report-${Date.now()}.html`,
+        getHtmlReportByCategory().replace(
+          /<script>, <template> or <div> /g,
+          'script, template or div '
+        )
       )
-    )
-
-    // Build the index / friendly output (same as your local flow)
-    execSync('node --no-warnings generate-accessibility-report.js', {
-      stdio: 'inherit'
-    })
+    }
   },
 
   /**
