@@ -1,4 +1,4 @@
-@e2e @flying-pigs @caseworker @happy-path @accessibility @grantsui
+@e2e @flying-pigs @caseworker @happy-path @grantsui
 Feature: Processing a Flying Pigs grant application
 
   As a caseworker
