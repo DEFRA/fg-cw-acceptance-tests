@@ -207,6 +207,7 @@ export const config = {
       )
     }
   },
+
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {object} config wdio configuration object
@@ -222,11 +223,17 @@ export const config = {
 
   beforeScenario: async function (world, result, context) {
     const scenarioTags = world.pickle.tags.map((t) => t.name)
-    browser.url(resolveUrl(scenarioTags))
+    await browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
 
     const tags = world.pickle.tags.map((t) => t.name)
-    console.log(`🎯 Running scenario with tags: ${tags.join(', ')}`)
+    console.log(
+      `RUNNING: ${world.pickle.name} | ${world.pickle.tags.map((t) => t.name).join(',')}`
+    )
+
+    console.log(
+      `🎯 Running scenario: "${world.pickle.name}" | tags: ${tags.join(', ')}`
+    )
 
     let username, password, role
 
