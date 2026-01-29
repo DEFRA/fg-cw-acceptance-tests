@@ -4,7 +4,7 @@ import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
 
 import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
-
+import { execSync } from 'node:child_process'
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
@@ -197,15 +197,21 @@ export const config = {
   after: function (result, capabilities, specs) {
     console.log('in the after hook=======================')
 
-    if (isAccessibilityRun) {
-      fs.writeFileSync(
-        `./reports/accessibility/report-${Date.now()}.html`,
-        getHtmlReportByCategory().replace(
-          /<script>, <template> or <div> /g,
-          'script, template or div '
-        )
-      )
-    }
+    if (!isAccessibilityRun) return
+
+    const outDir = './reports/accessibility'
+    fs.mkdirSync(outDir, { recursive: true })
+
+    const html = getHtmlReportByCategory().replace(
+      /<script>, <template> or <div> /g,
+      'script, template or div '
+    )
+
+    fs.writeFileSync(`${outDir}/index.html`, html)
+
+    execSync('node --no-warnings generate-accessibility-report.js', {
+      stdio: 'inherit'
+    })
   },
 
   /**
