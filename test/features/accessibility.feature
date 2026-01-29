@@ -1,4 +1,4 @@
-@accessibility @admin
+@accessibility @admin @cw
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   
