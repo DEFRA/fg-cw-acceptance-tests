@@ -10,7 +10,8 @@ import path from 'node:path'
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
-const alreadyAnalysed = []
+// const alreadyAnalysed = []
+let analysedThisScenario = false
 
 // ---- Run mode (CDP profile -> tag selection) ----
 const profile =
@@ -39,7 +40,7 @@ const isAccessibilityRun = tagExpression.includes('@accessibility')
 
 // Optional: TEMP debug (remove once confirmed in CDP logs)
 // console.log('[CDP] profile/tagExpression', { profile, tagExpression })
-let inA11yAfterCommand = false
+// let inA11yAfterCommand = false
 
 export const config = {
   runner: 'local',
@@ -145,12 +146,15 @@ export const config = {
     bail: true
   },
   before: async function () {
-    console.log('in the before hook=======================')
-    if (isAccessibilityRun) {
-      // IMPORTANT: pass the browser/session so the lib can inject/attach to the page context
-      await init(browser)
+    if (!isAccessibilityRun) return
+
+    const origGetUrl = browser.getUrl.bind(browser)
+    browser.getUrl = async function () {
+      // if this starts spamming, you’ll know instantly
+      return await origGetUrl()
     }
   },
+
   afterTest: async function (
     test,
     context,
@@ -174,41 +178,41 @@ export const config = {
    * @param {object} error error object if any
    */
 
-  afterCommand: async function (commandName) {
-    if (!isAccessibilityRun) return
-    if (commandName === 'deleteSession') return
+  // afterCommand: async function (commandName) {
+  //   if (isAccessibilityRun) return
+  //   if (commandName === 'deleteSession') return
 
-    // critical: avoid infinite recursion / command storms
-    if (commandName === 'getUrl') return
-    if (inA11yAfterCommand) return
+  //   // critical: avoid infinite recursion / command storms
+  //   if (commandName === 'getUrl') return
+  //   if (inA11yAfterCommand) return
 
-    inA11yAfterCommand = true
-    try {
-      const actualUrl = await browser.getUrl()
+  //   inA11yAfterCommand = true
+  //   try {
+  //     const actualUrl = await browser.getUrl()
 
-      if (
-        actualUrl === 'about:blank' ||
-        /microsoft|ete\.access/.test(actualUrl)
-      )
-        return
+  //     if (
+  //       actualUrl === 'about:blank' ||
+  //       /microsoft|ete\.access/.test(actualUrl)
+  //     )
+  //       return
 
-      const url = new URL(actualUrl)
-      const formattedUrl = `${url.origin}${url.pathname}`
-      if (alreadyAnalysed.includes(formattedUrl)) return
-      alreadyAnalysed.push(formattedUrl)
+  //     const url = new URL(actualUrl)
+  //     const formattedUrl = `${url.origin}${url.pathname}`
+  //     if (alreadyAnalysed.includes(formattedUrl)) return
+  //     alreadyAnalysed.push(formattedUrl)
 
-      const hasViolationsFn = await browser.execute(
-        () => typeof window.violations === 'function'
-      )
-      if (!hasViolationsFn) return
+  //     const hasViolationsFn = await browser.execute(
+  //       () => typeof window.violations === 'function'
+  //     )
+  //     if (!hasViolationsFn) return
 
-      await analyse(browser, '')
-    } catch (e) {
-      console.warn('[a11y] analyse skipped:', e?.message || e)
-    } finally {
-      inA11yAfterCommand = false
-    }
-  },
+  //     await analyse(browser, '')
+  //   } catch (e) {
+  //     console.warn('[a11y] analyse skipped:', e?.message || e)
+  //   } finally {
+  //     inA11yAfterCommand = false
+  //   }
+  // },
 
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
@@ -259,6 +263,7 @@ export const config = {
    */
 
   beforeScenario: async function (world, result, context) {
+    analysedThisScenario = false
     if (isAccessibilityRun) {
       await init(browser)
     }
@@ -301,9 +306,25 @@ export const config = {
     }
   },
 
+  // afterStep: async function (step, scenario, result) {
+  //   if (result.error) {
+  //     await browser.takeScreenshot()
+  //   }
+  // },
+
   afterStep: async function (step, scenario, result) {
-    if (result.error) {
-      await browser.takeScreenshot()
+    if (!isAccessibilityRun) return
+    if (analysedThisScenario) return
+
+    const url = await browser.getUrl()
+    if (url === 'about:blank') return
+
+    analysedThisScenario = true
+
+    try {
+      await analyse(browser, '')
+    } catch (e) {
+      console.warn('[a11y] analyse failed:', e.message)
     }
   },
 
