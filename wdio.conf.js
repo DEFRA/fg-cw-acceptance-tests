@@ -5,6 +5,8 @@ import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
 import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
 import { execSync } from 'node:child_process'
+import path from 'node:path'
+
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
@@ -200,18 +202,26 @@ export const config = {
     if (!isAccessibilityRun) return
 
     const outDir = './reports/accessibility'
-    fs.mkdirSync(outDir, { recursive: true })
+    fs.mkdirSync(outDir, { recursive: true }) // keep this safety net
 
-    const html = getHtmlReportByCategory().replace(
-      /<script>, <template> or <div> /g,
-      'script, template or div '
-    )
+    try {
+      const html = getHtmlReportByCategory().replace(
+        /<script>, <template> or <div> /g,
+        'script, template or div '
+      )
+      fs.writeFileSync(`${outDir}/index.html`, html)
+    } catch (e) {
+      console.error('[a11y] Failed writing index.html', e)
+    }
 
-    fs.writeFileSync(`${outDir}/index.html`, html)
-
-    execSync('node --no-warnings generate-accessibility-report.js', {
-      stdio: 'inherit'
-    })
+    try {
+      execSync('node --no-warnings generate-accessibility-report.js', {
+        stdio: 'inherit'
+      })
+    } catch (e) {
+      console.error('[a11y] Failed generating accessibility report', e)
+      // DO NOT throw — don’t let reporting kill the suite
+    }
   },
 
   /**
@@ -275,6 +285,17 @@ export const config = {
 
   afterScenario: async function (world, result, context) {
     await browser.reloadSession()
+  },
+
+  onPrepare: function () {
+    // Only touch accessibility output when running accessibility
+    if (!isAccessibilityRun) return
+
+    const outDir = path.resolve('./reports/accessibility')
+
+    // Clean previous run (prevents stale uploads + mixed reports)
+    fs.rmSync(outDir, { recursive: true, force: true })
+    fs.mkdirSync(outDir, { recursive: true })
   },
 
   onComplete: function (exitCode, config, capabilities, results) {
