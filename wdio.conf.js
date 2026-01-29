@@ -10,6 +10,27 @@ const oneHour = 60 * 60 * 1000
 
 const alreadyAnalysed = []
 
+// ---- Run mode (CDP profile -> tag selection) ----
+const profile =
+  process.env.PROFILE ||
+  process.env.CDP_PROFILE ||
+  process.env.TEST_PROFILE ||
+  ''
+
+// If CDP provides a profile value, translate it into your existing tag mechanism
+if (profile === 'accessibility' && !process.env.SELECTED_TAGS) {
+  process.env.SELECTED_TAGS = '@accessibility'
+}
+
+// Default: functional tests
+const tagExpression = process.env.SELECTED_TAGS || '@cw'
+
+// Robust flag for hooks/reporting
+const isAccessibilityRun = tagExpression.includes('@accessibility')
+
+// Optional: TEMP debug (remove once confirmed in CDP logs)
+// console.log('[CDP] profile/tagExpression', { profile, tagExpression })
+
 export const config = {
   runner: 'local',
 
@@ -102,7 +123,7 @@ export const config = {
     snippets: true,
     source: true,
     strict: false,
-    tagExpression: '',
+    tagExpression,
     timeout: 180000,
     ignoreUndefinedDefinitions: false
   },
@@ -115,7 +136,9 @@ export const config = {
   },
   before: async function (capabilities, specs) {
     await browser.url('about:blank')
-    process.env.SELECTED_TAGS === '@accessibility' && (await init())
+    if (isAccessibilityRun) {
+      await init()
+    }
   },
   afterTest: async function (
     test,
@@ -140,10 +163,7 @@ export const config = {
    * @param {object} error error object if any
    */
   afterCommand: async function (commandName, args, result, error) {
-    if (
-      commandName !== 'deleteSession' &&
-      process.env.SELECTED_TAGS === '@accessibility'
-    ) {
+    if (commandName !== 'deleteSession' && isAccessibilityRun) {
       const actualUrl = await browser.getUrl()
 
       if (
@@ -170,7 +190,7 @@ export const config = {
   after: function (result, capabilities, specs) {
     console.log('in the after hook=======================')
 
-    process.env.SELECTED_TAGS === '@accessibility' &&
+    if (isAccessibilityRun) {
       fs.writeFileSync(
         `./reports/accessibility/report-${Date.now()}.html`,
         getHtmlReportByCategory().replace(
@@ -178,6 +198,7 @@ export const config = {
           'script, template or div '
         )
       )
+    }
   },
   /**
    * Gets executed right after terminating the webdriver session.
