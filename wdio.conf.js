@@ -4,7 +4,6 @@ import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
 
 import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
-import { execSync } from 'node:child_process'
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
