@@ -39,6 +39,7 @@ const isAccessibilityRun = tagExpression.includes('@accessibility')
 
 // Optional: TEMP debug (remove once confirmed in CDP logs)
 // console.log('[CDP] profile/tagExpression', { profile, tagExpression })
+let inA11yAfterCommand = false
 
 export const config = {
   runner: 'local',
@@ -172,38 +173,40 @@ export const config = {
    * @param {number} result 0 - command success, 1 - command error
    * @param {object} error error object if any
    */
+
   afterCommand: async function (commandName) {
     if (!isAccessibilityRun) return
     if (commandName === 'deleteSession') return
 
-    let actualUrl
+    // critical: avoid infinite recursion / command storms
+    if (commandName === 'getUrl') return
+    if (inA11yAfterCommand) return
+
+    inA11yAfterCommand = true
     try {
-      actualUrl = await browser.getUrl()
-    } catch {
-      return // session already dying
-    }
+      const actualUrl = await browser.getUrl()
 
-    if (actualUrl === 'about:blank' || /microsoft|ete\.access/.test(actualUrl))
-      return
+      if (
+        actualUrl === 'about:blank' ||
+        /microsoft|ete\.access/.test(actualUrl)
+      )
+        return
 
-    const url = new URL(actualUrl)
-    const formattedUrl = `${url.origin}${url.pathname}`
+      const url = new URL(actualUrl)
+      const formattedUrl = `${url.origin}${url.pathname}`
+      if (alreadyAnalysed.includes(formattedUrl)) return
+      alreadyAnalysed.push(formattedUrl)
 
-    if (alreadyAnalysed.includes(formattedUrl)) return
-
-    alreadyAnalysed.push(formattedUrl)
-
-    try {
       const hasViolationsFn = await browser.execute(
         () => typeof window.violations === 'function'
       )
       if (!hasViolationsFn) return
+
       await analyse(browser, '')
     } catch (e) {
-      console.warn(
-        '[a11y] analyse skipped (session/nav/injection not ready):',
-        e?.message || e
-      )
+      console.warn('[a11y] analyse skipped:', e?.message || e)
+    } finally {
+      inA11yAfterCommand = false
     }
   },
 
