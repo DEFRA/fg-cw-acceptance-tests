@@ -4,6 +4,7 @@ import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
 
 import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
+import { execSync } from 'node:child_process'
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
@@ -194,19 +195,26 @@ export const config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  after: function (result, capabilities, specs) {
-    console.log('in the after hook=======================')
+  after: function () {
+    if (!isAccessibilityRun) return
 
-    if (isAccessibilityRun) {
-      fs.writeFileSync(
-        `./reports/accessibility/report-${Date.now()}.html`,
-        getHtmlReportByCategory().replace(
-          /<script>, <template> or <div> /g,
-          'script, template or div '
-        )
+    const outDir = './reports/accessibility'
+    fs.mkdirSync(outDir, { recursive: true })
+
+    fs.writeFileSync(
+      `${outDir}/index.html`,
+      getHtmlReportByCategory().replace(
+        /<script>, <template> or <div> /g,
+        'script, template or div '
       )
-    }
+    )
+
+    // Build the index / friendly output (same as your local flow)
+    execSync('node --no-warnings generate-accessibility-report.js', {
+      stdio: 'inherit'
+    })
   },
+
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {object} config wdio configuration object
@@ -222,11 +230,17 @@ export const config = {
 
   beforeScenario: async function (world, result, context) {
     const scenarioTags = world.pickle.tags.map((t) => t.name)
-    browser.url(resolveUrl(scenarioTags))
+    await browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
 
     const tags = world.pickle.tags.map((t) => t.name)
-    console.log(`🎯 Running scenario with tags: ${tags.join(', ')}`)
+    console.log(
+      `RUNNING: ${world.pickle.name} | ${world.pickle.tags.map((t) => t.name).join(',')}`
+    )
+
+    console.log(
+      `🎯 Running scenario: "${world.pickle.name}" | tags: ${tags.join(', ')}`
+    )
 
     let username, password, role
 
