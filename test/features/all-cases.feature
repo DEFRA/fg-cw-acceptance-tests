@@ -1,7 +1,7 @@
 @cw @reader
 Feature: Caseworkers can view and manage applications from the All Cases page
 
-  @accessibility
+  
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -24,7 +24,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser
+  @assignUser @accessibility
   Scenario: Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
