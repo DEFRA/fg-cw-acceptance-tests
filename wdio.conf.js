@@ -24,6 +24,13 @@ if (profile === 'accessibility' && !process.env.SELECTED_TAGS) {
 
 // Default: functional tests
 const tagExpression = process.env.SELECTED_TAGS || '@cw'
+console.log('[CDP tags/profile]', {
+  PROFILE: process.env.PROFILE,
+  CDP_PROFILE: process.env.CDP_PROFILE,
+  TEST_PROFILE: process.env.TEST_PROFILE,
+  SELECTED_TAGS: process.env.SELECTED_TAGS,
+  tagExpression
+})
 
 // Robust flag for hooks/reporting
 const isAccessibilityRun = tagExpression.includes('@accessibility')
