@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import { browser } from '@wdio/globals'
-import { analyse, getHtmlReportByCategory, init } from './dist/wcagchecker.cjs'
+import { analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
 
 import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
@@ -145,15 +145,17 @@ export const config = {
     timeout: debug ? oneHour : 60000,
     bail: true
   },
-  before: async function () {
-    if (!isAccessibilityRun) return
+  // before: async function () {
+  // console.log('in before............')
+  // if (!isAccessibilityRun) return
 
-    const origGetUrl = browser.getUrl.bind(browser)
-    browser.getUrl = async function () {
-      // if this starts spamming, you’ll know instantly
-      return await origGetUrl()
-    }
-  },
+  // const origGetUrl = browser.getUrl.bind(browser)
+  // browser.getUrl = async function () {
+  //   // if this starts spamming, you’ll know instantly
+  //   return await origGetUrl()
+  // }
+  // console.log('end of before............')
+  // },
 
   afterTest: async function (
     test,
@@ -264,9 +266,9 @@ export const config = {
 
   beforeScenario: async function (world, result, context) {
     analysedThisScenario = false
-    if (isAccessibilityRun) {
-      await init(browser)
-    }
+    // if (isAccessibilityRun) {
+    //   await init(browser)
+    // }
     const scenarioTags = world.pickle.tags.map((t) => t.name)
     await browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
