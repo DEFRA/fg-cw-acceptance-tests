@@ -101,7 +101,7 @@ export const config = {
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send resp
   connectionRetryTimeout: 60000,
-  connectionRetryCount: 3,
+  connectionRetryCount: 1,
   framework: 'cucumber',
 
   reporters: [
@@ -265,37 +265,30 @@ export const config = {
    */
 
   beforeScenario: async function (world, result, context) {
+    console.log('Started before scenario.....')
     analysedThisScenario = false
-    // if (isAccessibilityRun) {
-    //   await init(browser)
-    // }
+
     const scenarioTags = world.pickle.tags.map((t) => t.name)
-    await browser.url(resolveUrl(scenarioTags))
+    browser.url(resolveUrl(scenarioTags))
     browser.options.baseUrl = resolveUrl(scenarioTags)
-
+    console.log('url is.....' + browser.options.baseUrl)
     const tags = world.pickle.tags.map((t) => t.name)
-    console.log(
-      `RUNNING: ${world.pickle.name} | ${world.pickle.tags.map((t) => t.name).join(',')}`
-    )
-
-    console.log(
-      `🎯 Running scenario: "${world.pickle.name}" | tags: ${tags.join(', ')}`
-    )
+    console.log(`Running scenario with tags: ${tags.join(', ')}`)
 
     let username, password, role
 
     if (tags.includes('@admin')) {
       username = process.env.ENTRA_ID_ADMIN_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'SA-FGCW ADMIN (Equal Experts)'
+      role = 'Test Admin'
     } else if (tags.includes('@reader')) {
       username = process.env.ENTRA_ID_READER_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'fgcw reader (Equal Experts)'
+      role = 'Test Reader'
     } else if (tags.includes('@writer')) {
       username = process.env.ENTRA_ID_WRITER_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'SA-FGCW WRITER (Equal Experts)'
+      role = 'Test Writer'
     }
 
     await browser.sharedStore.set('currentUser', { username, role })
@@ -307,6 +300,50 @@ export const config = {
       console.log('No role tag detected — skipping login.')
     }
   },
+
+  // beforeScenario: async function (world, result, context) {
+  //   analysedThisScenario = false
+  //   // if (isAccessibilityRun) {
+  //   //   await init(browser)
+  //   // }
+  //   const scenarioTags = world.pickle.tags.map((t) => t.name)
+  //   await browser.url(resolveUrl(scenarioTags))
+  //   browser.options.baseUrl = resolveUrl(scenarioTags)
+
+  //   const tags = world.pickle.tags.map((t) => t.name)
+  //   console.log(
+  //     `RUNNING: ${world.pickle.name} | ${world.pickle.tags.map((t) => t.name).join(',')}`
+  //   )
+
+  //   console.log(
+  //     `🎯 Running scenario: "${world.pickle.name}" | tags: ${tags.join(', ')}`
+  //   )
+
+  //   let username, password, role
+
+  //   if (tags.includes('@admin')) {
+  //     username = process.env.ENTRA_ID_ADMIN_USER
+  //     password = process.env.ENTRA_ID_USER_PASSWORD
+  //     role = 'SA-FGCW ADMIN (Equal Experts)'
+  //   } else if (tags.includes('@reader')) {
+  //     username = process.env.ENTRA_ID_READER_USER
+  //     password = process.env.ENTRA_ID_USER_PASSWORD
+  //     role = 'fgcw reader (Equal Experts)'
+  //   } else if (tags.includes('@writer')) {
+  //     username = process.env.ENTRA_ID_WRITER_USER
+  //     password = process.env.ENTRA_ID_USER_PASSWORD
+  //     role = 'SA-FGCW WRITER (Equal Experts)'
+  //   }
+
+  //   await browser.sharedStore.set('currentUser', { username, role })
+
+  //   if (username && password) {
+  //     console.log(`Performing Entra ID login for: ${username}`)
+  //     await entraLogin(username, password)
+  //   } else {
+  //     console.log('No role tag detected — skipping login.')
+  //   }
+  // },
 
   // afterStep: async function (step, scenario, result) {
   //   if (result.error) {
