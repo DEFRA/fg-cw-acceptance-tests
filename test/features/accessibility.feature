@@ -1,7 +1,7 @@
-@accessibility @admin @cw
+@cw @assignUser @admin @accessibility
 Feature: Caseworkers can view and manage applications from the All Cases page
 
-  @cw @assignUser @admin
+  @cw @assignUser @admin @accessibility
   Scenario: Accessibility -Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
