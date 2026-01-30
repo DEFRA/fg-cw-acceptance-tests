@@ -20,9 +20,9 @@ publish_dir () {
   fi
 }
 
-if [ "${PROFILE:-}" = "accessibility" ]; then
-  publish_dir "$PWD/reports/accessibility" ""
-else
+# if [ "${PROFILE:-}" = "accessibility" ]; then
+#   publish_dir "$PWD/reports/accessibility" ""
+# else
   publish_dir "$PWD/allure-report" ""
-fi
+# fi
 
