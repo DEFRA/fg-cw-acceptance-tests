@@ -24,6 +24,28 @@ class UserDetailsPage extends BasePage {
     await expect(actualName).toEqual(expected.name)
     await expect(actualEmail).toEqual(expected.email)
   }
+
+  get appRoleTags() {
+    return $$(
+      '//h2[normalize-space()="App roles"]/following-sibling::div//strong'
+    )
+  }
+
+  get noAppRolesMessage() {
+    return $('p=No App Roles have been allocated to this user')
+  }
+
+  async getAppRoles() {
+    if (await this.noAppRolesMessage.isExisting()) {
+      return []
+    }
+
+    const roles = []
+    for (const role of await this.appRoleTags) {
+      roles.push((await role.getText()).trim())
+    }
+    return roles
+  }
 }
 
 export default new UserDetailsPage()

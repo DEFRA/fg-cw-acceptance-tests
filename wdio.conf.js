@@ -280,15 +280,15 @@ export const config = {
     if (tags.includes('@admin')) {
       username = process.env.ENTRA_ID_ADMIN_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'Test Admin'
+      role = 'SA-FGCW ADMIN (Equal Experts)'
     } else if (tags.includes('@reader')) {
       username = process.env.ENTRA_ID_READER_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'Test Reader'
+      role = 'fgcw reader (Equal Experts)'
     } else if (tags.includes('@writer')) {
       username = process.env.ENTRA_ID_WRITER_USER
       password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'Test Writer'
+      role = 'SA-FGCW WRITER (Equal Experts)'
     }
 
     await browser.sharedStore.set('currentUser', { username, role })

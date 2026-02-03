@@ -1,7 +1,6 @@
-@cw @reader
+@cw @writer @test
 Feature: Caseworkers can view and manage applications from the All Cases page
 
-  
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -12,7 +11,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the Timeline should display these messages
       | Case received |
 
-  @assignUser @admin
+  @assignUser
   Scenario: Admin user can assign a case to users
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -24,7 +23,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser  @admin
+  @assignUser
   Scenario: Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -161,8 +160,8 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user click the "Agreements" link
     Then the user should see Agreements page is displayed
     And the user should see case agreements details
-      | Agreement status | Reference    | Date created | Date accepted | Start date  | View           |
-      | Offered          | SFI843094265 | Date         | Not accepted  | Not started | View agreement |
+      | Agreement status | Reference     | Date created | Date accepted | Start date  | View           |
+      | Offered          | FPTT843094265 | Date         | Not accepted  | Not started | View agreement |
     When the user click the "Back to applications" link
     And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
@@ -346,6 +345,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"
     When the user opens the application from the "All cases" list
     When the user click the "Timeline" link
@@ -375,8 +375,8 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user waits until the agreements message "Withdrawn" is displayed
     And the user waits for the agreements message
     And the user should see case agreements details
-      | Agreement status | Reference    | Date created | Date accepted | Start date  | View           |
-      | Withdrawn        | SFI843094265 | Date         | Not accepted  | Not started | View agreement |
+      | Agreement status | Reference     | Date created | Date accepted | Start date  | View           |
+      | Withdrawn        | FPTT843094265 | Date         | Not accepted  | Not started | View agreement |
     And the user click the "Back to applications" link
     And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"
@@ -395,11 +395,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Review scheme budget as a finance officer    |
 
 
-    Scenario: User can view and run Land parcel calculations
-      Given the user has submitted an application for the "frps-private-beta" grant
-      When the user waits for the case to appear on the Casework Portal
-      And the user opens the application from the "All cases" list
-      And the user click the "Calculations" link
+  Scenario: User can view and run Land parcel calculations
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Calculations" link
   #defect raised
 #      Then the user can view Land parcel calculations page
 
