@@ -5,7 +5,6 @@ import { analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
 import { resolveUrl } from './test/utils/urlResolver.js'
 import { entraLogin } from './test/utils/loginHelper.js'
 import { execSync } from 'node:child_process'
-import path from 'node:path'
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
@@ -301,56 +300,6 @@ export const config = {
     }
   },
 
-  // beforeScenario: async function (world, result, context) {
-  //   analysedThisScenario = false
-  //   // if (isAccessibilityRun) {
-  //   //   await init(browser)
-  //   // }
-  //   const scenarioTags = world.pickle.tags.map((t) => t.name)
-  //   await browser.url(resolveUrl(scenarioTags))
-  //   browser.options.baseUrl = resolveUrl(scenarioTags)
-
-  //   const tags = world.pickle.tags.map((t) => t.name)
-  //   console.log(
-  //     `RUNNING: ${world.pickle.name} | ${world.pickle.tags.map((t) => t.name).join(',')}`
-  //   )
-
-  //   console.log(
-  //     `🎯 Running scenario: "${world.pickle.name}" | tags: ${tags.join(', ')}`
-  //   )
-
-  //   let username, password, role
-
-  //   if (tags.includes('@admin')) {
-  //     username = process.env.ENTRA_ID_ADMIN_USER
-  //     password = process.env.ENTRA_ID_USER_PASSWORD
-  //     role = 'SA-FGCW ADMIN (Equal Experts)'
-  //   } else if (tags.includes('@reader')) {
-  //     username = process.env.ENTRA_ID_READER_USER
-  //     password = process.env.ENTRA_ID_USER_PASSWORD
-  //     role = 'fgcw reader (Equal Experts)'
-  //   } else if (tags.includes('@writer')) {
-  //     username = process.env.ENTRA_ID_WRITER_USER
-  //     password = process.env.ENTRA_ID_USER_PASSWORD
-  //     role = 'SA-FGCW WRITER (Equal Experts)'
-  //   }
-
-  //   await browser.sharedStore.set('currentUser', { username, role })
-
-  //   if (username && password) {
-  //     console.log(`Performing Entra ID login for: ${username}`)
-  //     await entraLogin(username, password)
-  //   } else {
-  //     console.log('No role tag detected — skipping login.')
-  //   }
-  // },
-
-  // afterStep: async function (step, scenario, result) {
-  //   if (result.error) {
-  //     await browser.takeScreenshot()
-  //   }
-  // },
-
   afterStep: async function (step, scenario, result) {
     if (!isAccessibilityRun) return
     if (analysedThisScenario) return
@@ -370,17 +319,6 @@ export const config = {
   afterScenario: async function (world, result, context) {
     if (isAccessibilityRun) return // DO NOT reload sessions during a11y collection
     await browser.reloadSession()
-  },
-
-  onPrepare: function () {
-    // Only touch accessibility output when running accessibility
-    if (!isAccessibilityRun) return
-
-    const outDir = path.resolve('./reports/accessibility')
-
-    // Clean previous run (prevents stale uploads + mixed reports)
-    fs.rmSync(outDir, { recursive: true, force: true })
-    fs.mkdirSync(outDir, { recursive: true })
   },
 
   onComplete: function (exitCode, config, capabilities, results) {
