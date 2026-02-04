@@ -1,7 +1,8 @@
 {
   "headers": {
     "adminPage": "Users and roles",
-    "usersPage": "Users"
+    "usersPage": "Users",
+    "userRolesPage": "User roles"
   },
   "labels": {
     "submitButton": "Submit",

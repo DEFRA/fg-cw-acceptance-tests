@@ -28,7 +28,7 @@ class AgreementsPage extends BasePage {
       }
 
       if (expectedKey.toUpperCase() === 'REFERENCE') {
-        const refRegex = /^SFI\d{9}$/
+        const refRegex = /^FPTT\d{9}$/
         await expect(actualValue).toMatch(refRegex)
         continue
       }
