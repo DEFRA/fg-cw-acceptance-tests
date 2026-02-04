@@ -1,4 +1,4 @@
-@cw @writer @test
+@cw @writer
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User can view a submitted application on the Casework Portal
