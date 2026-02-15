@@ -4,7 +4,7 @@ export default class BasePage {
   async getHeaderText(selector = 'h1') {
     const element = await $(selector)
     await element.waitForDisplayed({ timeout: config.waitforTimeout })
-    return await element.getText()
+    return element.getText()
   }
 
   async clickLinkByText(text) {

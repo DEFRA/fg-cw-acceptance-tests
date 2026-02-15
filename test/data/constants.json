@@ -2,7 +2,10 @@
   "headers": {
     "adminPage": "Users and roles",
     "usersPage": "Users",
-    "userRolesPage": "User roles"
+    "userRolesPage": "User roles",
+    "rolesPage": "Roles",
+    "createRolePage": "Create role",
+    "createUserPage": "Create user"
   },
   "labels": {
     "submitButton": "Submit",
