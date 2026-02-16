@@ -133,39 +133,28 @@ Then(
 Then('the role should not be available for assignment', async function () {
   await UserRolesPage.assertRoleNotAvailable(this.selectedRoleCode)
 
-  console.log(this.selectedRoleCode)
-  console.log('*********')
-
   const userHasRole = await UserRolesPage.isRoleCurrentlyAssigned(
     this.selectedRoleCode
   )
 
   if (userHasRole) {
-    // Role should still be visible because user already has it
     await UserRolesPage.assertRoleAvailable(this.selectedRoleCode)
   } else {
-    // Role should not be visible
     await UserRolesPage.assertRoleNotAvailable(this.selectedRoleCode)
   }
 })
 
 Then('the role is reverted back to assignable', async function () {
-  // Navigate back to Manage roles page if needed
   await $('a=Manage roles').click()
 
-  // Open the same role again
   await RolesPage.roleRow(this.selectedRoleCode).$('th a').click()
 
-  // Ensure edit page loaded
   await EditRolePage.assertEditRolePageLoaded(this.selectedRoleCode)
 
-  // Set back to Yes
   await EditRolePage.setAssignable('Yes')
 
-  // Confirm update
   await EditRolePage.confirmUpdate()
 
-  // Verify in table
   const assignable = await RolesPage.getAssignableByCode(this.selectedRoleCode)
 
   await expect(assignable).toEqual('Yes')

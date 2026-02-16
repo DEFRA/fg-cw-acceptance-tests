@@ -68,7 +68,7 @@ Feature: Casework portal user management
     When the user updates the role description with a random value
     Then the user should see previously selected role description updated correctly
 
-  @editRole @test
+  @editRole
   Scenario: Admin user can change a role to not assignable and the change is reflected on Manage users roles page
     Given the user navigates to casework user management page
     Then the user should see Admin page
