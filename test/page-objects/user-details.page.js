@@ -31,10 +31,7 @@ class UserDetailsPage extends BasePage {
   }
 
   async assertUserDetails(expected) {
-    console.log(expected)
     const actualHeading = (await this.getHeader()).trim()
-    console.log(actualHeading)
-    console.log('*****************')
     const actualEmail = (await this.userEmail.getText()).trim()
     const actualLastLogin = (await this.userLastLogin.getText()).trim()
 
@@ -42,9 +39,6 @@ class UserDetailsPage extends BasePage {
       actualLastLogin,
       'D MMMM YYYY HH:mm'
     ).format('D MMM YYYY HH:mm')
-
-    console.log(actualEmail)
-    console.log('******actualEmail***********')
 
     await expect(actualHeading).toEqual(expected.name + ' details')
     await expect(actualEmail).toEqual(expected.email)
