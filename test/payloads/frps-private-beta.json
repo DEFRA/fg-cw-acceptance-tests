@@ -22,13 +22,13 @@
         "landlinePhoneNumber": "01235863957",
         "name": "Texels Hire & Contracting",
         "address": {
-          "line1": "Benbrigge House",
-          "line2": "ALBRIGHTON",
-          "line3": null,
-          "line4": null,
-          "line5": null,
-          "street": "BRIDGE ROAD",
-          "city": "GRIMSBY",
+          "line1": "Benbrigge House - line 1",
+          "line2": "ALBRIGHTON - line 2",
+          "line3": "Cuckoo Hill Farm - line 3",
+          "line4": "Cuckoo Hill Farm -line 4",
+          "line5": "Farm road -line 5",
+          "street": "BRIDGE ROAD - Street",
+          "city": "GRIMSBY - City",
           "postalCode": "DY13 0UY"
         }
       },

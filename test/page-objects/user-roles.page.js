@@ -14,6 +14,10 @@ class UserRolesPage extends BasePage {
   async getPreSelectedRoles() {
     const checked = await $$('input[name="roles"]:checked')
 
+    if (checked.length === 0) {
+      return ['No Manage grants roles have been allocated to this user']
+    }
+
     const roles = []
     for (const checkbox of checked) {
       roles.push(await checkbox.getValue())
@@ -24,22 +28,44 @@ class UserRolesPage extends BasePage {
 
   async assertPreSelectedRoles(expected = []) {
     const actual = await this.getPreSelectedRoles()
+    const normalize = (arr) =>
+      arr.map((role) => role.replace(/,$/, '').trim()).sort()
 
-    if (expected.length === 0) {
-      await expect(actual).toEqual([])
+    const normalizedActual = normalize(actual)
+    const normalizedExpected = normalize(expected)
+
+    if (normalizedExpected.length === 0) {
+      await expect(normalizedActual).toEqual([])
       return
     }
-    await expect(actual.sort()).toEqual(expected.sort())
+    await expect(normalizedActual).toEqual(normalizedExpected)
   }
 
   async assertPreSelectedUser(expected) {
     const actualUserName = await this.getDisplayedUserName()
-    console.log(expected)
-    console.log('**********************')
-    console.log(actualUserName)
-    console.log('**********************')
-    console.log(expected.name)
     await expect(actualUserName).toEqual(expected.name)
+  }
+
+  async isRoleCurrentlyAssigned(roleCode) {
+    const roleCheckbox = await $(`input[name="roles"][value="${roleCode}"]`)
+
+    if (!(await roleCheckbox.isExisting())) {
+      return false
+    }
+
+    return await roleCheckbox.isSelected()
+  }
+
+  async assertRoleAvailable(roleCode) {
+    const roleCheckbox = await $(`input[name="roles"][value="${roleCode}"]`)
+
+    await expect(roleCheckbox).toBeExisting()
+  }
+
+  async assertRoleNotAvailable(roleCode) {
+    const roleCheckbox = await $(`input[name="roles"][value="${roleCode}"]`)
+
+    await expect(roleCheckbox).not.toBeExisting()
   }
 }
 
