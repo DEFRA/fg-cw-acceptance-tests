@@ -73,7 +73,7 @@ class CreateRolePage extends BasePage {
     await this.clickConfirm()
 
     return {
-      code,
+      roleCode,
       description,
       assignable
     }

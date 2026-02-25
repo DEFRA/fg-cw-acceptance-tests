@@ -6,9 +6,7 @@ class UserRolesPage extends BasePage {
   }
 
   async getDisplayedUserName() {
-    const text = await this.userInfoText.getText()
-
-    return text.replace('User:', '').trim()
+    return await this.getHeaderText()
   }
 
   async getPreSelectedRoles() {
@@ -43,7 +41,7 @@ class UserRolesPage extends BasePage {
 
   async assertPreSelectedUser(expected) {
     const actualUserName = await this.getDisplayedUserName()
-    await expect(actualUserName).toEqual(expected.name)
+    await expect(actualUserName).toEqual(expected.name + ' roles')
   }
 
   async isRoleCurrentlyAssigned(roleCode) {

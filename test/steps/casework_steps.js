@@ -1,5 +1,9 @@
 import { Given, Then, When } from '@wdio/cucumber-framework'
-import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
+import {
+  generatedClientRef,
+  getRequest,
+  postRequest
+} from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
@@ -270,7 +274,15 @@ Then('the user {string} with a comment', async function (applicationDecision) {
 })
 Then('the case status should be {string}', async function (status) {
   const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
-  expect(caseStatus).toEqual(status)
+  try {
+    await expect(caseStatus).toEqual(status)
+  } catch (err) {
+    throw new Error(
+      `Case status mismatch for ClientRef: ${generatedClientRef}
+Expected: "${status}"
+Received: "${caseStatus}"`
+    )
+  }
 })
 Then('the user should see {string} tab', async function (link) {
   await TasksPage.waitForElement(link)
@@ -451,3 +463,53 @@ Then(/^the user can view Land parcel calculations page$/, async function () {
     'Land parcel calculations'
   )
 })
+When(
+  /^the user click "([^"]*)" with a comment$/,
+  async function (applicationDecision) {
+    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+    await TasksPage.approvalNotes(code)
+  }
+)
+Then(
+  'the case details on GAS API for {string} should be:',
+  async function (code, dataTable) {
+    const apiResponse = await getRequest(
+      `${code}/applications/${generatedClientRef}/status`
+    )
+
+    expect(apiResponse.statusCode).toBe(200)
+
+    const expected = dataTable.rowsHash()
+
+    const body = apiResponse.body
+    const actual = Array.isArray(body) ? body[0] : body
+
+    if (!actual) {
+      throw new Error(
+        `Response body is empty for clientRef: ${generatedClientRef}`
+      )
+    }
+
+    for (const key of Object.keys(expected)) {
+      if (key === 'clientRef') {
+        if (actual.clientRef !== generatedClientRef) {
+          throw new Error(
+            `Mismatch for key "clientRef"
+Expected: ${generatedClientRef}
+Received: ${actual.clientRef}`
+          )
+        }
+        continue
+      }
+
+      if (actual[key] !== expected[key]) {
+        throw new Error(
+          `Mismatch for key "${key}"
+Expected: ${expected[key]}
+Received: ${actual[key]}
+clientRef: ${generatedClientRef}`
+        )
+      }
+    }
+  }
+)
