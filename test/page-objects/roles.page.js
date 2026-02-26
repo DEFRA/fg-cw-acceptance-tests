@@ -65,9 +65,9 @@ class RolesPage extends BasePage {
    * @param {object} expected - { code, description, assignable }
    */
   async assertRoleExists(expected) {
-    const actual = await this.getRoleDetails(expected.code)
+    const actual = await this.getRoleDetails(expected.roleCode)
 
-    await expect(actual.roleName).toEqual(expected.code)
+    await expect(actual.roleName).toEqual(expected.roleCode)
     await expect(actual.description).toEqual(expected.description)
     await expect(actual.assignable).toEqual(expected.assignable ? 'Yes' : 'No')
   }

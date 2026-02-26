@@ -6,14 +6,14 @@ Feature: Casework portal user management
     Then the user should see Admin page
     When the user opens the "Manage users" page
     Then the user should see Users page
-    When the user navigate to the User details page
+    When the user capture and navigate to the User details page
     Then the user should see correct user details
 
   Scenario: User app roles should display what selected on user roles page
     Given the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage users" page
-    When the user navigate to the User details page
+    When the user capture and navigate to the User details page
     And the user capture the displayed app roles
     And the user click the "Update roles" link
     Then the user should see User roles page
@@ -55,6 +55,17 @@ Feature: Casework portal user management
     Then the user remain on the page with a "Enter a name" error message displayed
     Then the user remain on the page with a "Enter an email address" error message displayed
 
+  Scenario: Admin user cannot create new user with already existing email
+    Given the user navigates to casework user management page
+    Then the user should see Admin page
+    When the user opens the "Manage users" page
+    And the user capture random user details
+    And the user click the "Create user" link
+    And the user enters random user name
+    And the user enters already existing email
+    And the user click the "Confirm" button
+    Then the user remain on the page with a "A user with this email address already exists" error message displayed
+
   @editRole
   Scenario: Admin user can update role description and description should be mandatory
     Given the user navigates to casework user management page
@@ -83,7 +94,7 @@ Feature: Casework portal user management
 
     When the user navigates to casework user management page
     And the user opens the "Manage users" page
-    And the user navigate to the User details page
+    And the user capture and navigate to the User details page
     And the user click the "Update roles" link
 
     Then the role should not be available for assignment

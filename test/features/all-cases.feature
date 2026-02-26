@@ -1,4 +1,4 @@
-@cw @writer
+@cw @writer @test
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User can view a submitted application on the Casework Portal
@@ -152,16 +152,16 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Check if any land parcels are within an SSSI | Accepted |
       | Check payment amount                         | Accepted |
       | Review scheme budget as a finance officer    | Accepted |
-    And the user click the "Back to applications" link
+    Then the user should see "Agreements" tab
+    When the user click the "Back to applications" link
     And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
     When the user opens the application from the "All cases" list
-    Then the user should see "Agreements" tab
     When the user click the "Agreements" link
     Then the user should see Agreements page is displayed
     And the user should see case agreements details
-      | Agreement status | Reference     | Date created | Date accepted | Start date  | View           |
-      | Offered          | FPTT843094265 | Date         | Not accepted  | Not started | View agreement |
+      | Agreement status | Reference     | Date accepted | Start date  | End date    | View           |
+      | Offered          | FPTT843094265 | Not accepted  | Not started | Not started | View agreement |
     When the user click the "Back to applications" link
     And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
@@ -356,7 +356,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
 
   @withdrawn
-  Scenario: Casework can withdrawn application post-agreement
+  Scenario: Casework can withdrawn application post agreement - Agreement Drafted
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
@@ -369,14 +369,61 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see "Agreements" tab
+    And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
+    Then the case status should be "Agreement drafted"
+    And the user opens the application from the "All cases" list
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
     When the user click the "Agreements" link
     And the user waits until the agreements message "Withdrawn" is displayed
     And the user waits for the agreements message
     And the user should see case agreements details
-      | Agreement status | Reference     | Date created | Date accepted | Start date  | View           |
-      | Withdrawn        | FPTT843094265 | Date         | Not accepted  | Not started | View agreement |
+      | Agreement status | Reference     | Date accepted | Start date  | End date    | View           |
+      | Withdrawn        | FPTT843094265 | Not accepted  | Not started | Not started | View agreement |
+    And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
+    Then the case status should be "Withdrawn"
+
+
+  @withdrawn
+  Scenario: Casework can withdrawn application post agreement - Agreement Offered
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+    When the user select "Confirm" to complete "Check draft funding agreement" task
+    When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+    Then the user should see below "frps-private-beta" tasks details
+      | Check draft funding agreement           | Confirmed |
+      | Notify customer that agreement is ready | Confirmed |
+    And the user selects "Agreement sent" for the case
+    When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
+
+    And the user click the "Back to applications" link
+    And the user waits for the case status to be updated
+    Then the case status should be "Agreement offered"
+    And the user opens the application from the "All cases" list
+
+    When the user click "Withdraw Application" with a comment
+    And the user click the "Withdraw" button
+    And the user waits for the case status to be updated
+
+    When the user click the "Agreements" link
+    And the user waits until the agreements message "Withdrawn" is displayed
+    And the user waits for the agreements message
+    And the user should see case agreements details
+      | Agreement status | Reference     | Date accepted | Start date  | End date    | View           |
+      | Withdrawn        | FPTT843094265 | Not accepted  | Not started | Not started | View agreement |
     And the user click the "Back to applications" link
     And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"

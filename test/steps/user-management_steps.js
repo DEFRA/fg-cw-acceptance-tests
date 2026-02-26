@@ -15,9 +15,12 @@ Given('the user navigates to casework user management page', async function () {
 Then('the user should see Admin page', async function () {
   await expect(await AdminPage.getHeaderText()).toEqual(text.headers.adminPage)
 })
-When('the user navigate to the User details page', async function () {
-  await UsersPage.clickRandomViewAndCaptureDetails(this)
-})
+When(
+  'the user capture and navigate to the User details page',
+  async function () {
+    await UsersPage.clickRandomViewAndCaptureDetails(this)
+  }
+)
 Then('the user should see correct user details', async function () {
   await UserDetailsPage.assertUserDetails(this.selectedUser)
 })
@@ -27,7 +30,7 @@ Then('the user should see Users page', async function () {
 
 Then('the user should see User roles page', async function () {
   await expect(await UserRolesPage.getHeaderText()).toEqual(
-    text.headers.userRolesPage
+    this.selectedUser.name + ' roles'
   )
 })
 Then('the user capture the displayed app roles', async function () {
@@ -158,4 +161,13 @@ Then('the role is reverted back to assignable', async function () {
   const assignable = await RolesPage.getAssignableByCode(this.selectedRoleCode)
 
   await expect(assignable).toEqual('Yes')
+})
+When(/^the user enters random user name$/, async function () {
+  await CreateUserPage.enterName('NAME')
+})
+When(/^the user enters already existing email$/, async function () {
+  await CreateUserPage.enterEmail(this.selectedUser.email)
+})
+When(/^the user capture random user details$/, async function () {
+  await UsersPage.captureRandomUserDetails(this)
 })
