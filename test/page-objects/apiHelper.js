@@ -4,45 +4,68 @@ import { config } from '../../wdio.conf.js'
 
 export let generatedClientRef = ''
 
-export async function postRequest(endpoint, payloadPath, headers = {}) {
-  const payloadData = await fs.readFile(payloadPath, 'utf-8')
-  let payload = JSON.parse(payloadData)
+const DEFAULT_HEADERS = {
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${process.env.GAS_KEY}`
+}
 
-  payload = requestPayload(payload)
-  const url = `${config.gasUrl}${endpoint}`
+function buildUrl(endpoint, queryParams) {
+  const queryString = queryParams
+    ? new URLSearchParams(queryParams).toString()
+    : ''
+  return `${config.gasUrl}${endpoint}${queryString ? `?${queryString}` : ''}`
+}
 
+function parseJsonSafe(payloadBuffer) {
+  const text = payloadBuffer?.toString?.().trim()
+  if (!text) return null
+
+  try {
+    return JSON.parse(text)
+  } catch (err) {
+    console.warn('Response body is not valid JSON:', err)
+    return null
+  }
+}
+
+async function apiRequest(method, url, { jsonBody, headers = {} } = {}) {
   const wreck = Wreck.defaults({
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.GAS_KEY}`,
-      ...headers
-    }
+    headers: { ...DEFAULT_HEADERS, ...headers }
   })
 
   try {
-    const { res, payload: responsePayload } = await wreck.post(url, {
-      payload: JSON.stringify(payload)
-    })
+    const options = {}
 
-    let responseBody = null
-
-    const responseText = responsePayload?.toString?.().trim()
-    if (responseText) {
-      try {
-        responseBody = JSON.parse(responseText)
-      } catch (err) {
-        console.warn('Response body is not valid JSON:', err)
-      }
+    if (jsonBody !== undefined) {
+      options.payload = JSON.stringify(jsonBody)
     }
+
+    const { res, payload } =
+      method === 'GET'
+        ? await wreck.get(url, options)
+        : await wreck.post(url, options)
 
     return {
       statusCode: res.statusCode,
-      body: responseBody
+      body: parseJsonSafe(payload)
     }
   } catch (error) {
-    console.error('API Request Failed:', error)
+    console.error(`API failed: ${error.message}`)
     throw error
   }
+}
+export async function postRequest(endpoint, payloadPath, headers = {}) {
+  const payloadData = await fs.readFile(payloadPath, 'utf-8')
+  let payload = JSON.parse(payloadData)
+  payload = requestPayload(payload)
+
+  const url = buildUrl(endpoint)
+  return apiRequest('POST', url, { jsonBody: payload, headers })
+}
+
+export async function getRequest(endpoint, queryParams = {}, headers = {}) {
+  const url = buildUrl(endpoint, queryParams)
+  return apiRequest('GET', url, { headers })
 }
 
 export function generateRandomClientRef() {
