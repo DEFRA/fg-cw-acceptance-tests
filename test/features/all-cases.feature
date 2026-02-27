@@ -154,7 +154,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Review scheme budget as a finance officer    | Accepted |
     Then the user should see "Agreements" tab
     When the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
     When the user opens the application from the "All cases" list
     When the user click the "Agreements" link
@@ -163,7 +162,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Agreement status | Reference     | Date accepted | Start date  | End date    | View           |
       | Offered          | FPTT843094265 | Not accepted  | Not started | Not started | View agreement |
     When the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
 
   @agreements
@@ -204,7 +202,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user click the "Confirm" button
     Then the user should see "Customer Agreement Review" message
     When the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Agreement offered"
 
   @case-status
@@ -216,12 +213,10 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Put on hold" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "On hold"
     When the user opens the application from the "All cases" list
     And the user click "Resume" the case with a comment
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "In review"
 
   @case-status @reject
@@ -233,12 +228,10 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Reject Application" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Rejected"
     When the user opens the application from the "All cases" list
     And the user click "Reinstate Application" the case with a comment
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "In review"
 
   Scenario:User cannot start task without clicking the start button
@@ -345,7 +338,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"
     When the user opens the application from the "All cases" list
     When the user click the "Timeline" link
@@ -370,7 +362,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Confirm" button
     Then the user should see "Agreements" tab
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Agreement drafted"
     And the user opens the application from the "All cases" list
     And the user selects "Withdraw application" for the case with a comment
@@ -382,7 +373,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Agreement status | Reference     | Date accepted | Start date  | End date    | View           |
       | Withdrawn        | FPTT843094265 | Not accepted  | Not started | Not started | View agreement |
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"
 
 
@@ -410,13 +400,11 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see "Customer Agreement Review" message
 
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Agreement offered"
     And the user opens the application from the "All cases" list
 
     When the user click "Withdraw Application" with a comment
     And the user click the "Withdraw" button
-    And the user waits for the case status to be updated
 
     When the user click the "Agreements" link
     And the user waits until the agreements message "Withdrawn" is displayed
@@ -425,7 +413,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | Agreement status | Reference     | Date accepted | Start date  | End date    | View           |
       | Withdrawn        | FPTT843094265 | Not accepted  | Not started | Not started | View agreement |
     And the user click the "Back to applications" link
-    And the user waits for the case status to be updated
     Then the case status should be "Withdrawn"
 
   @taskNotes
