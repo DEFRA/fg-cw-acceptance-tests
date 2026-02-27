@@ -272,17 +272,26 @@ Then('the user {string} with a comment', async function (applicationDecision) {
   await AllcasesPage.selectRadioByValue(code)
   await TasksPage.approvalNotes(code)
 })
-Then('the case status should be {string}', async function (status) {
-  const caseStatus = await AllcasesPage.getStatusForACase(generatedClientRef)
-  try {
-    await expect(caseStatus).toEqual(status)
-  } catch (err) {
-    throw new Error(
-      `Case status mismatch for ClientRef: ${generatedClientRef}
-Expected: "${status}"
-Received: "${caseStatus}"`
-    )
-  }
+Then('the case status should be {string}', async function (expectedStatus) {
+  const clientRef = generatedClientRef // or this.generatedClientRef if you store it on world
+
+  await browser.waitUntil(
+    async () => {
+      await browser.refresh()
+      const currentStatus = await AllcasesPage.getStatusForACase(clientRef)
+      return currentStatus.trim() === expectedStatus
+    },
+    {
+      timeout: 30000,
+      interval: 2000,
+      timeoutMsg: async () => {
+        const finalStatus = await AllcasesPage.getStatusForACase(clientRef)
+        return `Case status did not update in time for ClientRef: ${clientRef}
+Expected: "${expectedStatus}"
+Last seen: "${finalStatus}"`
+      }
+    }
+  )
 })
 Then('the user should see {string} tab', async function (link) {
   await TasksPage.waitForElement(link)
@@ -455,9 +464,7 @@ When(
     }
   }
 )
-When(/^the user waits for the case status to be updated$/, async function () {
-  await browser.refresh()
-})
+
 Then(/^the user can view Land parcel calculations page$/, async function () {
   expect(await CalculationsPage.getHeaderText()).toEqual(
     'Land parcel calculations'
