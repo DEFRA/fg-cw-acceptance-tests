@@ -1,9 +1,5 @@
 import { Given, Then, When } from '@wdio/cucumber-framework'
-import {
-  generatedClientRef,
-  getRequest,
-  postRequest
-} from '../page-objects/apiHelper.js'
+import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
@@ -480,43 +476,13 @@ When(
 Then(
   'the case details on GAS API for {string} should be:',
   async function (code, dataTable) {
-    const apiResponse = await getRequest(
-      `${code}/applications/${generatedClientRef}/status`
-    )
-
-    expect(apiResponse.statusCode).toBe(200)
-
     const expected = dataTable.rowsHash()
+    const clientRef = generatedClientRef
 
-    const body = apiResponse.body
-    const actual = Array.isArray(body) ? body[0] : body
-
-    if (!actual) {
-      throw new Error(
-        `Response body is empty for clientRef: ${generatedClientRef}`
-      )
-    }
-
-    for (const key of Object.keys(expected)) {
-      if (key === 'clientRef') {
-        if (actual.clientRef !== generatedClientRef) {
-          throw new Error(
-            `Mismatch for key "clientRef"
-Expected: ${generatedClientRef}
-Received: ${actual.clientRef}`
-          )
-        }
-        continue
-      }
-
-      if (actual[key] !== expected[key]) {
-        throw new Error(
-          `Mismatch for key "${key}"
-Expected: ${expected[key]}
-Received: ${actual[key]}
-clientRef: ${generatedClientRef}`
-        )
-      }
-    }
+    await TasksPage.waitForApplicationStatusApi({
+      code,
+      clientRef,
+      expected
+    })
   }
 )

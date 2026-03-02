@@ -15,7 +15,6 @@ Feature: SFI Grant Application status
 
     ### start the case
     And the user click the "Start" button
-    And the user refresh the browser
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD          |
       | stage     | REVIEW_APPLICATION |
@@ -26,7 +25,7 @@ Feature: SFI Grant Application status
     ## Reject the case
     And the user selects "Reject Application" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD            |
       | stage     | REVIEW_APPLICATION   |
@@ -37,7 +36,6 @@ Feature: SFI Grant Application status
     ## reinstate the application
     When the user click "Reinstate Application" with a comment
     And the user click the "Reinstate Application" button
-    And the user refresh the browser
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD          |
       | stage     | REVIEW_APPLICATION |
@@ -49,7 +47,7 @@ Feature: SFI Grant Application status
     ## On Hold the case
     And the user selects "Put on hold" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD          |
       | stage     | REVIEW_APPLICATION |
@@ -60,7 +58,7 @@ Feature: SFI Grant Application status
     ## resume the application
     When the user click "Resume" with a comment
     And the user click the "Resume" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD          |
       | stage     | REVIEW_APPLICATION |
@@ -72,7 +70,7 @@ Feature: SFI Grant Application status
  ## Withdraw the case
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD             |
       | stage     | REVIEW_APPLICATION    |
@@ -101,19 +99,19 @@ Feature: SFI Grant Application status
     And the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD         |
       | stage     | REVIEW_OFFER      |
       | status    | AGREEMENT_DRAFTED |
       | clientRef | self              |
       | grantCode | frps-private-beta |
-    And the user refresh the browser
 
+    And the user refresh the browser
     ## Reject the case
     And the user selects "Reject Application" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD            |
       | stage     | REVIEW_OFFER         |
@@ -124,7 +122,7 @@ Feature: SFI Grant Application status
     ## reinstate the application
     When the user click "Reinstate Application" with a comment
     And the user click the "Reinstate Application" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD         |
       | stage     | REVIEW_OFFER      |
@@ -135,7 +133,7 @@ Feature: SFI Grant Application status
  ## Withdraw the case
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD             |
       | stage     | REVIEW_OFFER          |
@@ -164,7 +162,7 @@ Feature: SFI Grant Application status
     And the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD         |
       | stage     | REVIEW_OFFER      |
@@ -179,7 +177,7 @@ Feature: SFI Grant Application status
     When the user click the "Confirm" button
     Then the user should see "Customer Agreement Review" message
 
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD                 |
       | stage     | CUSTOMER_AGREEMENT_REVIEW |
@@ -190,7 +188,7 @@ Feature: SFI Grant Application status
  ## Withdraw the case
     And the user click "Withdraw application" with a comment
     And the user click the "Withdraw" button
-    And the user refresh the browser
+
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD                 |
       | stage     | CUSTOMER_AGREEMENT_REVIEW |
