@@ -11,7 +11,20 @@
       "id": 2979,
       "message": "Application validated successfully",
       "valid": true,
-      "date": "{{current_datetime}}"
+      "date": "{{current_datetime}}",
+      "caveats": [
+        {
+          "code": "ne-consent-required",
+          "description": "A consent is required from Natural England",
+          "metadata": {
+            "actionCode": "UPL1",
+            "parcelId": "7656",
+            "sheetId": "SD6352",
+            "percentageOverlap": 2.14,
+            "overlapAreaHectares": 0.0336
+          }
+        }
+      ]
     },
     "scheme": "SFI",
     "applicant": {
