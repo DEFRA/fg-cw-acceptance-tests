@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "clientRef": "{{random_client_ref}}",
+    "previousClientRef": "jvu-wxn-hcn",
+    "sbi": "106284736",
+    "frn": "{{random_frn}}",
+    "crn": "1102838829",
+    "submittedAt": "{{current_datetime}}"
+  },
+  "answers": {
+    "rulesCalculations": {
+      "id": 2979,
+      "message": "Application validated successfully",
+      "valid": true,
+      "date": "{{current_datetime}}",
+      "caveats": [
+        {
+          "code": "ne-consent-required",
+          "description": "A consent is required from Natural England",
+          "metadata": {
+            "actionCode": "UPL1",
+            "parcelId": "7656",
+            "sheetId": "SD6352",
+            "percentageOverlap": 2.14,
+            "overlapAreaHectares": 0.0336
+          }
+        }
+      ]
+    },
+    "scheme": "SFI",
+    "applicant": {
+      "business": {
+        "reference": "1101091126",
+        "email": "texelshirecontractingg@gnitcartnocerihslexeto.com.test",
+        "mobilePhoneNumber": "07713973104",
+        "landlinePhoneNumber": "01235863957",
+        "name": "Texels Hire & Contracting",
+        "address": {
+          "line1": "Benbrigge House - line 1",
+          "line2": "ALBRIGHTON - line 2",
+          "line3": "Cuckoo Hill Farm - line 3",
+          "line4": "Cuckoo Hill Farm -line 4",
+          "line5": "Farm road -line 5",
+          "street": "BRIDGE ROAD - Street",
+          "city": "GRIMSBY - City",
+          "postalCode": "DY13 0UY"
+        }
+      },
+      "customer": {
+        "name": {
+          "title": "Mr",
+          "first": "Graham",
+          "middle": "Lisa",
+          "last": "Gilfoyle"
+        }
+      }
+    },
+    "totalAnnualPaymentPence": 70284,
+    "application": {
+      "parcel": [
+        {
+          "sheetId": "SK0971",
+          "parcelId": "7555",
+          "area": {
+            "unit": "ha",
+            "quantity": 5.2182
+          },
+          "actions": [
+            {
+              "code": "CMOR1",
+              "version": "1",
+              "durationYears": 3,
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 4.7575
+              }
+            },
+            {
+              "code": "UPL3",
+              "version": "1",
+              "durationYears": 3,
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 4.7575
+              }
+            }
+          ]
+        },
+        {
+          "sheetId": "SK0971",
+          "parcelId": "9194",
+          "area": {
+            "unit": "ha",
+            "quantity": 2.1703
+          },
+          "actions": [
+            {
+              "code": "CMOR1",
+              "version": "1",
+              "durationYears": 3,
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 2.1705
+              }
+            },
+            {
+              "code": "UPL1",
+              "version": "1",
+              "durationYears": 3,
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 2.1705
+              }
+            }
+          ]
+        }
+      ],
+      "agreement": []
+    },
+    "payments": {
+      "parcel": [
+        {
+          "sheetId": "SK0971",
+          "parcelId": "7555",
+          "area": {
+            "unit": "ha",
+            "quantity": 5.2182
+          },
+          "actions": [
+            {
+              "code": "CMOR1",
+              "description": "Assess moorland and produce a written record",
+              "durationYears": 3,
+              "paymentRates": 1060,
+              "annualPaymentPence": 5042,
+              "eligible": {
+                "unit": "ha",
+                "quantity": 4.7575
+              },
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 4.7575
+              }
+            },
+            {
+              "code": "UPL3",
+              "description": "Limited livestock grazing on moorland",
+              "durationYears": 3,
+              "paymentRates": 6600,
+              "annualPaymentPence": 31399,
+              "eligible": {
+                "unit": "ha",
+                "quantity": 4.7575
+              },
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 4.7575
+              }
+            }
+          ]
+        },
+        {
+          "sheetId": "SK0971",
+          "parcelId": "9194",
+          "area": {
+            "unit": "ha",
+            "quantity": 2.1703
+          },
+          "actions": [
+            {
+              "code": "CMOR1",
+              "description": "Assess moorland and produce a written record",
+              "durationYears": 3,
+              "paymentRates": 1060,
+              "annualPaymentPence": 2300,
+              "eligible": {
+                "unit": "ha",
+                "quantity": 2.1705
+              },
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 2.1705
+              }
+            },
+            {
+              "code": "UPL1",
+              "description": "Moderate livestock grazing on moorland",
+              "durationYears": 3,
+              "paymentRates": 2000,
+              "annualPaymentPence": 4341,
+              "eligible": {
+                "unit": "ha",
+                "quantity": 2.1705
+              },
+              "appliedFor": {
+                "unit": "ha",
+                "quantity": 2.1705
+              }
+            }
+          ]
+        }
+      ],
+      "agreement": [
+        {
+          "code": "CMOR1",
+          "description": "Assess moorland and produce a written record",
+          "durationYears": 3,
+          "paymentRates": 27200,
+          "annualPaymentPence": 27200
+        }
+      ]
+    }
+  }
+}

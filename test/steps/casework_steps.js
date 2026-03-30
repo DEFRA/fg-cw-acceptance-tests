@@ -486,3 +486,11 @@ Then(
     })
   }
 )
+Given(
+  'the user has submitted amend application for the {string} grant',
+  async function (grantName) {
+    const payloadPath = `test/payloads/frps-amend-application.json`
+    apiResponse = await postRequest(`${grantName}/applications`, payloadPath)
+    expect(apiResponse.statusCode).toBe(204)
+  }
+)

@@ -437,3 +437,15 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   #defect raised
 #      Then the user can view Land parcel calculations page
 
+
+  @assignUser @amendment_app @test
+  Scenario: User can submit amendment application
+    Given the user has submitted amend application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user selects newly created case
+    And the user click the "Assign" button
+    Then the "Assign" page should be displayed
+    When the user selects a random case worker
+    And the user click the "Assign" button
+    Then the user should see a success message confirming case assignment
+    And the selected case should be assigned to the chosen case worker
