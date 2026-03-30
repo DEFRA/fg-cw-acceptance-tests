@@ -1,7 +1,7 @@
 {
   "metadata": {
     "clientRef": "{{random_client_ref}}",
-    "previousClientRef": "jvu-wxn-hcn",
+    "previousClientRef": "{{previous_client_ref}}",
     "sbi": "106284736",
     "frn": "{{random_frn}}",
     "crn": "1102838829",

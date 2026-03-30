@@ -438,14 +438,161 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 #      Then the user can view Land parcel calculations page
 
 
-  @assignUser @amendment_app @test
-  Scenario: User can submit amendment application
-    Given the user has submitted amend application for the "frps-private-beta" grant
+  @amend_app
+  Scenario: User can cancel application and submit new amended application - In Review to Application Amend
+    Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
-    And the user selects newly created case
-    And the user click the "Assign" button
-    Then the "Assign" page should be displayed
-    When the user selects a random case worker
-    And the user click the "Assign" button
-    Then the user should see a success message confirming case assignment
-    And the selected case should be assigned to the chosen case worker
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    #return to customer
+    When the user selects "Return to customer" for the case with a comment
+    And the user click the "Confirm" button
+    And the user confirm Return to customer on confirmation page
+
+#    Then the user should see Application returned to customer for amending page
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD          |
+      | stage     | REVIEW_APPLICATION |
+      | status    | APPLICATION_AMEND  |
+      | clientRef | self               |
+      | grantCode | frps-private-beta  |
+
+    ## Amended request for a cancelled case
+    And the user has submitted amend application for the "frps-private-beta" grant
+    And the user click the "Back to applications" link
+    When the user opens the application from the "All cases" list
+
+    ## Check the timeline
+    And the user navigates to the "Timeline (2)" section
+    Then the timeline section should display both applications with correct statuses
+    And the timeline section should display today as the received date for both applications
+    When the user click the "View case" link
+    Then the user should be navigated to the previous case
+
+  @amend_app
+  Scenario: User can cancel application and submit an amended application - Agreement Drafted to Application Amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user selects "Approve application" for the case with a comment
+
+    #return to customer
+    When the user selects "Return to customer" for the case with a comment
+    And the user click the "Confirm" button
+    And the user confirm Return to customer on confirmation page
+
+#    Then the user should see Application returned to customer for amending page
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD          |
+      | stage     | REVIEW_APPLICATION |
+      | status    | APPLICATION_AMEND  |
+      | clientRef | self               |
+      | grantCode | frps-private-beta  |
+
+    ## Amended request for a cancelled case
+    And the user has submitted amend application for the "frps-private-beta" grant
+    And the user click the "Back to applications" link
+    When the user waits for the case to appear on the Casework Portal
+    When the user opens the application from the "All cases" list
+
+    When the user click the "Start" button
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user click the "Back to applications" link
+    Then the case status should be "In review"
+    When the user opens the application from the "All cases" list
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see below "frps-private-beta" tasks details
+      | Check customer details                       | Accepted |
+      | Review land parcel rule checks               | Accepted |
+      | Check if any land parcels are within an SSSI | Accepted |
+      | Check payment amount                         | Accepted |
+      | Review scheme budget as a finance officer    | Accepted |
+    Then the user should see "Agreements" tab
+    When the user select "Confirm" to complete "Check draft funding agreement" task
+    When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+    Then the user should see below "frps-private-beta" tasks details
+      | Check draft funding agreement           | Confirmed |
+      | Notify customer that agreement is ready | Confirmed |
+    And the user selects "Agreement sent" for the case
+    When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
+    When the user click the "Back to applications" link
+    Then the case status should be "Agreement offered"
+
+  @amend_app
+  Scenario: User can cancel application and submit an amended application - Agreement offered to Application Amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user selects "Approve application" for the case with a comment
+    When the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+    When the user select "Confirm" to complete "Check draft funding agreement" task
+    When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+
+    And the user selects "Agreement sent" for the case
+    When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
+
+     #return to customer
+    When the user selects "Return to customer" for the case with a comment
+    And the user click the "Confirm" button
+    And the user confirm Return to customer on confirmation page
+
+#    Then the user should see Application returned to customer for amending page
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD                 |
+      | stage     | CUSTOMER_AGREEMENT_REVIEW |
+      | status    | APPLICATION_AMEND         |
+      | clientRef | self                      |
+      | grantCode | frps-private-beta         |
+
+
+    ## Amended request for a cancelled case
+    And the user has submitted amend application for the "frps-private-beta" grant
+    And the user click the "Back to applications" link
+    When the user waits for the case to appear on the Casework Portal
+    When the user opens the application from the "All cases" list
+
+    When the user click the "Start" button
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user click the "Back to applications" link
+    Then the case status should be "In review"
+    When the user opens the application from the "All cases" list
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+    When the user select "Confirm" to complete "Check draft funding agreement" task
+    When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+
+    And the user selects "Agreement sent" for the case
+    When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
+    When the user click the "Back to applications" link
+    Then the case status should be "Agreement offered"
+
+

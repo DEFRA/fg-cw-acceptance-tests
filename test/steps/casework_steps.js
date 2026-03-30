@@ -1,5 +1,9 @@
 import { Given, Then, When } from '@wdio/cucumber-framework'
-import { generatedClientRef, postRequest } from '../page-objects/apiHelper.js'
+import {
+  generatedClientRef,
+  postRequest,
+  previousClientRef
+} from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
@@ -12,6 +16,7 @@ import {
 import NotesPage from '../page-objects/notes.page.js'
 import AgreementsPage from '../page-objects/agreements.page.js'
 import CalculationsPage from '../page-objects/calculations.page.js'
+import CaseDetailsPage from '../page-objects/caseDetails.page.js'
 
 let apiResponse
 
@@ -397,7 +402,6 @@ Then(
   }
 )
 Then(/^the user should see "([^"]*)" message$/, async function (message) {
-  await TasksPage.headerH2()
   expect(await TasksPage.headerH2()).toEqual(message)
 })
 Then(
@@ -490,7 +494,105 @@ Given(
   'the user has submitted amend application for the {string} grant',
   async function (grantName) {
     const payloadPath = `test/payloads/frps-amend-application.json`
-    apiResponse = await postRequest(`${grantName}/applications`, payloadPath)
+    apiResponse = await postRequest(`${grantName}/applications`, payloadPath, {
+      isAmend: true
+    })
     expect(apiResponse.statusCode).toBe(204)
   }
 )
+Then(
+  /^the user confirm Return to customer on confirmation page$/,
+  async function () {
+    await AllcasesPage.selectRadioByValue('yes')
+    await AllcasesPage.clickButtonByText('Confirm')
+  }
+)
+Then(
+  /^the user should see Application returned to customer for amending page$/,
+  async function () {
+    expect(await TasksPage.headerH2()).toEqual(
+      'Application returned to customer for amending'
+    )
+  }
+)
+Then(
+  /^the timeline section should display both applications with correct statuses$/,
+  async function () {
+    const rows = await TimelinePage.getTimelineRowData()
+
+    const currentApplicationRow = rows.find(
+      (row) => row.id === generatedClientRef
+    )
+
+    const previousApplicationRow = rows.find(
+      (row) => row.id === previousClientRef
+    )
+
+    if (!currentApplicationRow) {
+      throw new Error(
+        `Current application row not found for clientRef: ${generatedClientRef}`
+      )
+    }
+
+    if (!previousApplicationRow) {
+      throw new Error(
+        `Previous application row not found for clientRef: ${previousClientRef}`
+      )
+    }
+
+    expect(currentApplicationRow.status).toBe('Application Received')
+    expect(currentApplicationRow.action).toContain('This case')
+
+    expect(previousApplicationRow.status).toBe('Returned to customer')
+    expect(previousApplicationRow.action).toContain('View case')
+  }
+)
+Then(
+  /^the timeline section should display today as the received date for both applications$/,
+  async function () {
+    await TimelinePage.waitForTimelineTable()
+
+    const today = await TimelinePage.getTodayDisplayDate()
+
+    const currentApplicationRow =
+      await TimelinePage.getTimelineRowByClientRef(generatedClientRef)
+    const previousApplicationRow =
+      await TimelinePage.getTimelineRowByClientRef(previousClientRef)
+
+    if (!currentApplicationRow) {
+      throw new Error(
+        `Current application row not found for clientRef: ${generatedClientRef}`
+      )
+    }
+
+    if (!previousApplicationRow) {
+      throw new Error(
+        `Previous application row not found for clientRef: ${previousClientRef}`
+      )
+    }
+
+    expect(currentApplicationRow.dateReceived).toBe(today)
+    expect(previousApplicationRow.dateReceived).toBe(today)
+  }
+)
+
+Then('the user should be navigated to the previous case', async function () {
+  await browser.waitUntil(
+    async () => {
+      const url = await browser.getUrl()
+      return url.includes('/cases/')
+    },
+    {
+      timeout: 10000,
+      timeoutMsg: 'Expected to be navigated to case page but URL did not change'
+    }
+  )
+
+  await CaseDetailsPage.waitForCaseSummary()
+
+  const applicationIdText = await CaseDetailsPage.getApplicationIdText()
+  const statusText = await CaseDetailsPage.getStatusText()
+
+  expect(applicationIdText).toContain(previousClientRef)
+  expect(statusText).toContain('Returned to customer')
+})
