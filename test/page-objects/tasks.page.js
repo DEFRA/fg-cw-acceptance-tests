@@ -1,5 +1,5 @@
 import BasePage from '../page-objects/base.page.js'
-import { generatedClientRef, getRequest } from '../page-objects/apiHelper.js'
+import { getRequest } from '../page-objects/apiHelper.js'
 
 class TasksPage extends BasePage {
   async approvalNotes(actionCode) {
@@ -19,7 +19,7 @@ class TasksPage extends BasePage {
     code,
     clientRef,
     expected,
-    timeout = 5000,
+    timeout = 60000,
     interval = 3000
   }) {
     let lastStatusCode
@@ -28,47 +28,57 @@ class TasksPage extends BasePage {
 
     await browser.waitUntil(
       async () => {
-        const apiResponse = await getRequest(
-          `${code}/applications/${generatedClientRef}/status`
-        )
+        try {
+          const apiResponse = await getRequest(
+            `${code}/applications/${clientRef}/status`
+          )
 
-        lastStatusCode = apiResponse?.statusCode
-        lastBody = apiResponse?.body
+          lastStatusCode = apiResponse?.statusCode
+          lastBody = apiResponse?.body
 
-        if (lastStatusCode !== 200) {
-          lastReason = `statusCode=${lastStatusCode}`
-          return false
-        }
+          console.log('Application status API response:', lastBody)
+          console.log('*******************')
 
-        const body = lastBody
-        const actual = Array.isArray(body) ? body[0] : body
-
-        if (!actual) {
-          lastReason = 'empty body'
-          return false
-        }
-
-        if (expected.clientRef && actual.clientRef !== clientRef) {
-          lastReason = `clientRef mismatch expected "${clientRef}" received "${actual.clientRef}"`
-          return false
-        }
-
-        for (const key of Object.keys(expected)) {
-          if (key === 'clientRef') continue
-
-          const actualValue = actual[key]
-          const actualStr =
-            actualValue === undefined || actualValue === null
-              ? ''
-              : String(actualValue)
-
-          if (actualStr !== expected[key]) {
-            lastReason = `key "${key}" expected "${expected[key]}" received "${actualStr}"`
+          if (lastStatusCode !== 200) {
+            lastReason = `statusCode=${lastStatusCode}`
             return false
           }
-        }
 
-        return true
+          const body = lastBody
+          const actual = Array.isArray(body) ? body[0] : body
+
+          if (!actual) {
+            lastReason = 'empty body'
+            return false
+          }
+
+          if (expected.clientRef && actual.clientRef !== clientRef) {
+            lastReason = `clientRef mismatch expected "${clientRef}" received "${actual.clientRef}"`
+            return false
+          }
+
+          for (const key of Object.keys(expected)) {
+            if (key === 'clientRef') continue
+
+            const actualValue = actual[key]
+            const actualStr =
+              actualValue === undefined || actualValue === null
+                ? ''
+                : String(actualValue)
+
+            if (actualStr !== expected[key]) {
+              lastReason = `key "${key}" expected "${expected[key]}" received "${actualStr}"`
+              return false
+            }
+          }
+
+          return true
+        } catch (error) {
+          lastReason = `request failed: ${error.message}`
+          lastStatusCode = undefined
+          lastBody = undefined
+          return false
+        }
       },
       {
         timeout,

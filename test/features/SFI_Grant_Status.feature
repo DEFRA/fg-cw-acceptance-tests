@@ -186,8 +186,8 @@ Feature: SFI Grant Application status
       | grantCode | frps-private-beta         |
 
  ## Withdraw the case
-    And the user click "Withdraw application" with a comment
-    And the user click the "Withdraw" button
+    And the user selects "Withdraw application" for the case with a comment
+    And the user click the "Confirm" button
 
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD                 |
