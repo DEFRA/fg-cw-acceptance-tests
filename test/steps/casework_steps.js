@@ -556,6 +556,7 @@ Then(
 
     const currentApplicationRow =
       await TimelinePage.getTimelineRowByClientRef(generatedClientRef)
+
     const previousApplicationRow =
       await TimelinePage.getTimelineRowByClientRef(previousClientRef)
 
@@ -573,6 +574,9 @@ Then(
 
     expect(currentApplicationRow.dateReceived).toBe(today)
     expect(previousApplicationRow.dateReceived).toBe(today)
+
+    expect(currentApplicationRow.dateEnded).toBe('')
+    expect(previousApplicationRow.dateEnded).toBe(today)
   }
 )
 
@@ -596,3 +600,9 @@ Then('the user should be navigated to the previous case', async function () {
   expect(applicationIdText).toContain(previousClientRef)
   expect(statusText).toContain('Returned to customer')
 })
+When(
+  /^the user click previous client ref view case link on Timeline page$/,
+  async function () {
+    await TimelinePage.clickViewCaseForClientRef(previousClientRef)
+  }
+)
