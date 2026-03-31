@@ -3,6 +3,7 @@ import Wreck from '@hapi/wreck'
 import { config } from '../../wdio.conf.js'
 
 export let generatedClientRef = ''
+export let previousClientRef = ''
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
@@ -54,10 +55,16 @@ async function apiRequest(method, url, { jsonBody, headers = {} } = {}) {
     throw error
   }
 }
-export async function postRequest(endpoint, payloadPath, headers = {}) {
+
+export async function postRequest(
+  endpoint,
+  payloadPath,
+  options = {},
+  headers = {}
+) {
   const payloadData = await fs.readFile(payloadPath, 'utf-8')
   let payload = JSON.parse(payloadData)
-  payload = requestPayload(payload)
+  payload = requestPayload(payload, options)
 
   const url = buildUrl(endpoint)
   return apiRequest('POST', url, { jsonBody: payload, headers })
@@ -73,21 +80,48 @@ export function generateRandomClientRef() {
   return generatedClientRef
 }
 
+export function setPreviousClientRef() {
+  if (!generatedClientRef) {
+    throw new Error('generatedClientRef is not set')
+  }
+
+  previousClientRef = generatedClientRef
+  return previousClientRef
+}
+
+export function getPreviousClientRef() {
+  if (!previousClientRef) {
+    throw new Error('previousClientRef is not set')
+  }
+
+  return previousClientRef
+}
+
+export function resetClientRefs() {
+  generatedClientRef = ''
+  previousClientRef = ''
+}
+
+function requestPayload(payload, { isAmend = false } = {}) {
+  if (isAmend) {
+    setPreviousClientRef()
+  }
+
+  const stringifies = JSON.stringify(payload)
+
+  const replaced = stringifies
+    .replace(/{{random_client_ref}}/g, generateRandomClientRef())
+    .replace(/{{previous_client_ref}}/g, isAmend ? getPreviousClientRef() : '')
+    .replace(/{{current_datetime}}/g, getCurrentDatetimeISO())
+    .replace(/{{random_frn}}/g, generateFRN())
+
+  return JSON.parse(replaced)
+}
+
 function getCurrentDatetimeISO() {
   return new Date().toISOString()
 }
 
 function generateFRN() {
   return Math.floor(1_000_000_000 + Math.random() * 9_000_000_000).toString()
-}
-
-function requestPayload(payload) {
-  const stringifies = JSON.stringify(payload)
-
-  const replaced = stringifies
-    .replace(/{{random_client_ref}}/g, generateRandomClientRef())
-    .replace(/{{current_datetime}}/g, getCurrentDatetimeISO())
-    .replace(/{{random_frn}}/g, generateFRN())
-
-  return JSON.parse(replaced)
 }
