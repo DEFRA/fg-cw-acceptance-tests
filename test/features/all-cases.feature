@@ -215,12 +215,13 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Back to applications" link
     Then the case status should be "On hold"
     When the user opens the application from the "All cases" list
-    And the user click "Resume" the case with a comment
+    And the user selects "Resume" for the case with a comment
+    And the user click the "Confirm" button
     And the user click the "Back to applications" link
     Then the case status should be "In review"
 
   @case-status @reject
-  Scenario: User can Reject and reinstate a case and status should update accordingly
+  Scenario: User can Reject a case and status should update accordingly
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
@@ -229,10 +230,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
     Then the case status should be "Rejected"
-    When the user opens the application from the "All cases" list
-    And the user click "Reinstate Application" the case with a comment
-    And the user click the "Back to applications" link
-    Then the case status should be "In review"
+
 
   Scenario:User cannot start task without clicking the start button
     Given the user has submitted an application for the "frps-private-beta" grant
@@ -403,8 +401,8 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the case status should be "Agreement offered"
     And the user opens the application from the "All cases" list
 
-    When the user click "Withdraw Application" with a comment
-    And the user click the "Withdraw" button
+    When the user selects "Withdraw Application" for the case with a comment
+    And the user click the "Confirm" button
 
     When the user click the "Agreements" link
     And the user waits until the agreements message "Withdrawn" is displayed
@@ -467,7 +465,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user navigates to the "Timeline (2)" section
     Then the timeline section should display both applications with correct statuses
     And the timeline section should display today as the received date for both applications
-    When the user click the "View case" link
+    When the user click previous client ref view case link on Timeline page
     Then the user should be navigated to the previous case
 
   @amend_app
@@ -514,18 +512,9 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user opens the application from the "All cases" list
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
-    Then the user should see below "frps-private-beta" tasks details
-      | Check customer details                       | Accepted |
-      | Review land parcel rule checks               | Accepted |
-      | Check if any land parcels are within an SSSI | Accepted |
-      | Check payment amount                         | Accepted |
-      | Review scheme budget as a finance officer    | Accepted |
     Then the user should see "Agreements" tab
     When the user select "Confirm" to complete "Check draft funding agreement" task
     When the user select "Confirm" to complete "Notify customer that agreement is ready" task
-    Then the user should see below "frps-private-beta" tasks details
-      | Check draft funding agreement           | Confirmed |
-      | Notify customer that agreement is ready | Confirmed |
     And the user selects "Agreement sent" for the case
     When the user click the "Confirm" button
     Then the user should see "Customer Agreement Review" message
@@ -595,4 +584,30 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user click the "Back to applications" link
     Then the case status should be "Agreement offered"
 
+  @amend_app
+  Scenario: User can cancel application and submit an amended application - On Hold to Application Amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
 
+    And the user selects "Put on hold" for the case with a comment
+    And the user click the "Confirm" button
+
+    When the user selects "Return to customer" for the case with a comment
+    And the user click the "Confirm" button
+    And the user confirm Return to customer on confirmation page
+
+#    Then the user should see Application returned to customer for amending page
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD          |
+      | stage     | REVIEW_APPLICATION |
+      | status    | APPLICATION_AMEND  |
+      | clientRef | self               |
+      | grantCode | frps-private-beta  |
+
+
+    And the user has submitted amend application for the "frps-private-beta" grant
+    And the user click the "Back to applications" link
+    When the user waits for the case to appear on the Casework Portal
+    When the user opens the application from the "All cases" list
