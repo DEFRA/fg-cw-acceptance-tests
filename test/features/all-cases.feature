@@ -611,3 +611,158 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Back to applications" link
     When the user waits for the case to appear on the Casework Portal
     When the user opens the application from the "All cases" list
+
+  Scenario: Amendable case creation status - Status Application received -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD            |
+      | stage     | REVIEW_APPLICATION   |
+      | status    | APPLICATION_RECEIVED |
+      | clientRef | self                 |
+      | grantCode | frps-private-beta    |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+
+  Scenario: Amendable case creation status - Status -- In Review -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD          |
+      | stage     | REVIEW_APPLICATION |
+      | status    | IN_REVIEW          |
+      | clientRef | self               |
+      | grantCode | frps-private-beta  |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+
+
+  Scenario: Amendable case creation status - Status -- On Hold -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    And the user selects "Put on hold" for the case with a comment
+    And the user click the "Confirm" button
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD          |
+      | stage     | REVIEW_APPLICATION |
+      | status    | ON_HOLD            |
+      | clientRef | self               |
+      | grantCode | frps-private-beta  |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+
+
+  Scenario: Amendable case creation status - Status -- Reject -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    And the user selects "Reject Application" for the case with a comment
+    And the user click the "Confirm" button
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD            |
+      | stage     | REVIEW_APPLICATION   |
+      | status    | APPLICATION_REJECTED |
+      | clientRef | self                 |
+      | grantCode | frps-private-beta    |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+
+
+  Scenario: Amendable case creation status - Status -- Withdraw -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    And the user selects "Withdraw application" for the case with a comment
+    And the user click the "Confirm" button
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD             |
+      | stage     | REVIEW_APPLICATION    |
+      | status    | APPLICATION_WITHDRAWN |
+      | clientRef | self                  |
+      | grantCode | frps-private-beta     |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+
+
+  Scenario: Amendable case creation status - Status -- Agreement Drafted -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD         |
+      | stage     | REVIEW_OFFER      |
+      | status    | AGREEMENT_DRAFTED |
+      | clientRef | self              |
+      | grantCode | frps-private-beta |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+
+
+  Scenario: Amendable case creation status - Status -- Agreement Offered -- Cannot amend
+    Given the user has submitted an application for the "frps-private-beta" grant
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    And the user click the "Start" button
+
+    When the user select "Accept" to complete "Check customer details" task
+    When the user select "Accept" to complete "Review land parcel rule checks" task
+    When the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
+    When the user select "Accept" to complete "Check payment amount" task
+    When the user select "Accept" to complete "Review scheme budget as a finance officer" task
+
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" button
+    Then the user should see "Agreements" tab
+
+    When the user select "Confirm" to complete "Check draft funding agreement" task
+    When the user select "Confirm" to complete "Notify customer that agreement is ready" task
+
+    And the user selects "Agreement sent" for the case
+    When the user click the "Confirm" button
+    Then the user should see "Customer Agreement Review" message
+
+
+    Then the case details on GAS API for "frps-private-beta" should be:
+      | phase     | PRE_AWARD                 |
+      | stage     | CUSTOMER_AGREEMENT_REVIEW |
+      | status    | AGREEMENT_OFFERED         |
+      | clientRef | self                      |
+      | grantCode | frps-private-beta         |
+
+    #cannot amendable
+    And the user cannot submitted amend application for the "frps-private-beta" grant
+

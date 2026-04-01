@@ -606,3 +606,47 @@ When(
     await TimelinePage.clickViewCaseForClientRef(previousClientRef)
   }
 )
+Then(
+  'the user cannot submitted amend application for the {string} grant',
+  async function (grantName) {
+    const payloadPath = 'test/payloads/frps-amend-application.json'
+
+    let apiResponse
+
+    try {
+      apiResponse = await postRequest(
+        `${grantName}/applications`,
+        payloadPath,
+        { isAmend: true }
+      )
+    } catch (error) {
+      const statusCode =
+        error?.output?.statusCode || error?.response?.statusCode
+
+      let responseBody = null
+
+      try {
+        if (error?.data) {
+          if (Buffer.isBuffer(error.data)) {
+            const text = error.data.toString().trim()
+            responseBody = text ? JSON.parse(text) : null
+          } else if (typeof error.data === 'string') {
+            const text = error.data.trim()
+            responseBody = text ? JSON.parse(text) : null
+          } else if (typeof error.data === 'object') {
+            responseBody = error.data
+          }
+        }
+      } catch {
+        responseBody = null
+      }
+
+      apiResponse = {
+        statusCode,
+        body: responseBody
+      }
+    }
+
+    expect(apiResponse.statusCode).toBe(409)
+  }
+)
