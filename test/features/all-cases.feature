@@ -604,7 +604,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
       | stage     | REVIEW_APPLICATION |
       | status    | APPLICATION_AMEND  |
       | clientRef | self               |
-      | grantCode | frps-private-beta  |   
+      | grantCode | frps-private-beta  |
 
 
     And the user has submitted amend application for the "frps-private-beta" grant
@@ -766,7 +766,3 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     #cannot amendable
     And the user cannot submitted amend application for the "frps-private-beta" grant
 
-    And the user has submitted amend application for the "frps-private-beta" grant
-    And the user click the "Back to applications" link
-    When the user waits for the case to appear on the Casework Portal
-    When the user opens the application from the "All cases" list
