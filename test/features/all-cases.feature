@@ -436,7 +436,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 #      Then the user can view Land parcel calculations page
 
 
-  @amend_app
+  @amend_app @test
   Scenario: User can cancel application and submit new amended application - In Review to Application Amend
     Given the user has submitted an application for the "frps-private-beta" grant
     When the user waits for the case to appear on the Casework Portal
@@ -459,6 +459,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     ## Amended request for a cancelled case
     And the user has submitted amend application for the "frps-private-beta" grant
     And the user click the "Back to applications" link
+    And the user waits for the case to appear on the Casework Portal
     When the user opens the application from the "All cases" list
 
     ## Check the timeline
