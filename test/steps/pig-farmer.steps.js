@@ -8,6 +8,7 @@ import {
   setApplicationType,
   getApplicationType
 } from '../utils/shared-data.js'
+import { loginToCaseworking, loginToGrants } from '../support/loginHelper.js'
 
 let referenceNumber
 
@@ -191,24 +192,19 @@ Then('the user should see the Contracted stage', async () => {
 Given(
   'a Flying Pigs application has been submitted by an applicant',
   async () => {
+    await loginToGrants()
+    await PigFarmerPage.recoverIfPageNotFound()
     referenceNumber = await PigFarmerPage.submitApplication()
-    setReferenceNumber(referenceNumber) // Store in shared data
-    setApplicationType('pig-farmer') // Store application type
+    setReferenceNumber(referenceNumber)
+    setApplicationType('pig-farmer')
     console.log(
       `Application submitted with reference number: ${referenceNumber}`
     )
   }
 )
 
-Given('I am signed in as a caseworker', async () => {
-  // This step can be implemented when authentication is required
-  // For now, we assume the user is already authenticated
-  console.log('Caseworker is signed in')
-})
-
-When('I navigate to the Cases page', async () => {
-  await PigFarmerPage.navigateToCasesPage()
-  console.log('Navigated to Cases page')
+Given('the user signed into Caseworking as a writer', async function () {
+  await loginToCaseworking('writer')
 })
 
 Then('I should see the submitted application listed', async () => {
@@ -227,7 +223,7 @@ When('I open the submitted application', async () => {
 })
 
 When('I view the Case Details', async () => {
-  await PigFarmerPage.clickLinkByText('Case Details')
+  await PigFarmerPage.clickLinkByText('Application')
 })
 
 Then('I should see the answers submitted by the applicant', async () => {
@@ -495,3 +491,7 @@ Then('the timeline should show:', async (dataTable) => {
 
 // Export reference number for use in other steps
 export { referenceNumber }
+Then('the user should see {string} Page', async function (expectedText) {
+  const actualApprovalText = await PigFarmerPage.headerH2()
+  await expect(actualApprovalText).toEqual(expectedText)
+})

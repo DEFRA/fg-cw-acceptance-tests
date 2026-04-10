@@ -2,7 +2,8 @@
 Feature: Casework portal user management
 
   Scenario: Admin user can view the User list and user details page
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage users" page
     Then the user should see Users page
@@ -10,7 +11,8 @@ Feature: Casework portal user management
     Then the user should see correct user details
 
   Scenario: User app roles should display what selected on user roles page
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage users" page
     When the user capture and navigate to the User details page
@@ -21,7 +23,8 @@ Feature: Casework portal user management
     And the user should see same app roles pre-selected
 
   Scenario: Admin user can create new roles - Valid data
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage roles" page
     Then the user should see Roles page
@@ -31,7 +34,8 @@ Feature: Casework portal user management
     Then the role should be created successfully
 
   Scenario: Can't create a role with incorrect or blank data
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage roles" page
     Then the user should see Roles page
@@ -46,7 +50,8 @@ Feature: Casework portal user management
 
   @newuser
   Scenario: Admin user cannot create new user with incorrect or blank data
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage users" page
     And the user click the "Create user" link
@@ -56,7 +61,8 @@ Feature: Casework portal user management
     Then the user remain on the page with a "Enter an email address" error message displayed
 
   Scenario: Admin user cannot create new user with already existing email
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage users" page
     And the user capture random user details
@@ -68,7 +74,8 @@ Feature: Casework portal user management
 
   @editRole
   Scenario: Admin user can update role description and description should be mandatory
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
     When the user opens the "Manage roles" page
     And the user selects a random role
@@ -81,7 +88,8 @@ Feature: Casework portal user management
 
   @editRole
   Scenario: Admin user can change a role to not assignable and the change is reflected on Manage users roles page
-    Given the user navigates to casework user management page
+    Given the user signed into Caseworking as a writer
+    And the user navigates to casework user management page
     Then the user should see Admin page
 
     When the user opens the "Manage roles" page
@@ -102,5 +110,8 @@ Feature: Casework portal user management
     When the user navigates to casework user management page
     Then the role is reverted back to assignable
 
-
+  Scenario: User with read permission cannot perform task on the case
+    Given the user signed into Caseworking with read permission
+    And the user navigates to casework user management page
+    Then the user should be shown a permission denied message
 

@@ -3,6 +3,7 @@ Feature: SFI Grant Application status
 
   Scenario: Application cases status - New application - On Hold - Withdrawn
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     Then the case details on GAS API for "frps-private-beta" should be:
@@ -58,6 +59,7 @@ Feature: SFI Grant Application status
 
   Scenario: Application cases status - New application - Approved-agreement drafted - reject
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     Then the case details on GAS API for "frps-private-beta" should be:
@@ -99,6 +101,7 @@ Feature: SFI Grant Application status
 
   Scenario: Application cases status - New application - Approved-agreement drafted - Withdrawn
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     Then the case details on GAS API for "frps-private-beta" should be:
@@ -141,6 +144,7 @@ Feature: SFI Grant Application status
 
   Scenario: Application cases status - New application - Approved-agreement offered -Withdrawn
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     Then the case details on GAS API for "frps-private-beta" should be:

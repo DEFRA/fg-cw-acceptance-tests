@@ -3,6 +3,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     And the user opens the application from the "All cases" list
@@ -14,6 +15,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @assignUser
   Scenario: Admin user can assign a case to users
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user selects newly created case
     And the user click the "Assign" button
@@ -26,6 +28,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @assignUser
   Scenario: Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user selects newly created case
     And the user click the "Assign" button
@@ -39,6 +42,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @assignUser @timeline
   Scenario: User sees the ‘Case assigned’ message on the timeline and can view the notes
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     And the user waits for the case to appear on the Casework Portal
     When the user selects newly created case
     And the user click the "Assign" button
@@ -56,6 +60,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @assignUser @timeline
   Scenario: User sees the ‘Case unassigned’ message on the timeline and can view the notes
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     And the user waits for the case to appear on the Casework Portal
     When the user selects newly created case
     And the user click the "Assign" button
@@ -79,6 +84,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @agreements @timeline
   Scenario: User can see Timeline is updated with each action
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
@@ -114,6 +120,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @addnotes
   Scenario: User can add notes to the case
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Notes" link
@@ -127,6 +134,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @agreements
   Scenario: User can view Agreements details after the case task are is Accepted
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     Then the user should see below "frps-private-beta" tasks details
@@ -167,6 +175,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @agreements
   Scenario: User can view Agreements details after the case is approved
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     Then the user should see below "frps-private-beta" tasks details
@@ -207,6 +216,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @case-status
   Scenario: Reject decision is no longer available when the case is ON_HOLD in the REVIEW_APPLICATION stage
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
@@ -223,6 +233,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @case-status @reject
   Scenario: User can Reject a case and status should update accordingly
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
@@ -234,6 +245,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario:User cannot start task without clicking the start button
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     And the user opens the application from the "All cases" list
@@ -242,6 +254,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User cannot Confirm without select an option and comments
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
@@ -256,6 +269,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario:User cannot continue without selecting the outcome on task page
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     And the user opens the application from the "All cases" list
@@ -282,6 +296,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario:User cannot continue without selecting the outcome on Case stage page
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
     And the user opens the application from the "All cases" list
@@ -289,6 +304,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User cannot complete case review task without selecting any option
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
@@ -312,6 +328,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Task remains incomplete unless the user selects Accept
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     When the user click the "Start" button
@@ -330,6 +347,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @withdrawn @timeline
   Scenario: Casework can withdrawn application pre-agreement
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -348,6 +366,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @withdrawn
   Scenario: Casework can withdrawn application post agreement - Agreement Drafted
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -377,6 +396,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @withdrawn
   Scenario: Casework can withdrawn application post agreement - Agreement Offered
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -416,6 +436,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @taskNotes
   Scenario: User cannot continue without adding Notes on Task Options
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -429,6 +450,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User can view and run Land parcel calculations
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Calculations" link
@@ -439,6 +461,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @amend_app @test
   Scenario: User can cancel application and submit new amended application - In Review to Application Amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -472,6 +495,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @amend_app
   Scenario: User can cancel application and submit an amended application - Agreement Drafted to Application Amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -525,6 +549,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @amend_app
   Scenario: User can cancel application and submit an amended application - Agreement offered to Application Amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -588,6 +613,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
   @amend_app
   Scenario: User can cancel application and submit an amended application - On Hold to Application Amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -615,6 +641,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status Application received -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
 
@@ -630,6 +657,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status -- In Review -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -647,6 +675,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status -- On Hold -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -667,6 +696,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status -- Reject -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -687,6 +717,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status -- Withdraw -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -707,6 +738,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status -- Agreement Drafted -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
@@ -735,6 +767,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: Amendable case creation status - Status -- Agreement Offered -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     And the user opens the application from the "All cases" list
     And the user click the "Start" button
