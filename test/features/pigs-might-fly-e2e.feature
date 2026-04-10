@@ -5,60 +5,33 @@ Feature: Processing a Flying Pigs grant application
   I want to review and process a submitted Flying Pigs grant application
   So that I can move it through to the Contracted stage
 
-  @grantsui
+  @grantsui @writer
   Scenario: Review and approve a Flying Pigs grant application
     Given a Flying Pigs application has been submitted by an applicant
-    And I am signed in as a caseworker
-    When I navigate to the Cases page
+
+    And the user signed into Caseworking as a writer
     Then I should see the submitted application listed
 
     When I open the submitted application
     And I view the Case Details
     Then I should see the answers submitted by the applicant
 
-    When I complete the "Review application data" task
-    Then the timeline should show the latest item "Task 'Review application data' completed"
+    When the user click the "Tasks" link
+    And the user click the "Start" button
+    When the user select "Accept" to complete "Verify pig farmer status" task
+    When the user select "Accept" to complete "Check pig stock numbers" task
+    When the user select "Accept" to complete "Check number of White Pigs" task
 
-    When I approve the application for assessment
-    Then the case stage should be "Assessment"
-    And the timeline should show the latest item "Case approved"
+    And the user selects "Approve application" for the case with a comment
+    And the user click the "Confirm" link
 
-    When I view the tasks for the case
-    Then I should see the following task sections:
-      | Check Application   |
-      | Registration Checks |
-      | Review available area checks |
-      | Review intersecting data layers |
+    Then the user should see "Final Approval" Page
+    When the user click the "Timeline" link
+    Then the Timeline should display these messages
+      | Case received                               |
+      | Stage 'Tasks' outcome (Start)               |
+      | Task 'Verify pig farmer status' completed   |
+      | Task 'Check pig stock numbers' completed    |
+      | Task 'Check number of White Pigs' completed |
+      | Stage 'Tasks' outcome (Approve)             |
 
-    When I complete all of the following tasks:
-      | Check application and documents          |
-      | Check on Find farm and land payment data |
-      | Check on RPS (Dual Funding)              |
-      | Confirm farm has a CPH                   |
-      | Confirm APHA registration                |
-      | SFI available area check 1               |
-      | SFI available area check 2               |
-      | Confirm available area check             |
-      | SFI intersecting layers check 1          |
-      | SFI intersecting layers check 2          |
-      | Confirm available area check             |
-
-
-    Then all tasks should have status "Complete"
-    When I confirm the decision as approval of the application
-    Then the case stage should be "Contracted"
-    And I should see a confirmation of successful approval
-    And the timeline should show:
-      | Task 'Check application and documents' completed | 1 |
-      | Task 'Check on Find farm and land payment data' completed | 1 |
-      | Task 'Check on RPS (Dual Funding)' completed | 1 |
-      | Task 'Confirm farm has a CPH' completed | 1 |
-      | Task 'Confirm APHA registration' completed | 1 |
-      | Task 'SFI available area check 1' completed | 1 |
-      | Task 'SFI available area check 2' completed | 1 |
-      | Task 'Confirm available area check' completed | 2 |
-      | Task 'SFI intersecting layers check 1' completed | 1 |
-      | Task 'SFI intersecting layers check 2' completed | 1 |
-      | Task 'Review application data' completed | 1 |
-      | Stage 'Application Received' outcome (approve) | 1 |
-      | Stage 'Assessment' outcome (approve) | 1 |

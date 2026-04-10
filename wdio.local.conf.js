@@ -1,8 +1,6 @@
 import fs from 'fs'
 import { browser } from '@wdio/globals'
-import { resolveUrl } from './test/utils/urlResolver.js'
 import chromedriver from 'chromedriver'
-import { entraLocalLogin } from './test/utils/loginHelper.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { exec } from 'child_process'
@@ -39,8 +37,8 @@ console.log('API_URL:', process.env.API_URL)
 
 export const config = {
   runner: 'local',
-  // baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
-  gasUrl: `https://ephemeral-protected.api.dev.cdp-int.defra.cloud/fg-gas-backend/grants/`,
+  gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
+  baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT || 'dev'}.cdp-int.defra.cloud`,
 
   services: [
     'shared-store',
@@ -68,6 +66,7 @@ export const config = {
             args: [
               '--no-sandbox',
               '--disable-infobars',
+              '--headless',
               '--disable-gpu',
               '--window-size=1920,1080',
               '--enable-features=NetworkService,NetworkServiceInProcess',
@@ -156,6 +155,10 @@ export const config = {
     timeout: debug ? oneHour : 60000
   },
 
+  beforeScenario: async function () {
+    console.log('Started before scenario.....')
+  },
+
   afterStep: async function (step, scenario, result) {
     if (result.error) {
       await browser.takeScreenshot()
@@ -180,41 +183,8 @@ export const config = {
     })
   },
 
-  beforeScenario: async function (world, result, context) {
-    const scenarioTags = world.pickle.tags.map((t) => t.name)
-    browser.url(resolveUrl(scenarioTags))
-    browser.options.baseUrl = resolveUrl(scenarioTags)
-
-    const tags = world.pickle.tags.map((t) => t.name)
-    console.log(`Running scenario with tags: ${tags.join(', ')}`)
-
-    let username, password, role
-
-    if (tags.includes('@admin')) {
-      username = process.env.ENTRA_ID_ADMIN_USER
-      password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'Test Admin'
-    } else if (tags.includes('@reader')) {
-      username = process.env.ENTRA_ID_READER_USER
-      password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'Test Reader'
-    } else if (tags.includes('@writer')) {
-      username = process.env.ENTRA_ID_WRITER_USER
-      password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'Test Writer'
-    }
-
-    await browser.sharedStore.set('currentUser', { username, role })
-
-    if (username && password) {
-      console.log(`Performing Entra ID login for: ${username}`)
-      await entraLocalLogin(username, password)
-    } else {
-      console.log('No role tag detected — skipping login.')
-    }
-  },
-
   afterScenario: async function (world, result, context) {
     await browser.reloadSession()
+    await browser.sharedStore.set('currentUser', null)
   }
 }

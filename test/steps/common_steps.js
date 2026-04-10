@@ -1,5 +1,6 @@
-import { Given, When } from '@wdio/cucumber-framework'
+import { Given, When, Then } from '@wdio/cucumber-framework'
 import AdminPage from '../page-objects/admin.page.js'
+import { loginToCaseworking } from '../support/loginHelper.js'
 
 When('the user opens the {string} page', async function (linkText) {
   await AdminPage.clickLinkByText(linkText)
@@ -18,3 +19,16 @@ Given(/^the user refresh the browser$/, async function () {
     )
   }
 })
+Given(
+  /^the user signed into Caseworking with read permission$/,
+  async function () {
+    await loginToCaseworking('reader')
+  }
+)
+Then(
+  /^the user should be shown a permission denied message$/,
+  async function () {
+    const isDisplayed = await AdminPage.isExactPermissionMessageDisplayed()
+    await expect(isDisplayed).toBe(true)
+  }
+)

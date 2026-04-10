@@ -2,8 +2,6 @@ import fs from 'node:fs'
 import { browser } from '@wdio/globals'
 import { analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
 
-import { resolveUrl } from './test/utils/urlResolver.js'
-import { entraLogin } from './test/utils/loginHelper.js'
 import { execSync } from 'node:child_process'
 
 const debug = process.env.DEBUG
@@ -45,7 +43,7 @@ export const config = {
   runner: 'local',
 
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
-  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
+  gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
 
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
@@ -144,17 +142,6 @@ export const config = {
     timeout: debug ? oneHour : 60000,
     bail: true
   },
-  // before: async function () {
-  // console.log('in before............')
-  // if (!isAccessibilityRun) return
-
-  // const origGetUrl = browser.getUrl.bind(browser)
-  // browser.getUrl = async function () {
-  //   // if this starts spamming, you’ll know instantly
-  //   return await origGetUrl()
-  // }
-  // console.log('end of before............')
-  // },
 
   afterTest: async function (
     test,
@@ -178,42 +165,6 @@ export const config = {
    * @param {number} result 0 - command success, 1 - command error
    * @param {object} error error object if any
    */
-
-  // afterCommand: async function (commandName) {
-  //   if (isAccessibilityRun) return
-  //   if (commandName === 'deleteSession') return
-
-  //   // critical: avoid infinite recursion / command storms
-  //   if (commandName === 'getUrl') return
-  //   if (inA11yAfterCommand) return
-
-  //   inA11yAfterCommand = true
-  //   try {
-  //     const actualUrl = await browser.getUrl()
-
-  //     if (
-  //       actualUrl === 'about:blank' ||
-  //       /microsoft|ete\.access/.test(actualUrl)
-  //     )
-  //       return
-
-  //     const url = new URL(actualUrl)
-  //     const formattedUrl = `${url.origin}${url.pathname}`
-  //     if (alreadyAnalysed.includes(formattedUrl)) return
-  //     alreadyAnalysed.push(formattedUrl)
-
-  //     const hasViolationsFn = await browser.execute(
-  //       () => typeof window.violations === 'function'
-  //     )
-  //     if (!hasViolationsFn) return
-
-  //     await analyse(browser, '')
-  //   } catch (e) {
-  //     console.warn('[a11y] analyse skipped:', e?.message || e)
-  //   } finally {
-  //     inA11yAfterCommand = false
-  //   }
-  // },
 
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
@@ -262,43 +213,6 @@ export const config = {
    * thrown in the onComplete hook will result in the test run failing.
    * @param world
    */
-
-  beforeScenario: async function (world, result, context) {
-    console.log('Started before scenario.....')
-    analysedThisScenario = false
-
-    const scenarioTags = world.pickle.tags.map((t) => t.name)
-    browser.url(resolveUrl(scenarioTags))
-    browser.options.baseUrl = resolveUrl(scenarioTags)
-    console.log('url is.....' + browser.options.baseUrl)
-    const tags = world.pickle.tags.map((t) => t.name)
-    console.log(`Running scenario with tags: ${tags.join(', ')}`)
-
-    let username, password, role
-
-    if (tags.includes('@admin')) {
-      username = process.env.ENTRA_ID_ADMIN_USER
-      password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'SA-FGCW ADMIN (Equal Experts)'
-    } else if (tags.includes('@reader')) {
-      username = process.env.ENTRA_ID_READER_USER
-      password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'fgcw reader (Equal Experts)'
-    } else if (tags.includes('@writer')) {
-      username = process.env.ENTRA_ID_WRITER_USER
-      password = process.env.ENTRA_ID_USER_PASSWORD
-      role = 'SA-FGCW WRITER (Equal Experts)'
-    }
-
-    await browser.sharedStore.set('currentUser', { username, role })
-
-    if (username && password) {
-      console.log(`Performing Entra ID login for: ${username}`)
-      await entraLogin(username, password)
-    } else {
-      console.log('No role tag detected — skipping login.')
-    }
-  },
 
   afterStep: async function (step, scenario, result) {
     if (!isAccessibilityRun) return

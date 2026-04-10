@@ -173,10 +173,7 @@ class PigFarmerPage extends BasePage {
   }
 
   async navigateToCasesPage() {
-    const environment = process.env.ENVIRONMENT || 'dev'
-    await browser.url(
-      `https://fg-cw-frontend.${environment}.cdp-int.defra.cloud/cases/#all-cases`
-    )
+    await browser.url('/cases/#all-cases')
   }
 
   async isReferenceNumberInTable(referenceNumber) {
@@ -234,7 +231,7 @@ class PigFarmerPage extends BasePage {
       if (expected === undefined) {
         console.warn(`⚠️ No expected value for: "${question}"`)
       } else if (expected !== answer) {
-        console.error(`❌ ${question}: Expected "${expected}", got "${answer}"`)
+        console.error(`${question}: Expected "${expected}", got "${answer}"`)
       } else {
         console.log(`✅ ${question}: "${answer}"`)
       }
@@ -343,15 +340,15 @@ class PigFarmerPage extends BasePage {
       if ((await checkbox.isExisting()) && (await checkbox.isDisplayed())) {
         found = true
         foundSelector = selector
-        console.log(`  ✅ FOUND with: ${selector}`)
+        console.log(`FOUND with: ${selector}`)
         break
       } else {
-        console.log(`  ❌ No match with: ${selector}`)
+        console.log(` No match with: ${selector}`)
       }
     }
 
     if (!found) {
-      console.log(`❌ FAILED to find any matching checkbox`)
+      console.log(`FAILED to find any matching checkbox`)
       throw new Error(
         `Could not find checkbox for task ID: ${taskId}. See console output for available checkboxes.`
       )
@@ -389,9 +386,6 @@ class PigFarmerPage extends BasePage {
   }
 
   async submitApplication() {
-    // const environment = process.env.ENVIRONMENT || 'dev'
-    await browser.url('/flying-pigs/start')
-    await this.login('1100504729', 'Password456')
     // Fill out the application form following the exact flow from steps
     await this.clickStartNow()
     await this.selectPigFarmerYes()
@@ -543,12 +537,12 @@ class PigFarmerPage extends BasePage {
       await noteField.waitForDisplayed()
       const note = this.generateTaskNote(taskName)
       await noteField.setValue(note)
-      console.log(`✅ Added note: ${note}`)
+      console.log(`Added note: ${note}`)
     }
 
     // Click Save and Continue
     await this.clickSaveAndContinue()
-    console.log(`✅ Completed task: ${taskName}`)
+    console.log(`Completed task: ${taskName}`)
   }
 
   async clickIncompleteTaskByName(taskName) {
@@ -564,7 +558,7 @@ class PigFarmerPage extends BasePage {
           const status = await statusTag.getText()
           console.log(`Found '${taskName}' with status: ${status}`)
           if (status === 'Incomplete') {
-            console.log(`🎯 Clicking incomplete task: ${taskName}`)
+            console.log(`Clicking incomplete task: ${taskName}`)
             await taskLink.click()
             return
           }
@@ -573,7 +567,7 @@ class PigFarmerPage extends BasePage {
     }
 
     // Fallback if no incomplete found
-    console.log(`⚠️ No incomplete task found, using fallback`)
+    console.log(`No incomplete task found, using fallback`)
     await this.clickLinkByText(taskName)
   }
 
@@ -628,7 +622,7 @@ class PigFarmerPage extends BasePage {
       )
     } else {
       console.log(
-        `⚠️ No note field found for ${taskName}. Tried: ${noteSelectors.join(', ')}`
+        `No note field found for ${taskName}. Tried: ${noteSelectors.join(', ')}`
       )
     }
   }
@@ -895,6 +889,41 @@ class PigFarmerPage extends BasePage {
     return {
       type: fieldId.includes('approve') ? 'approve' : 'reject',
       reason: randomReason
+    }
+  }
+
+  // clear the state when page not found displayed
+  async recoverIfPageNotFound() {
+    try {
+      const heading = await $('h1')
+
+      await heading.waitForDisplayed({ timeout: 5000 })
+
+      const headingText = (await heading.getText()).trim()
+
+      if (headingText === 'Page not found') {
+        console.log('Page not found detected — clearing application state')
+
+        const clearLink = await $('a=Clear application state')
+
+        await clearLink.waitForDisplayed({ timeout: 5000 })
+        await clearLink.click()
+
+        // wait for navigation away from error page
+        await browser.waitUntil(
+          async () => {
+            const newHeading = await $('h1')
+            const text = await newHeading.getText()
+            return text.trim() !== 'Page not found'
+          },
+          {
+            timeout: 10000,
+            timeoutMsg: 'Page did not recover after clearing application state'
+          }
+        )
+      }
+    } catch (err) {
+      console.log('No Page not found state detected')
     }
   }
 }
