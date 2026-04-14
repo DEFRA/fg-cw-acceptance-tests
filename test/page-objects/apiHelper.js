@@ -7,8 +7,7 @@ export let previousClientRef = ''
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${process.env.GAS_KEY}`,
-  'x-api-key': 'Pe5oGoD3rUEO6FV1HBIXNs0TuZesOnMB'
+  Authorization: `Bearer ${process.env.GAS_KEY}`
 }
 
 function buildUrl(endpoint, queryParams) {
