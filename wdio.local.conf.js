@@ -4,6 +4,7 @@ import chromedriver from 'chromedriver'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { exec } from 'child_process'
+import allure from 'allure-commandline'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -160,8 +161,14 @@ export const config = {
   },
 
   afterStep: async function (step, scenario, result) {
-    if (result.error) {
-      await browser.takeScreenshot()
+    if (!result.passed) {
+      const screenshot = await browser.takeScreenshot()
+
+      allure.addAttachment(
+        `Failure Screenshot - ${step.text || 'step'}`,
+        Buffer.from(screenshot, 'base64'),
+        'image/png'
+      )
     }
   },
 

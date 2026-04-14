@@ -1,14 +1,9 @@
 import fs from 'node:fs'
 import { browser } from '@wdio/globals'
-import { analyse, getHtmlReportByCategory } from './dist/wcagchecker.cjs'
-
-import { execSync } from 'node:child_process'
+import allure from 'allure-commandline'
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
-
-// const alreadyAnalysed = []
-let analysedThisScenario = false
 
 // ---- Run mode (CDP profile -> tag selection) ----
 const profile =
@@ -44,6 +39,8 @@ export const config = {
 
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
   gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
+  // gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
+
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
   port: process.env.CHROMEDRIVER_PORT || 4444,
@@ -152,80 +149,19 @@ export const config = {
     }
   },
 
-  /**
-   * Hook that gets executed after the suite has ended
-   * @param {object} suite suite details
-   */
-  // afterSuite: function (suite) {},
-  /**
-   * Runs after a WebdriverIO command gets executed
-   * @param {string} commandName hook command name
-   * @param {Array} args arguments that command would receive
-   * @param {number} result 0 - command success, 1 - command error
-   * @param {object} error error object if any
-   */
-
-  /**
-   * Gets executed after all tests are done. You still have access to all global variables from
-   * the test.
-   * @param {number} result 0 - test pass, 1 - test fail
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that ran
-   */
   after: function (result, capabilities, specs) {
     console.log('in the after hook=======================')
-
-    if (!isAccessibilityRun) return
-
-    const outDir = './reports/accessibility'
-    fs.mkdirSync(outDir, { recursive: true }) // keep this safety net
-
-    try {
-      const html = getHtmlReportByCategory().replace(
-        /<script>, <template> or <div> /g,
-        'script, template or div '
-      )
-      fs.writeFileSync(`${outDir}/index.html`, html)
-    } catch (e) {
-      console.error('[a11y] Failed writing index.html', e)
-    }
-
-    try {
-      execSync('node --no-warnings generate-accessibility-report.js', {
-        stdio: 'inherit'
-      })
-    } catch (e) {
-      console.error('[a11y] Failed generating accessibility report', e)
-      // DO NOT throw — don’t let reporting kill the suite
-    }
   },
 
-  /**
-   * Gets executed right after terminating the webdriver session.
-   * @param {object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that ran
-   */
-  // afterSession: function (config, capabilities, specs) {},
-  /**
-   * Gets executed after all workers got shut down and the process is about to exit. An error
-   * thrown in the onComplete hook will result in the test run failing.
-   * @param world
-   */
-
   afterStep: async function (step, scenario, result) {
-    if (!isAccessibilityRun) return
-    if (analysedThisScenario) return
+    if (!result.passed) {
+      const screenshot = await browser.takeScreenshot()
 
-    const url = await browser.getUrl()
-    if (url === 'about:blank') return
-
-    analysedThisScenario = true
-
-    try {
-      await analyse(browser, '')
-    } catch (e) {
-      console.warn('[a11y] analyse failed:', e.message)
+      allure.addAttachment(
+        `Failure Screenshot - ${step.text || 'step'}`,
+        Buffer.from(screenshot, 'base64'),
+        'image/png'
+      )
     }
   },
 

@@ -7,7 +7,8 @@ export let previousClientRef = ''
 
 const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${process.env.GAS_KEY}`
+  Authorization: `Bearer ${process.env.GAS_KEY}`,
+  'x-api-key': 'Pe5oGoD3rUEO6FV1HBIXNs0TuZesOnMB'
 }
 
 function buildUrl(endpoint, queryParams) {
@@ -34,7 +35,6 @@ async function apiRequest(method, url, { jsonBody, headers = {} } = {}) {
     headers: { ...DEFAULT_HEADERS, ...headers }
   })
 
-  // console.log('Request body:', JSON.stringify(jsonBody))
   console.log('Request headers:', headers)
   console.log('Request url:', url)
 
