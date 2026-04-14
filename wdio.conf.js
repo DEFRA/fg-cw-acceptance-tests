@@ -27,9 +27,6 @@ console.log('[CDP tags/profile]', {
   tagExpression
 })
 
-// Robust flag for hooks/reporting
-const isAccessibilityRun = tagExpression.includes('@accessibility')
-
 // Optional: TEMP debug (remove once confirmed in CDP logs)
 // console.log('[CDP] profile/tagExpression', { profile, tagExpression })
 // let inA11yAfterCommand = false
@@ -166,8 +163,8 @@ export const config = {
   },
 
   afterScenario: async function (world, result, context) {
-    if (isAccessibilityRun) return // DO NOT reload sessions during a11y collection
     await browser.reloadSession()
+    await browser.sharedStore.set('currentUser', null)
   },
 
   onComplete: function (exitCode, config, capabilities, results) {
