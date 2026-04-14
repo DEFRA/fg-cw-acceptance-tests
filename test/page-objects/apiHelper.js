@@ -34,7 +34,6 @@ async function apiRequest(method, url, { jsonBody, headers = {} } = {}) {
     headers: { ...DEFAULT_HEADERS, ...headers }
   })
 
-  // console.log('Request body:', JSON.stringify(jsonBody))
   console.log('Request headers:', headers)
   console.log('Request url:', url)
 
