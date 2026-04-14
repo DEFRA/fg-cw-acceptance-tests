@@ -15,10 +15,10 @@
   },
   "scripts": {
     "clean": "rm -rf allure-results allure-report reports/accessibility reports",
-    "test": "npm run clean && wdio run wdio.conf.js --logLevel trace",
+    "test": "npm run clean && wdio run wdio.conf.js --logLevel trace --cucumberOpts.tags='@test'",
     "test:local-env": "npm run clean && wdio run wdio.local.env.conf.js --cucumberOpts.tags='@test'",
     "test:local": "npm run clean && wdio run wdio.local.conf.js --cucumberOpts.tags='@test'",
-    "test:tags": "npm run clean && SELECTED_TAGS='@cw' wdio run wdio.local.conf.js --cucumberOpts.tags='@cw'",
+    "test:tags": "npm run clean && SELECTED_TAGS='@cw' wdio run wdio.local.conf.js --cucumberOpts.tags='@test'",
     "test:local:debug": "DEBUG=true npm run test:local",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
     "format": "prettier --write '**/*.{js,md,json,config.js}'",
