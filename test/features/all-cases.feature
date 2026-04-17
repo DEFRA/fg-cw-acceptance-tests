@@ -1,4 +1,4 @@
-@cw @writer
+@cw @writer @test
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User can view a submitted application on the Casework Portal
@@ -12,7 +12,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the Timeline should display these messages
       | Case received |
 
-  @assignUser @test
+  @assignUser
   Scenario: Admin user can assign a case to users
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
@@ -25,7 +25,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser @test
+  @assignUser
   Scenario: Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
@@ -39,7 +39,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser @timeline @test
+  @assignUser @timeline
   Scenario: User sees the ‘Case assigned’ message on the timeline and can view the notes
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
