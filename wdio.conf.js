@@ -46,12 +46,12 @@ export const config = {
   specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
-  maxInstances: debug ? 1 : 5,
 
   services: ['shared-store'],
 
   capabilities: [
     {
+      maxInstances: 5,
       // Outbound calls must go via the proxy
       proxy: {
         proxyType: 'manual',
