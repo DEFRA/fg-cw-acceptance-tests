@@ -52,14 +52,12 @@ export const config = {
   exclude: [
     // 'path/to/excluded/files'
   ],
-  //
-  maxInstances: 1,
 
   capabilities: debug
     ? [{ browserName: 'chrome' }]
     : [
         {
-          maxInstances: 1,
+          maxInstances: 5,
           browserName: 'chrome',
           'goog:chromeOptions': {
             binary:
