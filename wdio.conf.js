@@ -35,8 +35,8 @@ export const config = {
   runner: 'local',
 
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
-  gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
-  // gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
+  // gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
+  gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
 
   // Connection to remote chromedriver
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
@@ -46,12 +46,12 @@ export const config = {
   specs: ['./test/features/**/*.feature'],
   // Tests to exclude
   exclude: [],
+  maxInstances: 5,
 
   services: ['shared-store'],
 
   capabilities: [
     {
-      maxInstances: 5,
       // Outbound calls must go via the proxy
       proxy: {
         proxyType: 'manual',
