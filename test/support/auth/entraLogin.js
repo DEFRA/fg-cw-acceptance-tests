@@ -1,63 +1,146 @@
-export async function entraLogin(username, password) {
+export async function entraLogin(username, password, options = {}) {
+  const {
+    expectedUrlIncludes = '/',
+    maxAttempts = 3,
+    loginTimeout = 15000,
+    postLoginTimeout = 30000
+  } = options
+
   console.log(`Starting Entra login for: ${username}`)
 
-  const clickFresh = async (selector, action = 'click', value) => {
-    const el = await $(selector)
-    await el.waitForDisplayed({ timeout: 15000 })
-    await el.waitForEnabled({ timeout: 15000 })
+  const microsoftHosts = ['login.microsoftonline.com', 'login.live.com']
 
-    if (action === 'setValue') {
-      await el.click()
-      await el.clearValue()
-      await el.setValue(value)
-    } else {
-      await el.click()
-    }
+  const isMicrosoftLoginUrl = async () => {
+    const url = await browser.getUrl()
+    return microsoftHosts.some((host) => url.includes(host))
   }
 
-  const retry = async (fn, retries = 3) => {
-    let lastErr
-    for (let i = 0; i < retries; i++) {
-      try {
-        return await fn()
-      } catch (err) {
-        lastErr = err
-        const msg = String(err?.message || '')
-        const isStale = msg.includes('stale element reference')
-        if (!isStale || i === retries - 1) {
-          throw err
-        }
-        console.log(`Retrying after stale element (${i + 1}/${retries})`)
-      }
-    }
-    throw lastErr
-  }
-
-  await retry(async () => {
-    await clickFresh('#i0116', 'setValue', username)
-    await clickFresh('#idSIButton9')
-
-    await clickFresh('#i0118', 'setValue', password)
-    await clickFresh('#idSIButton9')
-
+  const isDisplayedSafe = async (selector) => {
     try {
-      const staySignedInBtn = await $('#idSIButton9')
-      await staySignedInBtn.waitForDisplayed({ timeout: 5000 })
-      await staySignedInBtn.waitForEnabled({ timeout: 5000 })
-      await staySignedInBtn.click()
+      const el = await $(selector)
+      return (await el.isExisting()) && (await el.isDisplayed())
+    } catch {
+      return false
+    }
+  }
+
+  const clickWhenReady = async (selector) => {
+    const el = await $(selector)
+    await el.waitForDisplayed({ timeout: loginTimeout })
+    await el.waitForEnabled({ timeout: loginTimeout })
+    await el.click()
+  }
+
+  const typeWhenReady = async (selector, value) => {
+    const el = await $(selector)
+    await el.waitForDisplayed({ timeout: loginTimeout })
+    await el.waitForEnabled({ timeout: loginTimeout })
+    await el.click()
+    await el.clearValue()
+    await el.setValue(value)
+  }
+
+  const waitForPasswordField = async () => {
+    await browser.waitUntil(async () => await isDisplayedSafe('#i0118'), {
+      timeout: loginTimeout,
+      interval: 500,
+      timeoutMsg: 'Password field did not appear after entering username'
+    })
+  }
+
+  const handleStaySignedInPromptIfPresent = async () => {
+    try {
+      if (await isDisplayedSafe('#idSIButton9')) {
+        const currentUrl = await browser.getUrl()
+
+        if (microsoftHosts.some((host) => currentUrl.includes(host))) {
+          console.log('Handling "Stay signed in?" prompt')
+          await clickWhenReady('#idSIButton9')
+        }
+      }
     } catch {
       console.log('No "Stay signed in?" prompt displayed')
     }
+  }
 
-    await browser.waitUntil(
-      async () => {
-        const url = await browser.getUrl()
-        return !url.includes('login.microsoftonline.com')
-      },
-      {
-        timeout: 20000,
-        timeoutMsg: 'Entra login did not complete - still on login page'
+  const hasReachedApp = async () => {
+    const url = await browser.getUrl()
+    const stillOnMicrosoft = microsoftHosts.some((host) => url.includes(host))
+
+    if (stillOnMicrosoft) {
+      return false
+    }
+
+    return url.includes(expectedUrlIncludes)
+  }
+
+  const performLoginAttempt = async () => {
+    if (await isDisplayedSafe('#i0116')) {
+      await typeWhenReady('#i0116', username)
+      await clickWhenReady('#idSIButton9')
+    }
+
+    await waitForPasswordField()
+
+    if (await isDisplayedSafe('#i0118')) {
+      await typeWhenReady('#i0118', password)
+      await clickWhenReady('#idSIButton9')
+    }
+
+    await browser.pause(1000)
+    await handleStaySignedInPromptIfPresent()
+
+    await browser.waitUntil(async () => await hasReachedApp(), {
+      timeout: postLoginTimeout,
+      interval: 1000,
+      timeoutMsg: `Entra login did not complete - expected URL to include "${expectedUrlIncludes}"`
+    })
+  }
+
+  let lastError
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      console.log(`Entra login attempt ${attempt}/${maxAttempts}`)
+      await performLoginAttempt()
+
+      if (await hasReachedApp()) {
+        console.log('Entra login successful')
+        return
       }
-    )
-  })
+
+      throw new Error(
+        `Login completed but expected app URL was not reached: ${expectedUrlIncludes}`
+      )
+    } catch (error) {
+      lastError = error
+      const currentUrl = await browser.getUrl()
+
+      console.log(
+        `Entra login attempt ${attempt} failed: ${error.message}. Current URL: ${currentUrl}`
+      )
+
+      if (attempt === maxAttempts) {
+        break
+      }
+
+      try {
+        if (await isMicrosoftLoginUrl()) {
+          console.log('Still on Microsoft login page, refreshing before retry')
+          await browser.refresh()
+        } else {
+          console.log('Navigating back to retry login')
+          await browser.back()
+        }
+      } catch {
+        console.log('Recovery action failed, continuing with retry')
+      }
+
+      await browser.pause(2000)
+    }
+  }
+
+  throw new Error(
+    `Entra login failed after ${maxAttempts} attempts. Last error: ${lastError?.message}`
+  )
 }
