@@ -153,7 +153,8 @@ export const config = {
     }
   },
 
-  afterScenario: async function () {
+  afterScenario: async function (world, result, context) {
+    await browser.reloadSession()
     try {
       await browser.sharedStore.set('currentUser', null)
     } catch (e) {
