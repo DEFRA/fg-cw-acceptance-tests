@@ -1,4 +1,4 @@
-@admin @cw @writer
+@admin @cw @writer @test
 Feature: Casework portal user management
 
   Scenario: Admin user can view the User list and user details page
