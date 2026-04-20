@@ -6,16 +6,6 @@ import {
   getGrantsCredentials
 } from './credentialsHelper.js'
 
-async function shouldReuseSession(service, username) {
-  const currentUser = await browser.sharedStore.get('currentUser')
-
-  return (
-    currentUser &&
-    currentUser.service === service &&
-    currentUser.username === username
-  )
-}
-
 async function rememberCurrentUser(user) {
   await browser.sharedStore.set('currentUser', user)
 }
@@ -28,19 +18,13 @@ export async function loginToCaseworking(role = 'writer') {
     role: resolvedRole
   } = getCaseworkerCredentials(role)
 
-  if (await shouldReuseSession('caseworking', username)) {
-    console.log(`Reusing existing Caseworking session for ${username}`)
-    await browser.url(url)
-    browser.options.baseUrl = url
-    return
-  }
-
   await browser.url(url)
   browser.options.baseUrl = url
 
   await rememberCurrentUser({
     username,
     role: resolvedRole,
+    loginType: role,
     service: 'caseworking'
   })
 
@@ -48,22 +32,17 @@ export async function loginToCaseworking(role = 'writer') {
   await entraLogin(username, password)
 }
 
-export async function loginToGrants() {
+export async function loginToGrants(role = 'applicant') {
   const url = getGrantsUrl()
   const { username, password } = getGrantsCredentials()
-
-  if (await shouldReuseSession('grants', username)) {
-    console.log(`Reusing existing Grants session for ${username}`)
-    await browser.url(url)
-    browser.options.baseUrl = url
-    return
-  }
 
   await browser.url(url)
   browser.options.baseUrl = url
 
   await rememberCurrentUser({
     username,
+    role: 'Grants user',
+    loginType: role,
     service: 'grants'
   })
 
