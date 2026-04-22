@@ -1,4 +1,4 @@
-@cw @writer @test
+@cw @writer
 Feature: SFI Grant Application status
 
   Scenario: Application cases status - New application - On Hold - Withdrawn

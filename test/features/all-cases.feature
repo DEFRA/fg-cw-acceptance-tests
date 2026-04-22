@@ -25,7 +25,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser @test
+  @assignUser
   Scenario: Admin user can Assign a case to users and add notes
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
@@ -39,7 +39,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see a success message confirming case assignment
     And the selected case should be assigned to the chosen case worker
 
-  @assignUser @timeline @test
+  @assignUser @timeline
   Scenario: User sees the ‘Case assigned’ message on the timeline and can view the notes
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
@@ -491,6 +491,10 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the timeline section should display today as the received date for both applications
     When the user click previous client ref view case link on Timeline page
     Then the user should be navigated to the previous case
+    And the Timeline should display these messages
+      | Case received                              |
+      | Stage 'Tasks' outcome (Start)              |
+      | Stage 'Tasks' outcome (Return to customer) |
 
   @amend_app
   Scenario: User can cancel application and submit an amended application - Agreement Drafted to Application Amend

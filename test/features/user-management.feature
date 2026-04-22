@@ -1,4 +1,4 @@
-@admin @cw @writer @test
+@admin @cw @writer
 Feature: Casework portal user management
 
   Scenario: Admin user can view the User list and user details page
@@ -114,4 +114,19 @@ Feature: Casework portal user management
     Given the user signed into Caseworking with read permission
     And the user navigates to casework user management page
     Then the user should be shown a permission denied message
+
+
+  Scenario: User with admin permission cannot perform activity on the case
+    Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking with admin permission
+    When the user waits for the case to appear on the Casework Portal
+    And the user opens the application from the "All cases" list
+    Then the user should not the start button
+    And the user click the "Application" link
+    Then the user can see the Application data
+    And the user click the "Calculations" link
+    Then the user should be shown a permission denied message
+
+
+
 

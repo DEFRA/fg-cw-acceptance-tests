@@ -5,7 +5,7 @@ Feature: Processing a Flying Pigs grant application
   I want to review and process a submitted Flying Pigs grant application
   So that I can move it through to the Contracted stage
 
-  @grantsui @writer
+  @grantsui @writer @test
   Scenario: Review and approve a Flying Pigs grant application
     Given a Flying Pigs application has been submitted by an applicant
 
