@@ -32,3 +32,9 @@ Then(
     await expect(isDisplayed).toBe(true)
   }
 )
+Given(
+  /^the user signed into Caseworking with admin permission$/,
+  async function () {
+    await loginToCaseworking('admin')
+  }
+)

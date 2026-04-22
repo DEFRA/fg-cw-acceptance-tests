@@ -3,26 +3,6 @@ import { browser } from '@wdio/globals'
 import allureReporter from '@wdio/allure-reporter'
 
 const debug = process.env.DEBUG
-const oneHour = 60 * 60 * 1000
-
-const profile =
-  process.env.PROFILE ||
-  process.env.CDP_PROFILE ||
-  process.env.TEST_PROFILE ||
-  ''
-
-if (profile === 'accessibility' && !process.env.SELECTED_TAGS) {
-  process.env.SELECTED_TAGS = '@accessibility'
-}
-
-const tagExpression = process.env.SELECTED_TAGS || '@cw'
-console.log('[CDP tags/profile]', {
-  PROFILE: process.env.PROFILE,
-  CDP_PROFILE: process.env.CDP_PROFILE,
-  TEST_PROFILE: process.env.TEST_PROFILE,
-  SELECTED_TAGS: process.env.SELECTED_TAGS,
-  tagExpression
-})
 
 export const config = {
   runner: 'local',
@@ -35,7 +15,6 @@ export const config = {
 
   specs: ['./test/features/**/*.feature'],
   exclude: [],
-  maxInstances: 5,
 
   services: ['shared-store'],
 
@@ -47,6 +26,7 @@ export const config = {
         sslProxy: 'localhost:3128'
       },
       browserName: 'chrome',
+      maxInstances: 1,
       'goog:chromeOptions': {
         args: [
           '--no-sandbox',
@@ -67,15 +47,15 @@ export const config = {
     }
   ],
 
-  execArgv: debug ? ['--inspect'] : [],
+  execArgv: [],
 
   logLevel: debug ? 'debug' : 'info',
 
   bail: 0,
   waitforTimeout: 10000,
   waitforInterval: 200,
-  connectionRetryTimeout: 60000,
-  connectionRetryCount: 1,
+  connectionRetryTimeout: 120000,
+  connectionRetryCount: 3,
   framework: 'cucumber',
 
   reporters: [
@@ -106,31 +86,8 @@ export const config = {
     snippets: true,
     source: true,
     strict: false,
-    tagExpression,
     timeout: 180000,
     ignoreUndefinedDefinitions: false
-  },
-
-  mochaOpts: {
-    ui: 'bdd',
-    timeout: debug ? oneHour : 60000,
-    bail: true
-  },
-
-  afterTest: async function (test, context, { error }) {
-    if (error) {
-      try {
-        const screenshot = await browser.takeScreenshot()
-
-        allureReporter.addAttachment(
-          `Failure Screenshot - ${test?.title || 'test'}`,
-          Buffer.from(screenshot, 'base64'),
-          'image/png'
-        )
-      } catch (e) {
-        console.log(`Could not capture afterTest screenshot: ${e.message}`)
-      }
-    }
   },
 
   after: function () {
@@ -154,6 +111,7 @@ export const config = {
   },
 
   afterScenario: async function (world, result, context) {
+    console.debug('************AFTER SCENARIO**************')
     await browser.reloadSession()
     try {
       await browser.sharedStore.set('currentUser', null)

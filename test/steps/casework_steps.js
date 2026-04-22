@@ -518,6 +518,7 @@ Then(
 Then(
   /^the timeline section should display both applications with correct statuses$/,
   async function () {
+    expect(await TimelinePage.headerH2()).toEqual('Timeline (multiple cases)')
     const rows = await TimelinePage.getTimelineRowData()
 
     const currentApplicationRow = rows.find(
@@ -650,3 +651,11 @@ Then(
     expect(apiResponse.statusCode).toBe(409)
   }
 )
+Then(/^the user should not the start button$/, async function () {
+  const startButton = await $('button=Start')
+  await expect(startButton).not.toBeDisplayed()
+})
+Then(/^the user can see the Application data$/, async function () {
+  const actual = await ApplicationPage.headerH2()
+  await expect(actual).toEqual('Application')
+})
