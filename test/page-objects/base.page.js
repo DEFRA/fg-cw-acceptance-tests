@@ -145,4 +145,8 @@ export default class BasePage {
     await radios[randomIndex].scrollIntoView()
     await radios[randomIndex].click()
   }
+
+  async tableRows() {
+    return $$('tbody.govuk-table__body tr.govuk-table__row').length
+  }
 }

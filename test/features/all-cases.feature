@@ -1,4 +1,4 @@
-@cw @writer @test
+@cw @writer
 Feature: Caseworkers can view and manage applications from the All Cases page
 
   Scenario: User can view a submitted application on the Casework Portal
@@ -11,6 +11,20 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
       | Case received |
+
+  Scenario: User can search using SBI and client Reference
+    Given the user has submitted an application for the "frps-private-beta" grant
+    And the user signed into Caseworking as a writer
+    When the user waits for the case to appear on the Casework Portal
+    And the user searches for a case using the case reference
+    Then the case should appear in the search results visible to the user
+    Then the case status should be "Application received"
+    And the user opens the application from the "All cases" list
+    Then the user should see the submitted application information
+    And the user navigates to the "Timeline" section
+    Then the Timeline should display these messages
+      | Case received |
+
 
   @assignUser
   Scenario: Admin user can assign a case to users

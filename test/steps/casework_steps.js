@@ -659,3 +659,16 @@ Then(/^the user can see the Application data$/, async function () {
   const actual = await ApplicationPage.headerH2()
   await expect(actual).toEqual('Application')
 })
+When(
+  /^the user searches for a case using the case reference$/,
+  async function () {
+    await AllcasesPage.enterText('#search', generatedClientRef)
+    await AllcasesPage.clickButtonByText('Search')
+  }
+)
+Then(
+  /^the case should appear in the search results visible to the user$/,
+  await async function () {
+    expect(await AllcasesPage.tableRows()).toEqual(1)
+  }
+)
