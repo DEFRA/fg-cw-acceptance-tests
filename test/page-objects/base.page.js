@@ -53,7 +53,12 @@ export default class BasePage {
 
   async alertText() {
     const alertBox = await $('div[role="alert"]')
-    return await alertBox.getText()
+    return alertBox.getText()
+  }
+
+  async getSelectorText(selector) {
+    const element = await $(`[data-testid="${selector}"]`)
+    return element.getText()
   }
 
   async getTaskStatusByName(taskName) {

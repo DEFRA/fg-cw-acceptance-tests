@@ -470,13 +470,10 @@ Then(/^the user can view Land parcel calculations page$/, async function () {
     'Land parcel calculations'
   )
 })
-When(
-  /^the user click "([^"]*)" with a comment$/,
-  async function (applicationDecision) {
-    const code = applicationDecision.toUpperCase().replace(/ /g, '_')
-    await TasksPage.approvalNotes(code)
-  }
-)
+When('the user enter {string} comment', async function (applicationDecision) {
+  const code = applicationDecision.toUpperCase().replace(/ /g, '_')
+  await TasksPage.approvalNotes(code)
+})
 Then(
   'the case details on GAS API for {string} should be:',
   async function (code, dataTable) {
@@ -670,5 +667,22 @@ Then(
   /^the case should appear in the search results visible to the user$/,
   await async function () {
     expect(await AllcasesPage.tableRows()).toEqual(1)
+  }
+)
+Given(
+  'the user clicks the {string} link until the draft agreement is received',
+  async function (buttonText) {
+    await browser.waitUntil(
+      async () => {
+        await AllcasesPage.clickLinkByText(buttonText)
+        const text = await TasksPage.getSelectorText('stage-heading')
+        return text === 'Agreement ready for applicant'
+      },
+      {
+        timeout: 60000,
+        interval: 5000,
+        timeoutMsg: 'Draft agreement was not received within 60 seconds'
+      }
+    )
   }
 )
