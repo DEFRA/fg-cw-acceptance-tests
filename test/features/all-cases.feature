@@ -1,6 +1,6 @@
 @cw @writer
 Feature: Caseworkers can view and manage applications from the All Cases page
-
+  @test
   Scenario: User can view a submitted application on the Casework Portal
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
@@ -817,4 +817,6 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
     #cannot amendable
     And the user cannot submitted amend application for the "frps-private-beta" grant
+
+    Scenario: Return to application
 

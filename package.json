@@ -80,6 +80,7 @@
   "dependencies": {
     "@hapi/wreck": "18.1.0",
     "axe-core": "4.10.3",
+    "axios": "1.18.1",
     "date-fns": "4.1.0",
     "dayjs": "1.11.19",
     "handlebars": ">=4.7.9",
