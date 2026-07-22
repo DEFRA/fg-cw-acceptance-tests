@@ -686,3 +686,9 @@ Given(
     )
   }
 )
+Given(
+  'the user selects Option {string} for the case',
+  async function (optionText) {
+    await AllcasesPage.selectRadioByValue(optionText)
+  }
+)
