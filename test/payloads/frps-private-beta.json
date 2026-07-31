@@ -4,7 +4,8 @@
     "sbi": "106284736",
     "frn": "{{random_frn}}",
     "crn": "1102838829",
-    "submittedAt": "{{current_datetime}}"
+    "submittedAt": "{{current_datetime}}",
+    "configVersion": "1.0.0"
   },
   "answers": {
     "rulesCalculations": {

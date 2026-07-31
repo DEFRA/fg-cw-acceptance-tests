@@ -5,7 +5,8 @@
     "submittedAt": "{{current_datetime}}",
     "sbi": "113598888",
     "frn": "1100943757",
-    "crn": "1100943757"
+    "crn": "1100943757",
+    "configVersion": "1.0.0"
   },
   "answers": {
     "businessDetailsUpToDate": true,
