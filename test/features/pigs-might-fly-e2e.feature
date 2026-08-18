@@ -5,7 +5,7 @@ Feature: Processing a Flying Pigs grant application
   I want to review and process a submitted Flying Pigs grant application
   So that I can move it through to the Contracted stage
 
-  @grantsui @writer
+  @grantsui @writer @test
   Scenario: Review and approve a Flying Pigs grant application
     Given a Flying Pigs application has been submitted by an applicant
 
@@ -16,11 +16,22 @@ Feature: Processing a Flying Pigs grant application
     And I view the Case Details
     Then I should see the answers submitted by the applicant
 
+
     When the user click the "Tasks" link
     And the user click the "Start" button
+
+    #Pig stock review tasks
     When the user select "Accept" to complete "Verify pig farmer status" task
     When the user select "Accept" to complete "Check pig stock numbers" task
     When the user select "Accept" to complete "Check number of White Pigs" task
+
+
+  #Reference capture tasks
+
+    When the user enter "1234566" to complete "Capture Siti/FC reference" task
+    When the user enter "4999" to complete "Capture herd size" task
+    When the user enter "28/09/2026" to complete "Capture inspection date" task
+
 
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" link

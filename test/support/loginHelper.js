@@ -19,7 +19,7 @@ export async function loginToCaseworking(role = 'writer') {
   } = getCaseworkerCredentials(role)
 
   await browser.url(url)
-  browser.options.baseUrl = url
+  // browser.options.baseUrl = url
 
   await rememberCurrentUser({
     username,
