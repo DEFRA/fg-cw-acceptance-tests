@@ -901,7 +901,11 @@ class PigFarmerPage extends BasePage {
 
       const headingText = (await heading.getText()).trim()
 
-      if (headingText === 'Page not found') {
+      if (
+        headingText === 'Page not found' ||
+        headingText === 'You do not have permission to view this page' ||
+        headingText === 'Application complete'
+      ) {
         console.log('Page not found detected — clearing application state')
 
         const clearLink = await $('a=Clear application state')

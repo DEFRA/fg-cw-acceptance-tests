@@ -9,6 +9,11 @@ import {
   getApplicationType
 } from '../utils/shared-data.js'
 import { loginToCaseworking, loginToGrants } from '../support/loginHelper.js'
+import TasksPage from '../page-objects/tasks.page.js'
+import { STSClient } from '@aws-sdk/client-sts'
+import { config } from '../support/config/config.js'
+import { generateToken } from '../support/grants-config-broker-token.js'
+import { expect } from 'vitest'
 
 let referenceNumber
 
@@ -200,6 +205,29 @@ Given(
     console.log(
       `Application submitted with reference number: ${referenceNumber}`
     )
+
+    // testing CB API
+
+    console.log('GETTING CONFIG BROKER TOKEN')
+    const GRANT_CODE = 'woodland'
+
+    const sts = new STSClient({ region: config.get('aws.region') })
+
+    try {
+      const token = await generateToken(sts)
+
+      const url = `${config.get('configBroker.apiEndpoint')}/api/latestVersion?grant=${GRANT_CODE}`
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      expect(response.status).toBe(200)
+
+      const body = await response.json()
+      expect(body).toBeDefined()
+    } finally {
+      sts.destroy()
+    }
   }
 )
 
@@ -495,3 +523,12 @@ Then('the user should see {string} Page', async function (expectedText) {
   const actualApprovalText = await PigFarmerPage.headerH2()
   await expect(actualApprovalText).toEqual(expectedText)
 })
+When(
+  'the user enter {string} to complete {string} task',
+  async function (value, taskName) {
+    await TasksPage.clickLinkByText(taskName)
+    await TasksPage.enterText('#value', value)
+    // await TasksPage.approvalNotes(option)
+    await TasksPage.clickButtonByText('Confirm')
+  }
+)
