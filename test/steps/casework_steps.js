@@ -274,7 +274,7 @@ Then('the user {string} with a comment', async function (applicationDecision) {
   await TasksPage.approvalNotes(code)
 })
 Then('the case status should be {string}', async function (expectedStatus) {
-  const clientRef = generatedClientRef // or this.generatedClientRef if you store it on world
+  const clientRef = generatedClientRef
 
   await browser.waitUntil(
     async () => {

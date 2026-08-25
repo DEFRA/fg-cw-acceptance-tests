@@ -88,6 +88,11 @@ export default class BasePage {
     await radio.click()
   }
 
+  async selectCheckBoxByValue(value) {
+    const radio = await $(`input[type="checkbox"][value="${value}"]`)
+    await radio.click()
+  }
+
   async selectRadioByLabel(labelText) {
     const locator = `//label[normalize-space()="${labelText}"]`
 

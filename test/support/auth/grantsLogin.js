@@ -1,7 +1,10 @@
+import PigFarmerPage from '../../page-objects/pig-farmer.page.js'
+
 export async function grantsLogin(username, password) {
+  await PigFarmerPage.recoverIfPageNotFound()
   const usernameInput = await $('#crn')
   const passwordInput = await $('#password')
-  const signInButton = await $('#submit')
+  const signInButton = await $('button=Sign in')
 
   await usernameInput.waitForDisplayed({ timeout: 10000 })
   await usernameInput.setValue(username)

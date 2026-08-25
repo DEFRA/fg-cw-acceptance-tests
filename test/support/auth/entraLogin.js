@@ -1,95 +1,119 @@
 export async function entraLogin(username, password, options = {}) {
   const {
+    applicationUrl,
     expectedUrlIncludes = '/',
     maxAttempts = 3,
     loginTimeout = 15000,
     postLoginTimeout = 30000
   } = options
 
+  if (!applicationUrl) {
+    throw new Error('entraLogin requires applicationUrl in the options')
+  }
+
   console.log(`Starting Entra login for: ${username}`)
+  console.log(`Application URL: ${applicationUrl}`)
 
   const microsoftHosts = ['login.microsoftonline.com', 'login.live.com']
 
   const isMicrosoftLoginUrl = async () => {
-    const url = await browser.getUrl()
-    return microsoftHosts.some((host) => url.includes(host))
+    try {
+      const url = await browser.getUrl()
+
+      return microsoftHosts.some((host) => url.includes(host))
+    } catch {
+      return false
+    }
   }
 
   const isDisplayedSafe = async (selector) => {
     try {
-      const el = await $(selector)
-      return (await el.isExisting()) && (await el.isDisplayed())
+      const element = await $(selector)
+
+      return (await element.isExisting()) && (await element.isDisplayed())
     } catch {
       return false
     }
   }
 
   const clickWhenReady = async (selector) => {
-    const el = await $(selector)
-    await el.waitForDisplayed({ timeout: loginTimeout })
-    await el.waitForEnabled({ timeout: loginTimeout })
-    await el.click()
+    const element = await $(selector)
+
+    await element.waitForDisplayed({
+      timeout: loginTimeout
+    })
+
+    await element.waitForEnabled({
+      timeout: loginTimeout
+    })
+
+    await element.click()
   }
 
   const typeWhenReady = async (selector, value) => {
-    const el = await $(selector)
-    await el.waitForDisplayed({ timeout: loginTimeout })
-    await el.waitForEnabled({ timeout: loginTimeout })
-    await el.click()
-    await el.clearValue()
-    await el.setValue(value)
+    const element = await $(selector)
+
+    await element.waitForDisplayed({
+      timeout: loginTimeout
+    })
+
+    await element.waitForEnabled({
+      timeout: loginTimeout
+    })
+
+    await element.click()
+    await element.clearValue()
+    await element.setValue(value)
   }
 
   const waitForPasswordField = async () => {
-    await browser.waitUntil(async () => await isDisplayedSafe('#i0118'), {
-      timeout: loginTimeout,
-      interval: 500,
-      timeoutMsg: 'Password field did not appear after entering username'
-    })
+    await browser.waitUntil(
+      async () => {
+        return await isDisplayedSafe('#i0118')
+      },
+      {
+        timeout: loginTimeout,
+        interval: 500,
+        timeoutMsg: 'Password field did not appear after entering username'
+      }
+    )
   }
 
   const handleStaySignedInPromptIfPresent = async () => {
     try {
-      if (await isDisplayedSafe('#idSIButton9')) {
-        const currentUrl = await browser.getUrl()
-
-        if (microsoftHosts.some((host) => currentUrl.includes(host))) {
-          console.log('Handling "Stay signed in?" prompt')
-          await clickWhenReady('#idSIButton9')
-        }
+      if (!(await isDisplayedSafe('#idSIButton9'))) {
+        return
       }
-    } catch {
-      console.log('No "Stay signed in?" prompt displayed')
+
+      const currentUrl = await browser.getUrl()
+
+      if (microsoftHosts.some((host) => currentUrl.includes(host))) {
+        console.log('Handling "Stay signed in?" prompt')
+
+        await clickWhenReady('#idSIButton9')
+      }
+    } catch (error) {
+      console.log(`No "Stay signed in?" prompt displayed: ${error.message}`)
     }
   }
 
   const hasReachedApp = async () => {
-    const url = await browser.getUrl()
-    const stillOnMicrosoft = microsoftHosts.some((host) => url.includes(host))
+    try {
+      const url = await browser.getUrl()
 
-    if (stillOnMicrosoft) {
+      const stillOnMicrosoft = microsoftHosts.some((host) => url.includes(host))
+
+      if (stillOnMicrosoft) {
+        return false
+      }
+
+      return url.includes(expectedUrlIncludes)
+    } catch {
       return false
     }
-
-    return url.includes(expectedUrlIncludes)
   }
 
-  const performLoginAttempt = async () => {
-    if (await isDisplayedSafe('#i0116')) {
-      await typeWhenReady('#i0116', username)
-      await clickWhenReady('#idSIButton9')
-    }
-
-    await waitForPasswordField()
-
-    if (await isDisplayedSafe('#i0118')) {
-      await typeWhenReady('#i0118', password)
-      await clickWhenReady('#idSIButton9')
-    }
-
-    await browser.pause(1000)
-    await handleStaySignedInPromptIfPresent()
-
+  const waitForApplication = async () => {
     await browser.waitUntil(async () => await hasReachedApp(), {
       timeout: postLoginTimeout,
       interval: 1000,
@@ -97,43 +121,128 @@ export async function entraLogin(username, password, options = {}) {
     })
   }
 
+  const performLoginAttempt = async () => {
+    const currentUrl = await browser.getUrl()
+
+    console.log(`Current URL before login attempt: ${currentUrl}`)
+
+    /*
+     * Username page
+     */
+    if (await isDisplayedSafe('#i0116')) {
+      console.log('Entering Entra username')
+
+      await typeWhenReady('#i0116', username)
+
+      await clickWhenReady('#idSIButton9')
+    }
+
+    /*
+     * Password page
+     */
+    await waitForPasswordField()
+
+    if (await isDisplayedSafe('#i0118')) {
+      console.log('Entering Entra password')
+
+      await typeWhenReady('#i0118', password)
+
+      await clickWhenReady('#idSIButton9')
+    }
+
+    /*
+     * Give Entra a moment to process the login.
+     */
+    await browser.pause(1000)
+
+    /*
+     * Handle "Stay signed in?"
+     */
+    await handleStaySignedInPromptIfPresent()
+
+    /*
+     * Do NOT just assume that leaving Microsoft means login succeeded.
+     * Wait until the actual application URL is reached.
+     */
+    await waitForApplication()
+  }
+
   let lastError
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       console.log(`Entra login attempt ${attempt}/${maxAttempts}`)
-      await performLoginAttempt()
 
-      if (await hasReachedApp()) {
-        console.log('Entra login successful')
-        return
+      /*
+       * Only navigate to the application on the first attempt.
+       */
+      if (attempt === 1) {
+        console.log(`Navigating to application: ${applicationUrl}`)
+
+        await browser.url(applicationUrl)
       }
 
-      throw new Error(
-        `Login completed but expected app URL was not reached: ${expectedUrlIncludes}`
-      )
+      await performLoginAttempt()
+
+      /*
+       * Final verification.
+       */
+      const successful = await hasReachedApp()
+
+      if (!successful) {
+        throw new Error(
+          `Login finished but application URL was not reached. Expected URL to include "${expectedUrlIncludes}"`
+        )
+      }
+
+      console.log(`Entra login successful for ${username}`)
+
+      return
     } catch (error) {
       lastError = error
-      const currentUrl = await browser.getUrl()
 
-      console.log(
-        `Entra login attempt ${attempt} failed: ${error.message}. Current URL: ${currentUrl}`
-      )
+      let currentUrl = 'unknown'
+
+      try {
+        currentUrl = await browser.getUrl()
+      } catch {
+        // Ignore getUrl failure
+      }
+
+      console.log(`Entra login attempt ${attempt} failed: ${error.message}`)
+
+      console.log(`Current URL after failure: ${currentUrl}`)
 
       if (attempt === maxAttempts) {
         break
       }
 
+      /*
+       * Recovery before the next attempt.
+       */
       try {
         if (await isMicrosoftLoginUrl()) {
-          console.log('Still on Microsoft login page, refreshing before retry')
+          console.log('Still on Microsoft login page - refreshing')
+
           await browser.refresh()
         } else {
-          console.log('Navigating back to retry login')
-          await browser.back()
+          console.log(
+            'Not on Microsoft login page - navigating to application again'
+          )
+
+          await browser.url(applicationUrl)
         }
-      } catch {
-        console.log('Recovery action failed, continuing with retry')
+      } catch (recoveryError) {
+        console.log(`Recovery action failed: ${recoveryError.message}`)
+
+        /*
+         * If recovery failed, try a clean navigation.
+         */
+        try {
+          await browser.url(applicationUrl)
+        } catch (navigationError) {
+          console.log(`Navigation recovery failed: ${navigationError.message}`)
+        }
       }
 
       await browser.pause(2000)
@@ -141,6 +250,7 @@ export async function entraLogin(username, password, options = {}) {
   }
 
   throw new Error(
-    `Entra login failed after ${maxAttempts} attempts. Last error: ${lastError?.message}`
+    `Entra login failed after ${maxAttempts} attempts. ` +
+      `Last error: ${lastError?.message || 'Unknown error'}`
   )
 }

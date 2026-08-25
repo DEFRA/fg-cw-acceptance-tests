@@ -1,6 +1,10 @@
 import { entraLogin } from '../support/auth/entraLogin.js'
 import { grantsLogin } from '../support/auth/grantsLogin.js'
-import { getCaseworkingUrl, getGrantsUrl } from './serviceUrls.js'
+import {
+  getAgreementUrl,
+  getCaseworkingUrl,
+  getGrantsUrl
+} from './serviceUrls.js'
 import {
   getCaseworkerCredentials,
   getGrantsCredentials
@@ -12,14 +16,14 @@ async function rememberCurrentUser(user) {
 
 export async function loginToCaseworking(role = 'writer') {
   const url = getCaseworkingUrl()
+
   const {
     username,
     password,
     role: resolvedRole
   } = getCaseworkerCredentials(role)
 
-  await browser.url(url)
-  browser.options.baseUrl = url
+  console.log(`Logging into Caseworking as ${role}: ${username}`)
 
   await rememberCurrentUser({
     username,
@@ -28,8 +32,12 @@ export async function loginToCaseworking(role = 'writer') {
     service: 'caseworking'
   })
 
-  console.log(`Logging into Caseworking as ${role}: ${username}`)
-  await entraLogin(username, password)
+  await entraLogin(username, password, {
+    applicationUrl: url,
+    expectedUrlIncludes: '/cases'
+  })
+
+  browser.options.baseUrl = url
 }
 
 export async function loginToGrants(role = 'applicant') {
@@ -48,4 +56,22 @@ export async function loginToGrants(role = 'applicant') {
 
   console.log(`Logging into Grants as: ${username}`)
   await grantsLogin(username, password)
+}
+
+export async function loginToAgreement(role = 'applicant') {
+  const url = getAgreementUrl()
+  const { username } = getGrantsCredentials()
+
+  await browser.url(url)
+  browser.options.baseUrl = url
+
+  await rememberCurrentUser({
+    username,
+    role: 'Grants user',
+    loginType: role,
+    service: 'grants'
+  })
+
+  console.log(`Logging into Agreement as: ${username}`)
+  // await grantsLogin(username, password)
 }
