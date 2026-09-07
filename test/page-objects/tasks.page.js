@@ -15,6 +15,12 @@ class TasksPage extends BasePage {
     await commentBox.setValue(notes)
   }
 
+  async getAgreementStatus() {
+    const statusElement = await $('p.govuk-body*=Status:')
+    const statusText = await statusElement.getText()
+    return statusText.replace('Status:', '').trim()
+  }
+
   async waitForApplicationStatusApi({
     code,
     clientRef,

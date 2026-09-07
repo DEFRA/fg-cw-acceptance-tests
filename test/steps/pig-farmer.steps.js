@@ -9,6 +9,8 @@ import {
   getApplicationType
 } from '../utils/shared-data.js'
 import { loginToCaseworking, loginToGrants } from '../support/loginHelper.js'
+import TasksPage from '../page-objects/tasks.page.js'
+import AllcasesPage from '../page-objects/allcases.page.js'
 
 let referenceNumber
 
@@ -85,6 +87,8 @@ Then(
 
 When('the user navigates to the cases page', async () => {
   await PigFarmerPage.navigateToCasesPage()
+  console.log(getReferenceNumber())
+  console.log('************TEST*******************')
 })
 
 Then(
@@ -494,4 +498,25 @@ export { referenceNumber }
 Then('the user should see {string} Page', async function (expectedText) {
   const actualApprovalText = await PigFarmerPage.headerH2()
   await expect(actualApprovalText).toEqual(expectedText)
+})
+When(
+  'the user enter {string} to complete {string} task',
+  async function (value, taskName) {
+    await TasksPage.clickLinkByText(taskName)
+    await TasksPage.enterText('#value', value)
+    await TasksPage.clickButtonByText('Confirm')
+  }
+)
+When('the user opens the the case from cases page', async function () {
+  await AllcasesPage.clickLinkByText(getReferenceNumber())
+})
+Then(
+  'the case status on task should be {string}',
+  async function (expectedStatus) {
+    const actualStatus = await TasksPage.getAgreementStatus()
+    expect(actualStatus).toContain(expectedStatus)
+  }
+)
+When('the user select the {string} radio button', async (option) => {
+  await $(`label=${option}`).click()
 })

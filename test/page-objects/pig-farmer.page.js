@@ -2,6 +2,7 @@ import BasePage from './base.page.js'
 import fs from 'fs'
 import yaml from 'yaml'
 import { config } from '../../wdio.conf.js'
+import { getCaseworkingUrl } from '../support/serviceUrls.js'
 
 class PigFarmerPage extends BasePage {
   get startNowButton() {
@@ -173,7 +174,8 @@ class PigFarmerPage extends BasePage {
   }
 
   async navigateToCasesPage() {
-    await browser.url('/cases/#all-cases')
+    const url = getCaseworkingUrl()
+    await browser.url(url)
   }
 
   async isReferenceNumberInTable(referenceNumber) {
@@ -901,7 +903,13 @@ class PigFarmerPage extends BasePage {
 
       const headingText = (await heading.getText()).trim()
 
-      if (headingText === 'Page not found') {
+      if (
+        headingText === 'Page not found' ||
+        headingText === 'You do not have permission to view this page' ||
+        headingText === 'Application complete' ||
+        headingText === 'Agreement offer accepted' ||
+        headingText === 'Sign into your Defra account'
+      ) {
         console.log('Page not found detected — clearing application state')
 
         const clearLink = await $('a=Clear application state')
