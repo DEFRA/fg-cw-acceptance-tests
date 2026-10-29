@@ -6,7 +6,7 @@ When(/^the user accept the agreement$/, async function () {
   await loginToAgreement()
   await agreementsPage.clickLinkByText('Continue')
   await agreementsPage.selectCheckBoxByValue('confirmed')
-  await agreementsPage.clickButtonByText('Accept agreement offer')
+  await agreementsPage.clickButtonByText('Accept offer')
   const actualApplicationText = await agreementsPage.getHeaderText()
   await expect(actualApplicationText).toEqual('Agreement offer accepted')
 })

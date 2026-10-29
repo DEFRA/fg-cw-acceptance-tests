@@ -37,9 +37,9 @@ Feature: Woodland Grant Application status
       | clientRef | self                                 |
       | grantCode | woodland                             |
 
-    And the user select "Sent to customer" to complete "Notify customer that draft agreement is ready" task
+    And the user select "Sent" to complete "Notify customer that draft agreement is ready" task
     Then the user should see below "woodland" tasks details
-      | Notify customer that draft agreement is ready | Sent |
+      | Notify customer that draft agreement is ready | Sent to customer |
 
     And the user enter "Action Confirm Agreement Sent" comment
     And the user click the "Confirm agreement sent" button
@@ -92,4 +92,72 @@ Feature: Woodland Grant Application status
       | status    | STATUS_RETURNED_TO_CUSTOMER |
       | clientRef | self                        |
       | grantCode | woodland                    |
+
+
+  Scenario: Application submitted via grant Ui and check the agreement
+    Given the user submit the application using grants ui
+    And the user signed into Caseworking as a writer
+    When the user open the application submitted using grants ui
+    Then the case status should be "Application received"
+    Then the case details on GAS API for "woodland" should be:
+      | phase     | PHASE_PRE_AWARD             |
+      | stage     | STAGE_REVIEWING_APPLICATION |
+      | status    | STATUS_APPLICATION_RECEIVED |
+      | clientRef | self                        |
+      | grantCode | woodland                    |
+    And the user opens the application from the "All cases" list
+
+    ### start the case
+    And the user click the "Start" button
+    Then the case details on GAS API for "woodland" should be:
+      | phase     | PHASE_PRE_AWARD             |
+      | stage     | STAGE_REVIEWING_APPLICATION |
+      | status    | STATUS_APPLICATION_RECEIVED |
+      | clientRef | self                        |
+      | grantCode | woodland                    |
+
+    ## Approve the WMP case
+    ##selecting Generate agreement radio button
+    And the user selects "ACTION APPROVE APPLICATION" for the case
+    And the user click the "Confirm" button
+
+    ## Agreement generated
+    And the user clicks the "Refresh page" link until the draft agreement is received
+    Then the case details on GAS API for "woodland" should be:
+      | phase     | PHASE_PRE_AWARD                      |
+      | stage     | STAGE_PREPARING_AGREEMENT            |
+      | status    | STATUS_AGREEMENT_READY_FOR_APPLICANT |
+      | clientRef | self                                 |
+      | grantCode | woodland                             |
+
+    And the user select "Sent" to complete "Notify customer that draft agreement is ready" task
+    Then the user should see below "woodland" tasks details
+      | Notify customer that draft agreement is ready | Sent to customer |
+
+    And the user enter "Action Confirm Agreement Sent" comment
+    And the user click the "Confirm agreement sent" button
+
+    Then the user should see "Agreement with applicant" message
+
+    Then the case details on GAS API for "woodland" should be:
+      | phase     | PHASE_PRE_AWARD                |
+      | stage     | STAGE_AGREEMENT_WITH_APPLICANT |
+      | status    | STATUS_AGREEMENT_OFFERED       |
+      | clientRef | self                           |
+      | grantCode | woodland                       |
+
+    When the user accept the agreement
+    Then the case details on GAS API for "woodland" should be:
+      | phase     | PHASE_PRE_AWARD           |
+      | stage     | STAGE_AGREEMENT_ACCEPTED  |
+      | status    | STATUS_AGREEMENT_ACCEPTED |
+      | clientRef | self                      |
+      | grantCode | woodland                  |
+
+    When the user navigate to Caseworking as a writer
+    And the user opens the application from the "All cases" list
+
+    #Complete CRM Task
+  When the user complete "Create CRM record" task
+
 

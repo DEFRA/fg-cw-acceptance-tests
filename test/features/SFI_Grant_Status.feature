@@ -72,11 +72,11 @@ Feature: SFI Grant Application status
 
     ### Approve application
     And the user click the "Start" button
-    And the user select "Accept" to complete "Check customer details" task
-    And the user select "Accept" to complete "Review land parcel rule checks" task
-    And the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
-    And the user select "Accept" to complete "Check payment amount" task
-    And the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user select "Accepted" to complete "Check customer details" task
+    And the user select "Accepted" to complete "Review land parcel rule checks" task
+    And the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
+    And the user select "Accepted" to complete "Check payment amount" task
+    And the user select "Accepted" to complete "Review scheme budget as a finance officer" task
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
 
@@ -114,11 +114,11 @@ Feature: SFI Grant Application status
 
     ### Approve application
     And the user click the "Start" button
-    And the user select "Accept" to complete "Check customer details" task
-    And the user select "Accept" to complete "Review land parcel rule checks" task
-    And the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
-    And the user select "Accept" to complete "Check payment amount" task
-    And the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user select "Accepted" to complete "Check customer details" task
+    And the user select "Accepted" to complete "Review land parcel rule checks" task
+    And the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
+    And the user select "Accepted" to complete "Check payment amount" task
+    And the user select "Accepted" to complete "Review scheme budget as a finance officer" task
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
 
@@ -140,8 +140,7 @@ Feature: SFI Grant Application status
       | status    | APPLICATION_REJECTED |
       | clientRef | self                 |
       | grantCode | frps-private-beta    |
-
-
+  @test
   Scenario: Application cases status - New application - Approved-agreement offered -Withdrawn
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
@@ -157,11 +156,11 @@ Feature: SFI Grant Application status
 
     ### Approve application
     And the user click the "Start" button
-    And the user select "Accept" to complete "Check customer details" task
-    And the user select "Accept" to complete "Review land parcel rule checks" task
-    And the user select "Accept" to complete "Check if any land parcels are within an SSSI" task
-    And the user select "Accept" to complete "Check payment amount" task
-    And the user select "Accept" to complete "Review scheme budget as a finance officer" task
+    And the user select "Accepted" to complete "Check customer details" task
+    And the user select "Accepted" to complete "Review land parcel rule checks" task
+    And the user select "Accepted" to complete "Check if any land parcels are within an SSSI" task
+    And the user select "Accepted" to complete "Check payment amount" task
+    And the user select "Accepted" to complete "Review scheme budget as a finance officer" task
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
 
@@ -172,8 +171,8 @@ Feature: SFI Grant Application status
       | clientRef | self              |
       | grantCode | frps-private-beta |
     Then the user should see "Agreements" tab
-    When the user select "Confirm" to complete "Check draft funding agreement" task
-    And the user select "Confirm" to complete "Notify customer that agreement is ready" task
+    When the user select "Confirmed" to complete "Check draft funding agreement" task
+    And the user select "Confirmed" to complete "Notify customer that agreement is ready" task
 
     And the user selects "Agreement sent" for the case
     When the user click the "Confirm" button
