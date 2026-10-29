@@ -2,7 +2,7 @@ import { Given, When, Then } from '@wdio/cucumber-framework'
 import AdminPage from '../page-objects/admin.page.js'
 import { loginToCaseworking } from '../support/loginHelper.js'
 import { loginAndRunWoodlandManagementJourney } from '../page-objects/grant-ui/woodland-journey-helper.js'
-import { clearState } from '../page-objects/grant-ui/clear-sbi-state.js'
+import { clearState } from 'page-objects/grant-ui/clear-sbi-state.js'
 
 When('the user opens the {string} page', async function (linkText) {
   await AdminPage.clickLinkByText(linkText)
@@ -42,7 +42,7 @@ Given(
 )
 Given(/^the user submit the application using grants ui$/, async function () {
   const testUser = {
-    username: '1234454565',
+    username: process.env.DEFRA_ID_GRANTS_USER
     password: process.env.DEFRA_ID_USER_PASSWORD
   }
 
