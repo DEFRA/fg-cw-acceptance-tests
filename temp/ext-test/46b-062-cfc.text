@@ -1,0 +1,421 @@
+{
+  _id: ObjectId('695bdc6c45539ccf2ac781dd'),
+  caseRef: '46b-062-cfc',
+  workflowCode: 'frps-private-beta',
+  currentPhase: 'POST_AGREEMENT_MONITORING',
+  currentStage: 'MONITORING',
+  currentStatus: 'AGREEMENT_ACCEPTED',
+  dateReceived: ISODate('2026-01-05T15:44:44.419Z'),
+  payload: {
+    createdAt: '2026-01-05T15:44:44.145Z',
+    submittedAt: '2026-01-05T15:44:43.971Z',
+    identifiers: {
+      sbi: '107365747',
+      frn: '1101313269',
+      crn: '1103623923',
+      defraId: 'defraId'
+    },
+    answers: {
+      rulesCalculations: {
+        id: 233,
+        message: 'Application validated successfully',
+        valid: true,
+        date: '2026-01-05T15:44:43.971Z'
+      },
+      scheme: 'SFI',
+      applicant: {
+        business: {
+          reference: '1101313269',
+          email: { address: 'griffinmrm@rmniffirgr.com.test' },
+          phone: { mobile: '01234031670' },
+          name: 'Griffin, M R',
+          address: {
+            line1: 'Lang Cottage',
+            line2: 'Eastfield House',
+            line3: 'Haute Vienne',
+            line4: null,
+            line5: null,
+            street: 'FAIRVIEW CRESCENT',
+            city: 'SELBY',
+            postalCode: 'TR12 7AZ'
+          }
+        },
+        customer: {
+          name: {
+            title: 'Mrs',
+            first: 'Bernard',
+            middle: null,
+            last: 'Tarrant'
+          }
+        }
+      },
+      totalAnnualPaymentPence: 28709,
+      application: {
+        parcel: [
+          {
+            sheetId: 'SD7858',
+            parcelId: '1059',
+            area: { unit: 'ha', quantity: 1.4236 },
+            actions: [
+              {
+                code: 'CMOR1',
+                version: 1,
+                durationYears: 1,
+                appliedFor: { unit: 'ha', quantity: 1.4236 }
+              }
+            ]
+          }
+        ],
+        agreement: []
+      },
+      payments: {
+        parcel: [
+          {
+            sheetId: 'SD7858',
+            parcelId: '1059',
+            area: { unit: 'ha', quantity: 1.4236 },
+            actions: [
+              {
+                code: 'CMOR1',
+                description: 'Assess moorland and produce a written record',
+                durationYears: 1,
+                paymentRates: 1060,
+                annualPaymentPence: 1509,
+                eligible: { unit: 'ha', quantity: 1.4236 },
+                appliedFor: { unit: 'ha', quantity: 1.4236 }
+              }
+            ]
+          }
+        ],
+        agreement: [
+          {
+            code: 'CMOR1',
+            description: 'Assess moorland and produce a written record',
+            durationYears: 1,
+            paymentRates: 27200,
+            annualPaymentPence: 27200
+          }
+        ]
+      }
+    }
+  },
+  assignedUserId: null,
+  phases: [
+    {
+      code: 'PRE_AWARD',
+      stages: [
+        {
+          code: 'REVIEW_APPLICATION',
+          outcome: null,
+          taskGroups: [
+            {
+              code: 'MANUAL_REVIEW_TASKS',
+              tasks: [
+                {
+                  code: 'CHECK_CUSTOMER_DETAILS',
+                  status: 'ACCEPTED',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:45:19.862Z',
+                  updatedBy: '695bd68867dd939eb5a44f14',
+                  commentRefs: []
+                },
+                {
+                  code: 'REVIEW_LAND_RULES',
+                  status: 'ACCEPTED',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:45:23.738Z',
+                  updatedBy: '695bd68867dd939eb5a44f14',
+                  commentRefs: []
+                },
+                {
+                  code: 'SSSI_CONSENT_REQUESTED',
+                  status: 'ACCEPTED',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:45:28.226Z',
+                  updatedBy: '695bd68867dd939eb5a44f14',
+                  commentRefs: []
+                },
+                {
+                  code: 'PAYMENT_AMOUNT_CHECK',
+                  status: 'ACCEPTED',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:45:32.442Z',
+                  updatedBy: '695bd68867dd939eb5a44f14',
+                  commentRefs: []
+                },
+                {
+                  code: 'REVIEW_SCHEME_BUDGET',
+                  status: 'ACCEPTED',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:51:09.194Z',
+                  updatedBy: '695bd8d4cf905c27e4ed7506',
+                  commentRefs: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          code: 'REVIEW_OFFER',
+          outcome: null,
+          taskGroups: [
+            {
+              code: 'DRAFT_AGREEMENT_REVIEW_TASKS',
+              tasks: [
+                {
+                  code: 'REVIEW_OFFER_DOCUMENT',
+                  status: 'CONFIRM',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:51:27.797Z',
+                  updatedBy: '695bd8d4cf905c27e4ed7506',
+                  commentRefs: []
+                },
+                {
+                  code: 'OFFER_AGREEMENT',
+                  status: 'CONFIRM',
+                  completed: true,
+                  updatedAt: '2026-01-05T15:51:31.979Z',
+                  updatedBy: '695bd8d4cf905c27e4ed7506',
+                  commentRefs: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          code: 'CUSTOMER_AGREEMENT_REVIEW',
+          outcome: null,
+          taskGroups: []
+        }
+      ]
+    },
+    {
+      code: 'POST_AGREEMENT_MONITORING',
+      stages: [ { code: 'MONITORING', outcome: null, taskGroups: [] } ]
+    }
+  ],
+  comments: [
+    {
+      ref: '695bddf745539ccf2ac781e0',
+      type: 'STAGE_COMPLETED',
+      text: 'approved',
+      createdBy: '695bd8d4cf905c27e4ed7506',
+      createdAt: '2026-01-05T15:51:19.154Z'
+    }
+  ],
+  timeline: [
+    {
+      createdAt: '2026-01-05T15:57:25.627Z',
+      eventType: 'CASE_STATUS_CHANGED',
+      createdBy: 'System',
+      commentRef: null,
+      description: 'Case status changed',
+      data: {
+        phaseCode: 'POST_AGREEMENT_MONITORING',
+        stageCode: 'MONITORING',
+        statusCode: 'AGREEMENT_ACCEPTED'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:57:25.627Z',
+      eventType: 'STAGE_COMPLETED',
+      createdBy: 'System',
+      commentRef: null,
+      description: 'Stage completed',
+      data: {
+        actionCode: null,
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'CUSTOMER_AGREEMENT_REVIEW',
+        statusCode: 'AGREEMENT_OFFERED'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:57:25.627Z',
+      eventType: 'PHASE_COMPLETED',
+      createdBy: 'System',
+      commentRef: null,
+      description: 'Phase completed',
+      data: { phaseCode: 'PRE_AWARD' }
+    },
+    {
+      createdAt: '2026-01-05T15:51:34.427Z',
+      eventType: 'STAGE_COMPLETED',
+      createdBy: '695bd8d4cf905c27e4ed7506',
+      commentRef: null,
+      description: 'Stage completed',
+      data: {
+        actionCode: 'AGREEMENT_SENT',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_OFFER',
+        statusCode: 'AGREEMENT_DRAFTED'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:51:31.979Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd8d4cf905c27e4ed7506',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_OFFER',
+        taskGroupCode: 'DRAFT_AGREEMENT_REVIEW_TASKS',
+        taskCode: 'OFFER_AGREEMENT'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:51:27.797Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd8d4cf905c27e4ed7506',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_OFFER',
+        taskGroupCode: 'DRAFT_AGREEMENT_REVIEW_TASKS',
+        taskCode: 'REVIEW_OFFER_DOCUMENT'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:51:20.365Z',
+      eventType: 'CASE_STATUS_CHANGED',
+      createdBy: 'System',
+      commentRef: null,
+      description: 'Case status changed',
+      data: {
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_OFFER',
+        statusCode: 'AGREEMENT_DRAFTED'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:51:20.365Z',
+      eventType: 'STAGE_COMPLETED',
+      createdBy: 'System',
+      commentRef: null,
+      description: 'Stage completed',
+      data: {
+        actionCode: null,
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        statusCode: 'AGREEMENT_GENERATING'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:51:19.154Z',
+      eventType: 'STAGE_COMPLETED',
+      createdBy: '695bd8d4cf905c27e4ed7506',
+      commentRef: '695bddf745539ccf2ac781e0',
+      description: 'Stage completed',
+      data: {
+        actionCode: 'APPROVE_APPLICATION',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        statusCode: 'IN_REVIEW'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:51:09.194Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd8d4cf905c27e4ed7506',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        taskGroupCode: 'MANUAL_REVIEW_TASKS',
+        taskCode: 'REVIEW_SCHEME_BUDGET'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:45:32.442Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd68867dd939eb5a44f14',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        taskGroupCode: 'MANUAL_REVIEW_TASKS',
+        taskCode: 'PAYMENT_AMOUNT_CHECK'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:45:28.226Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd68867dd939eb5a44f14',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        taskGroupCode: 'MANUAL_REVIEW_TASKS',
+        taskCode: 'SSSI_CONSENT_REQUESTED'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:45:23.738Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd68867dd939eb5a44f14',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        taskGroupCode: 'MANUAL_REVIEW_TASKS',
+        taskCode: 'REVIEW_LAND_RULES'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:45:19.862Z',
+      eventType: 'TASK_COMPLETED',
+      createdBy: '695bd68867dd939eb5a44f14',
+      commentRef: null,
+      description: 'Task completed',
+      data: {
+        caseId: '695bdc6c45539ccf2ac781dd',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        taskGroupCode: 'MANUAL_REVIEW_TASKS',
+        taskCode: 'CHECK_CUSTOMER_DETAILS'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:45:15.578Z',
+      eventType: 'STAGE_COMPLETED',
+      createdBy: '695bd68867dd939eb5a44f14',
+      commentRef: null,
+      description: 'Stage completed',
+      data: {
+        actionCode: 'START_REVIEW',
+        phaseCode: 'PRE_AWARD',
+        stageCode: 'REVIEW_APPLICATION',
+        statusCode: 'APPLICATION_RECEIVED'
+      }
+    },
+    {
+      createdAt: '2026-01-05T15:44:44.419Z',
+      eventType: 'CASE_CREATED',
+      createdBy: 'System',
+      commentRef: null,
+      description: 'Case received',
+      data: { caseRef: '46b-062-cfc' }
+    }
+  ],
+  supplementaryData: {
+    agreements: [
+      {
+        agreementRef: 'SFI141931958',
+        agreementStatus: 'ACCEPTED',
+        createdAt: '2026-01-05T15:51:19.822Z',
+        updatedAt: '2026-01-05T15:57:25.245Z'
+      }
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "clientRef": "gld-9b2-bws",
+    "sbi": "1234567890",
+    "frn": "{{random_frn}}",
+    "crn": "1234567890",
+    "configVersion": "1.0.0",
+    "submittedAt": "2026-07-06T10:33:09.346Z"
+  },
+  "answers": {
+    "referenceNumber": "GLD-9B2-BWS",
+    "businessDetailsUpToDate": true,
+    "confirmEligibility": true,
+    "confirmLandDetailsUpToDate": true,
+    "applicant": {
+      "business": {
+        "name": "Ash Acres",
+        "reference": "0300000069",
+        "email": {
+          "address": "contact+300000069@example.test"
+        },
+        "phone": {
+          "mobile": "07300000069"
+        },
+        "address": {
+          "city": "Bradford",
+          "postalCode": "LS20 1JR",
+          "line1": "70 The Avenue",
+          "line2": "Yard",
+          "line3": "Bradford",
+          "line4": "Yorkshire"
+        }
+      },
+      "customer": {
+        "name": {
+          "title": "Ms",
+          "first": "Sophia",
+          "middle": "Elizabeth",
+          "last": "Reed"
+        }
+      }
+    },
+    "detailsConfirmedAt": "2026-07-06T10:33:09.346Z",
+    "selectedParcelId": "SD6364-6615",
+    "actionCode": "UPL1"
+  }
+}
