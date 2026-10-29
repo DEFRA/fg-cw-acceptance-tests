@@ -9,6 +9,7 @@ export const config = {
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/cases`,
   gasUrl: `https://fg-gas-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/grants/`,
   // gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
+  grantsUiUrl: `https://grants-ui.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
   port: process.env.CHROMEDRIVER_PORT || 4444,
@@ -31,7 +32,7 @@ export const config = {
         args: [
           '--no-sandbox',
           '--disable-infobars',
-          '--headless',
+          // '--headless',
           '--disable-gpu',
           '--window-size=1920,1080',
           '--enable-features=NetworkService,NetworkServiceInProcess',
