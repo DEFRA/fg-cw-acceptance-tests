@@ -3,7 +3,7 @@ import BasePage from '../page-objects/base.page.js'
 class AllCasesPage extends BasePage {
   async serviceNameHeader() {
     const serviceName = await $('[data-testid="defra-heading-service-name"]')
-    return await serviceName.getText()
+    return serviceName.getText()
   }
 
   async headerH2() {

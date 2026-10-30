@@ -17,6 +17,7 @@ import NotesPage from '../page-objects/notes.page.js'
 import AgreementsPage from '../page-objects/agreements.page.js'
 import CalculationsPage from '../page-objects/calculations.page.js'
 import CaseDetailsPage from '../page-objects/caseDetails.page.js'
+import { getCaseworkingUrl } from '../support/serviceUrls.js'
 
 let apiResponse
 
@@ -30,8 +31,9 @@ Given(
 )
 When(
   'the user opens the application from the {string} list',
-  async (pageTitle) => {
-    await AllcasesPage.clickLinkByText(generatedClientRef)
+  async function (pageTitle) {
+    const clientRef = this.generatedClientRef
+    await AllcasesPage.clickLinkByText(clientRef)
   }
 )
 Then('the user should see the submitted application information', async () => {
@@ -274,7 +276,8 @@ Then('the user {string} with a comment', async function (applicationDecision) {
   await TasksPage.approvalNotes(code)
 })
 Then('the case status should be {string}', async function (expectedStatus) {
-  const clientRef = generatedClientRef
+  const clientRef = this.generatedClientRef
+  console.log(`created case in status: ${clientRef}`)
 
   await browser.waitUntil(
     async () => {
@@ -478,7 +481,7 @@ Then(
   'the case details on GAS API for {string} should be:',
   async function (code, dataTable) {
     const expected = dataTable.rowsHash()
-    const clientRef = generatedClientRef
+    const clientRef = this.generatedClientRef
 
     await TasksPage.waitForApplicationStatusApi({
       code,
@@ -692,3 +695,20 @@ Given(
     await AllcasesPage.selectRadioByValue(optionText)
   }
 )
+When(
+  /^the user open the application submitted using grants ui$/,
+  async function () {
+    console.log('Generated Client Ref: ' + this.generatedClientRef)
+    const serviceName = await AllcasesPage.serviceNameHeader()
+    await expect(serviceName).toEqual('Manage rural grant applications')
+    await AllcasesPage.waitForElement(this.generatedClientRef)
+    // await AllcasesPage.clickLinkByText(this.generatedClientRef)
+  }
+)
+When(/^the user navigate to Caseworking as a writer$/, async function () {
+  const url = getCaseworkingUrl()
+
+  browser.options.baseUrl = url
+  console.log('URL IS: ' + url)
+  await browser.url(url)
+})

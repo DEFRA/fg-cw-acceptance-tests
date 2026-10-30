@@ -34,12 +34,13 @@ const oneHour = 60 * 60 * 1000
 // Log the environment being used
 console.log('Environment variables loaded:')
 console.log('ENVIRONMENT:', process.env.ENVIRONMENT)
-console.log('API_URL:', process.env.API_URL)
+console.log('API_URL:', process.env.grantsUiUrl)
 
 export const config = {
   runner: 'local',
   gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT || 'dev'}.cdp-int.defra.cloud`,
+  grantsUiUrl: `https://grants-ui.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
   services: [
     'shared-store',
@@ -65,7 +66,7 @@ export const config = {
             args: [
               '--no-sandbox',
               '--disable-infobars',
-              '--headless',
+              // '--headless',
               '--disable-gpu',
               '--disable-cache',
               '--disk-cache-size=0',

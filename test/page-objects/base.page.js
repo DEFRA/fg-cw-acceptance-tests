@@ -159,4 +159,13 @@ export default class BasePage {
   async tableRows() {
     return $$('tbody.govuk-table__body tr.govuk-table__row').length
   }
+
+  open(path) {
+    return browser.url(browser.options.grantsUiUrl + path)
+  }
+
+  async clickButton(selector) {
+    const button = await $("button[type='submit']")
+    await button.click()
+  }
 }

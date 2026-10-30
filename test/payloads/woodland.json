@@ -3,9 +3,9 @@
     "clientRef": "{{random_client_ref}}",
     "code": "woodland",
     "submittedAt": "{{current_datetime}}",
-    "sbi": "113598888",
-    "frn": "1100943757",
-    "crn": "1100943757",
+    "sbi": "1234567890",
+    "frn": "{{random_frn}}",
+    "crn": "1234567890",
     "configVersion": "1.0.0"
   },
   "answers": {
@@ -32,19 +32,19 @@
           "address": "patricia.mellor@mellorandsons.com.test"
         },
         "phone": {
-          "mobile": "+44 7712 334891",
+          "mobile": "+44 7712 334567",
           "landline": "01729 851204"
         },
         "address": {
-          "line1": "Brackenfold Farm",
+          "line1": "AXB XYZ Farm",
           "line2": "Littondale Road",
           "line3": null,
           "line4": null,
           "line5": null,
           "street": "Littondale Road",
           "city": "Skipton",
-          "postalCode": "BD23 5QH",
-          "uprn": "981124620011",
+          "postalCode": "Ty23 5QH",
+          "uprn": "982374892374",
           "buildingName": "Brackenfold Farm",
           "buildingNumberRange": null,
           "county": "North Yorkshire",
@@ -62,15 +62,15 @@
       "customer": {
         "name": {
           "title": "Mrs",
-          "first": "Patricia",
+          "first": "Trisha",
           "middle": null,
           "last": "Mellor"
         },
         "email": {
-          "address": "patricia.mellor@mellorandsons.com.test"
+          "address": "patricia.mellor@testing.com.test"
         },
         "phone": {
-          "mobile": "+44 7712 334891",
+          "mobile": "+44 77123456454",
           "landline": "01729 851204"
         },
         "address": {
@@ -81,7 +81,7 @@
           "line5": null,
           "street": "Arncliffe",
           "city": "Skipton",
-          "postalCode": "BD23 5QE",
+          "postalCode": "TR3 5QE",
           "uprn": "981124620022",
           "buildingName": "Dales View Cottage",
           "buildingNumberRange": "2",
@@ -100,15 +100,15 @@
     "applicationConfirmation": true,
     "landParcels": [
       {
-        "parcelId": "SD6351-8781",
+        "parcelId": "DC6351-8781",
         "areaHa": 68.0498
       },
       {
-        "parcelId": "SD6352-8774",
+        "parcelId": "DC6352-8774",
         "areaHa": 11.1006
       },
       {
-        "parcelId": "SD6252-7537",
+        "parcelId": "DC6252-7537",
         "areaHa": 0.3361
       }
     ],
