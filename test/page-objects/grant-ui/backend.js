@@ -32,7 +32,7 @@ class Backend {
    */
   async clearTestData(sbi, grantCode) {
     const url = `${backendUrl()}/admin/test-data?sbi=${sbi}&grantCode=${grantCode}`
-    console.log(`Clearing test data via ${url}`)
+    console.log('Clearing test data')
 
     const response = await fetch(url, {
       method: 'DELETE',
@@ -40,7 +40,7 @@ class Backend {
     })
 
     console.log(
-      `Clear test data response for SBI ${sbi}, grantCode ${grantCode}: ${response.status} ${response.statusText}`
+      `Clear test data response: ${response.status} ${response.statusText}`
     )
     await expect(response.status).toBe(200)
   }

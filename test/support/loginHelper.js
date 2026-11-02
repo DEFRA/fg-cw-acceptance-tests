@@ -23,7 +23,7 @@ export async function loginToCaseworking(role = 'writer') {
     role: resolvedRole
   } = getCaseworkerCredentials(role)
 
-  console.log(`Logging into Caseworking as ${role}: ${username}`)
+  console.log(`Logging into Caseworking as ${role}`)
 
   await rememberCurrentUser({
     username,
@@ -54,7 +54,7 @@ export async function loginToGrants(role = 'applicant') {
     service: 'grants'
   })
 
-  console.log(`Logging into Grants as: ${username}`)
+  console.log('Logging into Grants')
   await grantsLogin(username, password)
 }
 
@@ -72,6 +72,6 @@ export async function loginToAgreement(role = 'applicant') {
     service: 'grants'
   })
 
-  console.log(`Logging into Agreement as: ${username}`)
+  console.log('Logging into Agreement')
   // await grantsLogin(username, password)
 }

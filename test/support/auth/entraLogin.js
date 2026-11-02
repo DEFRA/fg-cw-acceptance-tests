@@ -11,7 +11,7 @@ export async function entraLogin(username, password, options = {}) {
     throw new Error('entraLogin requires applicationUrl in the options')
   }
 
-  console.log(`Starting Entra login for: ${username}`)
+  console.log('Starting Entra login')
   console.log(`Application URL: ${applicationUrl}`)
 
   const microsoftHosts = ['login.microsoftonline.com', 'login.live.com']
@@ -195,7 +195,7 @@ export async function entraLogin(username, password, options = {}) {
         )
       }
 
-      console.log(`Entra login successful for ${username}`)
+      console.log('Entra login successful')
 
       return
     } catch (error) {

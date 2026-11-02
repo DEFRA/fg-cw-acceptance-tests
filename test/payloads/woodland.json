@@ -3,9 +3,9 @@
     "clientRef": "{{random_client_ref}}",
     "code": "woodland",
     "submittedAt": "{{current_datetime}}",
-    "sbi": "1234567890",
+    "sbi": "888000002",
     "frn": "{{random_frn}}",
-    "crn": "1234567890",
+    "crn": "9990000002",
     "configVersion": "1.0.0"
   },
   "answers": {
@@ -21,39 +21,39 @@
     "intendToApplyHigherTier": true,
     "hectaresTenOrOverYearsOld": 40.25,
     "hectaresUnderTenYearsOld": 15.75,
-    "centreGridReference": "SP 1234 5678",
+    "centreGridReference": "NG 1234 5678",
     "woodlandName": "Test Woodland",
     "fcTeamCode": "EAST_AND_EAST_MIDLANDS",
     "applicant": {
       "business": {
-        "name": "Mellor & Sons",
-        "reference": "1100943757",
+        "name": "Test Woodland Holdings",
+        "reference": "9990000098",
         "email": {
-          "address": "patricia.mellor@mellorandsons.com.test"
+          "address": "test-woodland@example.test"
         },
         "phone": {
-          "mobile": "+44 7712 334567",
-          "landline": "01729 851204"
+          "mobile": "07700900001",
+          "landline": "01632960001"
         },
         "address": {
-          "line1": "AXB XYZ Farm",
-          "line2": "Littondale Road",
+          "line1": "1 Test Lane",
+          "line2": "Test Village",
           "line3": null,
           "line4": null,
           "line5": null,
-          "street": "Littondale Road",
-          "city": "Skipton",
-          "postalCode": "Ty23 5QH",
-          "uprn": "982374892374",
-          "buildingName": "Brackenfold Farm",
+          "street": "Test Lane",
+          "city": "Exampleton",
+          "postalCode": "ZZ99 5ZZ",
+          "uprn": "999000000001",
+          "buildingName": "Test Building",
           "buildingNumberRange": null,
-          "county": "North Yorkshire",
+          "county": "Test County",
           "dependentLocality": null,
           "doubleDependentLocality": null,
           "flatName": null,
-          "pafOrganisationName": "Mellor & Sons"
+          "pafOrganisationName": "Test Woodland Holdings"
         },
-        "vat": "GB123456789",
+        "vat": "GB000000000",
         "type": {
           "code": 101443,
           "type": "Farmer"
@@ -61,31 +61,31 @@
       },
       "customer": {
         "name": {
-          "title": "Mrs",
-          "first": "Trisha",
+          "title": "Mx",
+          "first": "Test",
           "middle": null,
-          "last": "Mellor"
+          "last": "Two"
         },
         "email": {
-          "address": "patricia.mellor@testing.com.test"
+          "address": "test-user-two@example.test"
         },
         "phone": {
-          "mobile": "+44 77123456454",
-          "landline": "01729 851204"
+          "mobile": "07700900002",
+          "landline": "01632960002"
         },
         "address": {
-          "line1": "2 Dales View Cottage",
-          "line2": "Arncliffe",
+          "line1": "2 Test Lane",
+          "line2": "Test Village",
           "line3": null,
           "line4": null,
           "line5": null,
-          "street": "Arncliffe",
-          "city": "Skipton",
-          "postalCode": "TR3 5QE",
-          "uprn": "981124620022",
-          "buildingName": "Dales View Cottage",
+          "street": "Test Lane",
+          "city": "Exampleton",
+          "postalCode": "ZZ99 5ZZ",
+          "uprn": "999000000002",
+          "buildingName": "Test Building",
           "buildingNumberRange": "2",
-          "county": "North Yorkshire",
+          "county": "Test County",
           "dependentLocality": null,
           "doubleDependentLocality": null,
           "flatName": null,
@@ -100,15 +100,15 @@
     "applicationConfirmation": true,
     "landParcels": [
       {
-        "parcelId": "DC6351-8781",
+        "parcelId": "AA0001-0001",
         "areaHa": 68.0498
       },
       {
-        "parcelId": "DC6352-8774",
+        "parcelId": "AA0001-0002",
         "areaHa": 11.1006
       },
       {
-        "parcelId": "DC6252-7537",
+        "parcelId": "AA0001-0003",
         "areaHa": 0.3361
       }
     ],
