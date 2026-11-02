@@ -1,9 +1,6 @@
 import { $ } from '@wdio/globals'
 import BasePage from './base.page.js'
 
-const landParcel = process.env.SFI_TEST_LAND_PARCEL || 'AA0108-0114'
-const [sheetId, parcelId] = landParcel.split('-')
-
 class LandFundingPage extends BasePage {
   // Selectors
   get startNowButton() {
@@ -23,7 +20,7 @@ class LandFundingPage extends BasePage {
   }
 
   get landParcelRadio() {
-    return $(`input[value="${landParcel}"]`)
+    return $('input[value="SD6743-8083"]')
   }
 
   get actionCheckbox() {
@@ -121,7 +118,7 @@ class LandFundingPage extends BasePage {
           keyText = 'Total number of actions applied for'
           break
         case 'Land parcel':
-          keyText = landParcel
+          keyText = 'SD6743-8083'
           break
         default:
           keyText = key
@@ -130,7 +127,7 @@ class LandFundingPage extends BasePage {
       if (key === 'Action' || key === 'Applied area') {
         // For action details, check the specific cell content in the land parcel row
         const actionCell = await $(
-          `//div[@class='govuk-summary-list__row govuk-summary-list__row--no-actions'][dt[@class='govuk-summary-list__key govuk-!-font-weight-regular' and text()='${landParcel}']]/dd[@class='govuk-summary-list__value']`
+          `//div[@class='govuk-summary-list__row govuk-summary-list__row--no-actions'][dt[@class='govuk-summary-list__key govuk-!-font-weight-regular' and text()='SD6743-8083']]/dd[@class='govuk-summary-list__value']`
         )
         await actionCell.waitForDisplayed()
         const cellText = await actionCell.getText()
@@ -269,8 +266,8 @@ class LandFundingPage extends BasePage {
 
     const actionExpectedAnswers = {
       code: 'CMOR1',
-      sheetId,
-      parcelId,
+      sheetId: 'SD6743',
+      parcelId: '8083',
       appliedFor: '4.53411065 ha'
     }
 

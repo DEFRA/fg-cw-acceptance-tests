@@ -38,23 +38,18 @@ npm install
 
 ### Synthetic test data
 
-Application payloads use invented customer, business, contact, address and land examples.
-Seed matching synthetic data in the target environment before running these journeys.
+Application payloads use invented customer, business, contact and address examples.
+Keep the existing synthetic identifier placeholders when creating further fixtures.
 Do not replace these examples with real customer records to make a journey pass.
 
-The land-funding journey defaults to parcel `AA0108-0114`. Set
-`SFI_TEST_LAND_PARCEL` to another synthetic parcel (`SHEET-PARCEL`) available in the
-test environment if needed. The selector and expected answers use the same value.
+The woodland journey uses the shared Grants credential helper. Configure
+`DEFRA_ID_GRANTS_USER` and `DEFRA_ID_GRANTS_PASSWORD` through local secrets or CDP
+Secrets for the test applicant. Set `WOODLAND_TEST_SBI` to its matching synthetic
+business when clearing test state (default `1234567890`). The applicant and SBI must
+match the test data available in the target environment.
 
-The woodland journey defaults to parcel `AA0001-0001` and SBI `888000002`.
-`WOODLAND_TEST_LAND_PARCEL` and `WOODLAND_TEST_SBI` can select the matching synthetic
-parcel and business in your environment. Its grid and woodland name are also test examples.
-
-Configure `DEFRA_ID_GRANTS_USER` and `DEFRA_ID_GRANTS_PASSWORD` through local secrets
-or CDP Secrets for the synthetic applicant associated with that SBI and parcel. The
-woodland step uses the same credential helper as the other Grants journeys.
-Do not commit credentials. The static payload fixtures remain synthetic and are not
-rewritten by these journey environment overrides.
+Do not commit credentials. This SBI override applies to the woodland UI journey;
+it does not rewrite the static payload fixtures.
 
 ### Running local tests
 

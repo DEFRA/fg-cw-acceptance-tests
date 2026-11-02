@@ -45,7 +45,7 @@ Given(/^the user submit the application using grants ui$/, async function () {
   const testUser = getGrantsCredentials()
 
   const woodlandApplicationData = {
-    landParcelId: process.env.WOODLAND_TEST_LAND_PARCEL || 'AA0001-0001',
+    landParcelId: 'ST1437-7349',
     hectaresTenOrOverYearsOld: 30,
     centreGridReference: 'NG 1234 5678',
     woodlandName: 'Test Woodland',
@@ -55,7 +55,7 @@ Given(/^the user submit the application using grants ui$/, async function () {
   const { username, password } = testUser
 
   // Clear application state
-  const sbi = process.env.WOODLAND_TEST_SBI || '888000002'
+  const sbi = process.env.WOODLAND_TEST_SBI || '1234567890'
   await clearState(username, sbi, 'woodland')
   console.log('Woodland application state cleared')
 

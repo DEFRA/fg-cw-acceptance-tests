@@ -3,9 +3,9 @@
     "clientRef": "{{random_client_ref}}",
     "code": "woodland",
     "submittedAt": "{{current_datetime}}",
-    "sbi": "888000002",
+    "sbi": "1234567890",
     "frn": "{{random_frn}}",
-    "crn": "9990000002",
+    "crn": "1234567890",
     "configVersion": "1.0.0"
   },
   "answers": {
@@ -100,15 +100,15 @@
     "applicationConfirmation": true,
     "landParcels": [
       {
-        "parcelId": "AA0001-0001",
+        "parcelId": "DC6351-8781",
         "areaHa": 68.0498
       },
       {
-        "parcelId": "AA0001-0002",
+        "parcelId": "DC6352-8774",
         "areaHa": 11.1006
       },
       {
-        "parcelId": "AA0001-0003",
+        "parcelId": "DC6252-7537",
         "areaHa": 0.3361
       }
     ],
