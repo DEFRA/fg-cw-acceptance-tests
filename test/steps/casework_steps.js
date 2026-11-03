@@ -35,7 +35,7 @@ Given(
   }
 )
 When(
-  'the user opens the application from the {string} list',
+  'the user opens the application from the All cases list',
   async function () {
     const clientRef = this.generatedClientRef
     await AllcasesPage.clickLinkByText(clientRef)

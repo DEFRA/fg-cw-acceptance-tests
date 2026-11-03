@@ -12,7 +12,7 @@ Feature: SFI Grant Application status
       | status    | APPLICATION_RECEIVED |
       | clientRef | self                 |
       | grantCode | frps-private-beta    |
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     ### start the case
     And the user click the "Start" button
@@ -68,7 +68,7 @@ Feature: SFI Grant Application status
       | status    | APPLICATION_RECEIVED |
       | clientRef | self                 |
       | grantCode | frps-private-beta    |
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     ### Approve application
     And the user click the "Start" button
@@ -110,7 +110,7 @@ Feature: SFI Grant Application status
       | status    | APPLICATION_RECEIVED |
       | clientRef | self                 |
       | grantCode | frps-private-beta    |
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     ### Approve application
     And the user click the "Start" button
@@ -152,7 +152,7 @@ Feature: SFI Grant Application status
       | status    | APPLICATION_RECEIVED |
       | clientRef | self                 |
       | grantCode | frps-private-beta    |
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     ### Approve application
     And the user click the "Start" button
