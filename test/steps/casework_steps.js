@@ -438,6 +438,7 @@ Then(
     const pollInterval = 2000
     const startTime = Date.now()
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const elements = await $$('dl > div > dd')
       const actualText = (await elements[0].getText()).trim()
