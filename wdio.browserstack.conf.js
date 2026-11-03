@@ -149,11 +149,7 @@ export const config = {
   // },
 
   // Hooks
-  afterTest: async function (
-    test,
-    context,
-    { error, result, duration, passed, retries }
-  ) {
+  afterTest: async function (test, context, { error }) {
     if (error) {
       await browser.takeScreenshot()
     }

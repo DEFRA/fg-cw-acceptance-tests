@@ -150,7 +150,7 @@ export const config = {
     })
   },
 
-  afterScenario: async function (world, result, context) {
+  afterScenario: async function () {
     await browser.reloadSession()
   }
 }

@@ -59,6 +59,20 @@ async function apiRequest(method, url, { jsonBody, headers = {} } = {}) {
   }
 }
 
+// export async function postRequest(
+//   endpoint,
+//   payloadPath,
+//   options = {},
+//   headers = {}
+// ) {
+//   const payloadData = await fs.readFile(payloadPath, 'utf-8')
+//   let payload = JSON.parse(payloadData)
+//   payload = requestPayload(payload, options)
+//
+//   const url = buildUrl(endpoint)
+//   return apiRequest('POST', url, { jsonBody: payload, headers })
+// }
+
 export async function postRequest(
   endpoint,
   payloadPath,
@@ -66,11 +80,21 @@ export async function postRequest(
   headers = {}
 ) {
   const payloadData = await fs.readFile(payloadPath, 'utf-8')
-  let payload = JSON.parse(payloadData)
-  payload = requestPayload(payload, options)
+  const originalPayload = JSON.parse(payloadData)
+
+  const { payload, clientRef } = requestPayload(originalPayload, options)
 
   const url = buildUrl(endpoint)
-  return apiRequest('POST', url, { jsonBody: payload, headers })
+
+  const response = await apiRequest('POST', url, {
+    jsonBody: payload,
+    headers
+  })
+
+  return {
+    ...response,
+    clientRef
+  }
 }
 
 export async function getRequest(endpoint, queryParams = {}, headers = {}) {
@@ -79,7 +103,11 @@ export async function getRequest(endpoint, queryParams = {}, headers = {}) {
 }
 
 export function generateRandomClientRef() {
-  generatedClientRef = 'client' + Math.random().toString(36).substring(2, 10)
+  const generatedClientRef =
+    'client' + Math.random().toString(36).substring(2, 10)
+
+  console.log('Generated CLIENT REF:', generatedClientRef)
+
   return generatedClientRef
 }
 
@@ -112,13 +140,20 @@ function requestPayload(payload, { isAmend = false } = {}) {
 
   const stringifies = JSON.stringify(payload)
 
+  const clientRef = generateRandomClientRef()
+
+  console.log('API CLIENT REF:', clientRef)
+
   const replaced = stringifies
-    .replace(/{{random_client_ref}}/g, generateRandomClientRef())
+    .replace(/{{random_client_ref}}/g, clientRef)
     .replace(/{{previous_client_ref}}/g, isAmend ? getPreviousClientRef() : '')
     .replace(/{{current_datetime}}/g, getCurrentDatetimeISO())
     .replace(/{{random_frn}}/g, generateFRN())
 
-  return JSON.parse(replaced)
+  return {
+    payload: JSON.parse(replaced),
+    clientRef
+  }
 }
 
 function getCurrentDatetimeISO() {

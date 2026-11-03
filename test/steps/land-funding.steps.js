@@ -104,15 +104,12 @@ Then(
   }
 )
 
-Then(
-  'the reference number should be in the format {string}',
-  async (expectedFormat) => {
-    const isValidFormat =
-      await LandFundingPage.verifyReferenceNumberFormat(referenceNumber)
-    await expect(isValidFormat).toBe(true)
-    console.log(`Reference number ${referenceNumber} matches expected format`)
-  }
-)
+Then('the reference number should be in the format {string}', async () => {
+  const isValidFormat =
+    await LandFundingPage.verifyReferenceNumberFormat(referenceNumber)
+  await expect(isValidFormat).toBe(true)
+  console.log(`Reference number ${referenceNumber} matches expected format`)
+})
 
 // Note: Caseworker steps are shared and defined in pig-farmer.steps.js
 // They work across different grant applications by using the exported referenceNumber

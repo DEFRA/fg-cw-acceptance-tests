@@ -37,8 +37,8 @@ export default class BasePage {
   }
 
   async headerH2() {
-    const h2Element = await $('h2')
-    return h2Element.getText()
+    const h2Element = await $$('h2')
+    return h2Element[0].getText()
   }
 
   async selectRadioButtonByCaseText(caseText) {
@@ -164,7 +164,7 @@ export default class BasePage {
     return browser.url(browser.options.grantsUiUrl + path)
   }
 
-  async clickButton(selector) {
+  async clickButton() {
     const button = await $("button[type='submit']")
     await button.click()
   }

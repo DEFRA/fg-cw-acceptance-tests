@@ -42,17 +42,11 @@ export const config = {
   baseUrl: `https://fg-cw-frontend.${process.env.ENVIRONMENT || 'dev'}.cdp-int.defra.cloud`,
   grantsUiUrl: `https://grants-ui.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
-  services: [
-    'shared-store',
-    ['chromedriver', { port: 9515 }] // service starts/stops Chromedriver for you
-  ],
+  services: ['shared-store', ['chromedriver', { port: 9515 }]],
 
   path: '/',
   specs: ['./test/features/**/*.feature'],
-  // Patterns to exclude.
-  exclude: [
-    // 'path/to/excluded/files'
-  ],
+  exclude: [],
 
   capabilities: debug
     ? [{ browserName: 'chrome' }]
@@ -192,7 +186,7 @@ export const config = {
     })
   },
 
-  afterScenario: async function (world, result, context) {
+  afterScenario: async function () {
     await browser.reloadSession()
     await browser.sharedStore.set('currentUser', null)
   }

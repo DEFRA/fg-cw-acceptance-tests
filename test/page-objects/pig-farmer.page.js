@@ -193,6 +193,7 @@ class PigFarmerPage extends BasePage {
     // First wait for the page to load completely
     await browser.waitUntil(
       async () =>
+        // eslint-disable-next-line no-undef
         (await browser.execute(() => document.readyState)) === 'complete',
       { timeout: 10000, timeoutMsg: 'Cases page did not load completely' }
     )
@@ -465,7 +466,7 @@ class PigFarmerPage extends BasePage {
           found = true
         }
       } catch (error) {
-        // Continue to next approach
+        console.error(error)
       }
 
       // Approach 2: Try with different case variations
@@ -484,7 +485,7 @@ class PigFarmerPage extends BasePage {
               break
             }
           } catch (error) {
-            // Continue to next variation
+            console.log(error)
           }
         }
       }
@@ -499,7 +500,7 @@ class PigFarmerPage extends BasePage {
             found = true
           }
         } catch (error) {
-          // Continue
+          console.error(error)
         }
       }
 
@@ -515,7 +516,7 @@ class PigFarmerPage extends BasePage {
     }
   }
 
-  async completeTask(taskName, taskIndex = null) {
+  async completeTask(taskName) {
     console.log(`🚀 Starting task: ${taskName}`)
 
     // Handle duplicate task names - check status first
@@ -611,7 +612,7 @@ class PigFarmerPage extends BasePage {
           break
         }
       } catch (error) {
-        // Continue to next selector
+        console.error(error)
       }
     }
 
@@ -930,8 +931,8 @@ class PigFarmerPage extends BasePage {
           }
         )
       }
-    } catch (err) {
-      console.log('No Page not found state detected')
+    } catch (error) {
+      console.log(error)
     }
   }
 }

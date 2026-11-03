@@ -23,15 +23,20 @@ let apiResponse
 
 Given(
   'the user has submitted an application for the {string} grant',
-  async (grantName) => {
+  async function (grantName) {
     const payloadPath = `test/payloads/${grantName}.json`
     apiResponse = await postRequest(`${grantName}/applications`, payloadPath)
+    console.log(apiResponse.clientRef)
+    console.log('APU DKJLHDF')
+    this.generatedClientRef = apiResponse.clientRef
+
+    console.log('API CLIENT REF:', this.generatedClientRef)
     expect(apiResponse.statusCode).toBe(204)
   }
 )
 When(
   'the user opens the application from the {string} list',
-  async function (pageTitle) {
+  async function () {
     const clientRef = this.generatedClientRef
     await AllcasesPage.clickLinkByText(clientRef)
   }
@@ -265,6 +270,7 @@ Then(
   }
 )
 Then('the user complete {string} task', async function (taskName) {
+  await TasksPage.headerH2()
   await TasksPage.clickLinkByText(taskName)
   await TasksPage.selectRadioByValue('ACCEPTED')
   await TasksPage.acceptedNotes(taskName)
@@ -307,9 +313,12 @@ Then('the user should see Agreements page is displayed', async function () {
 When(
   'the user waits for the case to appear on the Casework Portal',
   async function () {
+    console.log('CLIENT REF:', this.generatedClientRef)
     const serviceName = await AllcasesPage.serviceNameHeader()
     await expect(serviceName).toEqual('Manage rural grant applications')
-    await AllcasesPage.waitForElement(generatedClientRef)
+    console.log(this.generatedClientRef)
+    console.log('CLIENT REF IS:')
+    await AllcasesPage.waitForElement(this.generatedClientRef)
   }
 )
 When('the user enters random text into the Add Notes field', async function () {
@@ -429,6 +438,7 @@ Then(
     const pollInterval = 2000
     const startTime = Date.now()
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const elements = await $$('dl > div > dd')
       const actualText = (await elements[0].getText()).trim()
