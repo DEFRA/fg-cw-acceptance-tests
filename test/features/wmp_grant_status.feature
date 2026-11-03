@@ -12,7 +12,7 @@ Feature: Woodland Grant Application status
       | status    | STATUS_APPLICATION_RECEIVED |
       | clientRef | self                        |
       | grantCode | woodland                    |
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     ### start the case
     And the user click the "Start" button
@@ -64,7 +64,7 @@ Feature: Woodland Grant Application status
       | status    | STATUS_APPLICATION_RECEIVED |
       | clientRef | self                        |
       | grantCode | woodland                    |
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     ### start the case
     And the user click the "Start" button
@@ -104,7 +104,7 @@ Feature: Woodland Grant Application status
 #      | status    | STATUS_APPLICATION_RECEIVED |
 #      | clientRef | self                        |
 #      | grantCode | woodland                    |
-#    And the user opens the application from the "All cases" list
+#    And the user opens the application from the All cases list
 #
 #    ### start the case
 #    And the user click the "Start" button
@@ -154,7 +154,7 @@ Feature: Woodland Grant Application status
       | grantCode | woodland                  |
 
     When the user navigate to Caseworking as a writer
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     #Complete CRM Task
   When the user complete "Create CRM record" task

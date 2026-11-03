@@ -6,7 +6,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     Then the user should see the submitted application information
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
@@ -19,7 +19,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user searches for a case using the case reference
     Then the case should appear in the search results visible to the user
     Then the case status should be "Application received"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     Then the user should see the submitted application information
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
@@ -64,7 +64,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user selects a random case worker
     And the user enters random text into the Assign case Notes field
     And the user click the "Assign" button
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
       | Case assigned |
@@ -88,7 +88,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user click the "Assign" button
     Then the user should see a success message confirming case is unassigned
     And the selected case should be unassigned
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user navigates to the "Timeline" section
     Then the Timeline should display these messages
       | Case unassigned |
@@ -100,7 +100,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     And the user select "Accept" to complete "Check customer details" task
     And the user select "Accept" to complete "Review land parcel rule checks" task
@@ -136,7 +136,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Notes" link
     And the user click the "Add note" link
     And the user click the "Save" button
@@ -150,7 +150,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     Then the user should see below "frps-private-beta" tasks details
       | Check customer details                       | Incomplete |
       | Review land parcel rule checks               | Incomplete |
@@ -165,7 +165,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Back to applications" link
     Then the case status should be "In review"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see below "frps-private-beta" tasks details
@@ -177,7 +177,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see "Agreements" tab
     When the user click the "Back to applications" link
     Then the case status should be "Agreement drafted"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     When the user click the "Agreements" link
     Then the user should see Agreements page is displayed
     And the user should see case agreements details
@@ -191,7 +191,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     Then the user should see below "frps-private-beta" tasks details
       | Check customer details                       | Incomplete |
       | Review land parcel rule checks               | Incomplete |
@@ -206,7 +206,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Back to applications" link
     Then the case status should be "In review"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see below "frps-private-beta" tasks details
@@ -232,13 +232,13 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     And the user selects "Put on hold" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
     Then the case status should be "On hold"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     And the user selects "Resume" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
@@ -249,7 +249,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     And the user selects "Reject Application" for the case with a comment
     And the user click the "Confirm" button
@@ -262,7 +262,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Check customer details" link
     Then user should not options to confirm the task
 
@@ -270,7 +270,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     And the user click the "Confirm" button
     Then the user remain on the page with a "Choose an option" error message displayed
@@ -286,7 +286,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     And the user click the "Check customer details" link
     And the user click the "Confirm" button
@@ -313,14 +313,14 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
     Then the case status should be "Application received"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
 
   Scenario: User cannot complete case review task without selecting any option
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     When the user select "Accept" to complete "Check customer details" task
     When the user select "Accept" to complete "Review land parcel rule checks" task
@@ -344,7 +344,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     When the user click the "Start" button
     And the user select "Request information from customer" to complete "Check customer details" task
     And the user select "Pause for internal investigation" to complete "Review land parcel rule checks" task
@@ -363,13 +363,13 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
     And the user click the "Back to applications" link
     Then the case status should be "Withdrawn"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     When the user click the "Timeline" link
     Then the Timeline should display these messages
       | Case received                    |
@@ -382,7 +382,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
     When the user select "Accept" to complete "Check customer details" task
     When the user select "Accept" to complete "Review land parcel rule checks" task
@@ -394,7 +394,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Then the user should see "Agreements" tab
     And the user click the "Back to applications" link
     Then the case status should be "Agreement drafted"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user selects "Withdraw application" for the case with a comment
     And the user click the "Confirm" button
     When the user click the "Agreements" link
@@ -412,7 +412,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
     When the user select "Accept" to complete "Check customer details" task
     When the user select "Accept" to complete "Review land parcel rule checks" task
@@ -433,7 +433,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
 
     And the user click the "Back to applications" link
     Then the case status should be "Agreement offered"
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     When the user selects "Withdraw Application" for the case with a comment
     And the user click the "Confirm" button
@@ -452,7 +452,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
     When the user clicks Confirm on the task without notes and sees "Explain this outcome is required"
       | Check customer details                       |
@@ -466,7 +466,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Calculations" link
   #defect raised
 #      Then the user can view Land parcel calculations page
@@ -477,7 +477,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     #return to customer
@@ -497,7 +497,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user has submitted amend application for the "frps-private-beta" grant
     And the user click the "Back to applications" link
     And the user waits for the case to appear on the Casework Portal
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
 
     ## Check the timeline
     And the user navigates to the "Timeline (2)" section
@@ -515,7 +515,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     When the user select "Accept" to complete "Check customer details" task
@@ -542,7 +542,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user has submitted amend application for the "frps-private-beta" grant
     And the user click the "Back to applications" link
     When the user waits for the case to appear on the Casework Portal
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
 
     When the user click the "Start" button
     When the user select "Accept" to complete "Check customer details" task
@@ -552,7 +552,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Back to applications" link
     Then the case status should be "In review"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see "Agreements" tab
@@ -569,7 +569,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     When the user select "Accept" to complete "Check customer details" task
@@ -605,7 +605,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user has submitted amend application for the "frps-private-beta" grant
     And the user click the "Back to applications" link
     When the user waits for the case to appear on the Casework Portal
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
 
     When the user click the "Start" button
     When the user select "Accept" to complete "Check customer details" task
@@ -615,7 +615,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     When the user select "Accept" to complete "Review scheme budget as a finance officer" task
     And the user click the "Back to applications" link
     Then the case status should be "In review"
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
     And the user selects "Approve application" for the case with a comment
     And the user click the "Confirm" button
     Then the user should see "Agreements" tab
@@ -633,7 +633,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     And the user selects "Put on hold" for the case with a comment
@@ -655,13 +655,13 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     And the user has submitted amend application for the "frps-private-beta" grant
     And the user click the "Back to applications" link
     When the user waits for the case to appear on the Casework Portal
-    When the user opens the application from the "All cases" list
+    When the user opens the application from the All cases list
 
   Scenario: Amendable case creation status - Status Application received -- Cannot amend
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
 
     Then the case details on GAS API for "frps-private-beta" should be:
       | phase     | PRE_AWARD            |
@@ -677,7 +677,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     Then the case details on GAS API for "frps-private-beta" should be:
@@ -695,7 +695,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     And the user selects "Put on hold" for the case with a comment
@@ -716,7 +716,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     And the user selects "Reject Application" for the case with a comment
@@ -737,7 +737,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     And the user selects "Withdraw application" for the case with a comment
@@ -758,7 +758,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     When the user select "Accept" to complete "Check customer details" task
@@ -787,7 +787,7 @@ Feature: Caseworkers can view and manage applications from the All Cases page
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer
     When the user waits for the case to appear on the Casework Portal
-    And the user opens the application from the "All cases" list
+    And the user opens the application from the All cases list
     And the user click the "Start" button
 
     When the user select "Accept" to complete "Check customer details" task
