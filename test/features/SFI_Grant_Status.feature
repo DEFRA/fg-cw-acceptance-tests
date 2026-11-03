@@ -140,7 +140,7 @@ Feature: SFI Grant Application status
       | status    | APPLICATION_REJECTED |
       | clientRef | self                 |
       | grantCode | frps-private-beta    |
-  @test
+
   Scenario: Application cases status - New application - Approved-agreement offered -Withdrawn
     Given the user has submitted an application for the "frps-private-beta" grant
     And the user signed into Caseworking as a writer

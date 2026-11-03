@@ -2,7 +2,7 @@ import { Given, When, Then } from '@wdio/cucumber-framework'
 import AdminPage from '../page-objects/admin.page.js'
 import { loginToCaseworking } from '../support/loginHelper.js'
 import { loginAndRunWoodlandManagementJourney } from '../page-objects/grant-ui/woodland-journey-helper.js'
-import { clearState } from 'page-objects/grant-ui/clear-sbi-state.js'
+// import { clearState } from '../page-objects/grant-ui/clear-sbi-state.js'
 
 When('the user opens the {string} page', async function (linkText) {
   await AdminPage.clickLinkByText(linkText)
@@ -13,6 +13,7 @@ Given(/^the user refresh the browser$/, async function () {
     await browser.refresh()
     await browser.waitUntil(
       async () =>
+        // eslint-disable-next-line no-undef
         (await browser.execute(() => document.readyState)) === 'complete',
       {
         timeout: 10000,
@@ -42,23 +43,23 @@ Given(
 )
 Given(/^the user submit the application using grants ui$/, async function () {
   const testUser = {
-    username: process.env.DEFRA_ID_GRANTS_USER
+    username: process.env.DEFRA_ID_GRANTS_USER,
     password: process.env.DEFRA_ID_USER_PASSWORD
   }
 
   const woodlandApplicationData = {
-    landParcelId: 'ST1437-7349',
+    landParcelId: 'SD6351-8781',
     hectaresTenOrOverYearsOld: 30,
     centreGridReference: 'SP 4178 2432',
-    woodlandName: 'Ashbrook WD',
+    woodlandName: 'Testing WD',
     fcTeamCodeId: 'fcTeamCode-2'
   }
 
   const { username, password } = testUser
 
   // Clear application state
-  const sbi = '106841262'
-  await clearState(username, sbi, 'woodland')
+  // const sbi = '106841262'
+  // await clearState(username, sbi, 'woodland')
   console.log('Woodland application state cleared')
 
   // Complete the woodland application journey via the UI

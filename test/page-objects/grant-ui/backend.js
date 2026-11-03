@@ -11,12 +11,9 @@ function backendHeaders(headers = {}) {
     ...headers
   }
 
-  if (
-    process.env.RUN_ENV === 'local' &&
-    process.env.GRANTS_UI_BACKEND_API_KEY
-  ) {
+  if (process.env.RUN_ENV === 'local' && process.env.GAS_KEY) {
     return {
-      'x-api-key': process.env.GRANTS_UI_BACKEND_API_KEY,
+      'x-api-key': process.env.X_API_KEY,
       ...authHeaders
     }
   }

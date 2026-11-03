@@ -11,8 +11,8 @@ export const config = {
   // gasUrl: `https://ephemeral-protected.api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/fg-gas-backend/grants/`,
   grantsUiUrl: `https://grants-ui.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
-  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
-  port: process.env.CHROMEDRIVER_PORT || 4444,
+  // hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  // port: process.env.CHROMEDRIVER_PORT || 4444,
 
   specs: ['./test/features/**/*.feature'],
   exclude: [],
@@ -21,18 +21,18 @@ export const config = {
 
   capabilities: [
     {
-      proxy: {
-        proxyType: 'manual',
-        httpProxy: 'localhost:3128',
-        sslProxy: 'localhost:3128'
-      },
+      // proxy: {
+      //   proxyType: 'manual',
+      //   httpProxy: 'localhost:3128',
+      //   sslProxy: 'localhost:3128'
+      // },
       browserName: 'chrome',
       maxInstances: 1,
       'goog:chromeOptions': {
         args: [
           '--no-sandbox',
           '--disable-infobars',
-          '--headless',
+          // '--headless',
           '--disable-gpu',
           '--window-size=1920,1080',
           '--enable-features=NetworkService,NetworkServiceInProcess',
@@ -111,7 +111,7 @@ export const config = {
     }
   },
 
-  afterScenario: async function (world, result, context) {
+  afterScenario: async function () {
     console.debug('************AFTER SCENARIO**************')
     await browser.reloadSession()
     try {
