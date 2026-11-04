@@ -19,7 +19,7 @@
           "code": "ne-consent-required",
           "description": "A consent is required from Natural England",
           "metadata": {
-            "actionCode": "IR1",
+            "actionCode": "IR",
             "parcelId": "7656",
             "sheetId": "SD6352",
             "percentageOverlap": 2.14,
@@ -121,7 +121,7 @@
     "payments": {
       "parcel": [
         {
-          "sheetId": "PC071",
+          "sheetId": "PH9071",
           "parcelId": "7555",
           "area": {
             "unit": "ha",

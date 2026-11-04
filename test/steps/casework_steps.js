@@ -1,9 +1,5 @@
 import { Given, Then, When } from '@wdio/cucumber-framework'
-import {
-  generatedClientRef,
-  postRequest,
-  previousClientRef
-} from '../page-objects/apiHelper.js'
+import { postRequest, previousClientRef } from '../page-objects/apiHelper.js'
 import AllcasesPage from '../page-objects/allcases.page.js'
 import ApplicationPage from '../page-objects/application.page.js'
 import TasksPage from '../page-objects/tasks.page.js'
@@ -25,10 +21,18 @@ Given(
   'the user has submitted an application for the {string} grant',
   async function (grantName) {
     const payloadPath = `test/payloads/${grantName}.json`
-    apiResponse = await postRequest(`${grantName}/applications`, payloadPath)
-    console.log(apiResponse.clientRef)
-    console.log('APU DKJLHDF')
+    apiResponse = await postRequest(
+      `${grantName}/applications`,
+      payloadPath,
+      this
+    )
+
     this.generatedClientRef = apiResponse.clientRef
+    this.originalClientRef = apiResponse.clientRef
+
+    await browser.sharedStore.set('originalClientRef', apiResponse.clientRef)
+
+    console.log('ORIGINAL CLIENT REF:', apiResponse.clientRef)
 
     console.log('API CLIENT REF:', this.generatedClientRef)
     expect(apiResponse.statusCode).toBe(204)
@@ -62,8 +66,8 @@ Then('the user should see application is successfully approved', async () => {
   const actualApprovalText = await ApplicationPage.headerH2()
   await expect(actualApprovalText).toEqual('Stage for contract management')
 })
-When('the user selects newly created case', async () => {
-  await AllcasesPage.selectRadioButtonByCaseText(generatedClientRef)
+When('the user selects newly created case', async function () {
+  await AllcasesPage.selectRadioButtonByCaseText(this.generatedClientRef)
 })
 When('the user click the {string} button', async (buttonText) => {
   await AllcasesPage.clickButtonByText(buttonText)
@@ -79,8 +83,9 @@ When('the user selects a random case worker', async function () {
 Then(
   'the selected case(s) should be assigned to the chosen case worker',
   async function () {
-    this.caseUserText =
-      await AllcasesPage.getAssignedUserForACase(generatedClientRef)
+    this.caseUserText = await AllcasesPage.getAssignedUserForACase(
+      this.generatedClientRef
+    )
     expect(this.assignedUserName).toEqual(this.caseUserText)
   }
 )
@@ -91,7 +96,7 @@ Then(
     const bodyText = await AssignCasePage.getConfirmedUser()
     expect(bodyText).toEqual(
       'Case ' +
-        generatedClientRef +
+        this.generatedClientRef +
         ' has been assigned to ' +
         this.assignedUserName
     )
@@ -234,13 +239,14 @@ Then(
   async function () {
     const bodyText = await AssignCasePage.getConfirmedUser()
     expect(bodyText).toEqual(
-      'Case ' + generatedClientRef + ' has been assigned to Not assigned'
+      'Case ' + this.generatedClientRef + ' has been assigned to Not assigned'
     )
   }
 )
 Then('the selected case should be unassigned', async function () {
-  this.caseUserText =
-    await AllcasesPage.getAssignedUserForACase(generatedClientRef)
+  this.caseUserText = await AllcasesPage.getAssignedUserForACase(
+    this.generatedClientRef
+  )
   expect('Not assigned').toEqual(this.caseUserText)
 })
 Then('the user should see Agreements details', async function () {
@@ -504,9 +510,15 @@ Given(
   'the user has submitted amend application for the {string} grant',
   async function (grantName) {
     const payloadPath = `test/payloads/frps-amend-application.json`
-    apiResponse = await postRequest(`${grantName}/applications`, payloadPath, {
-      isAmend: true
-    })
+    apiResponse = await postRequest(
+      `${grantName}/applications`,
+      payloadPath,
+      this,
+      {
+        isAmend: true
+      }
+    )
+    this.generatedClientRef = apiResponse.clientRef
     expect(apiResponse.statusCode).toBe(204)
   }
 )
@@ -530,9 +542,12 @@ Then(
   async function () {
     expect(await TimelinePage.headerH2()).toEqual('Timeline (multiple cases)')
     const rows = await TimelinePage.getTimelineRowData()
+    console.log('CURENT AND PRE')
+    console.log(this.generatedClientRef)
+    console.log(previousClientRef)
 
     const currentApplicationRow = rows.find(
-      (row) => row.id === generatedClientRef
+      (row) => row.id === this.generatedClientRef
     )
 
     const previousApplicationRow = rows.find(
@@ -541,7 +556,7 @@ Then(
 
     if (!currentApplicationRow) {
       throw new Error(
-        `Current application row not found for clientRef: ${generatedClientRef}`
+        `Current application row not found for clientRef: ${this.generatedClientRef}`
       )
     }
 
@@ -565,15 +580,16 @@ Then(
 
     const today = await TimelinePage.getTodayDisplayDate()
 
-    const currentApplicationRow =
-      await TimelinePage.getTimelineRowByClientRef(generatedClientRef)
+    const currentApplicationRow = await TimelinePage.getTimelineRowByClientRef(
+      this.generatedClientRef
+    )
 
     const previousApplicationRow =
       await TimelinePage.getTimelineRowByClientRef(previousClientRef)
 
     if (!currentApplicationRow) {
       throw new Error(
-        `Current application row not found for clientRef: ${generatedClientRef}`
+        `Current application row not found for clientRef: ${this.generatedClientRef}`
       )
     }
 
@@ -621,13 +637,14 @@ Then(
   'the user cannot submitted amend application for the {string} grant',
   async function (grantName) {
     const payloadPath = 'test/payloads/frps-amend-application.json'
-
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
     let apiResponse
 
     try {
       apiResponse = await postRequest(
         `${grantName}/applications`,
         payloadPath,
+        this,
         { isAmend: true }
       )
     } catch (error) {
@@ -672,7 +689,7 @@ Then(/^the user can see the Application data$/, async function () {
 When(
   /^the user searches for a case using the case reference$/,
   async function () {
-    await AllcasesPage.enterText('#search', generatedClientRef)
+    await AllcasesPage.enterText('#search', this.generatedClientRef)
     await AllcasesPage.clickButtonByText('Search')
   }
 )
