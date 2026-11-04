@@ -7,6 +7,7 @@ class CustomWorld {
     this.generatedClientRef = null
     this.previousClientRef = null
     this.response = null
+    this.originalClientRef = null
   }
 }
 

@@ -59,30 +59,24 @@ async function apiRequest(method, url, { jsonBody, headers = {} } = {}) {
   }
 }
 
-// export async function postRequest(
-//   endpoint,
-//   payloadPath,
-//   options = {},
-//   headers = {}
-// ) {
-//   const payloadData = await fs.readFile(payloadPath, 'utf-8')
-//   let payload = JSON.parse(payloadData)
-//   payload = requestPayload(payload, options)
-//
-//   const url = buildUrl(endpoint)
-//   return apiRequest('POST', url, { jsonBody: payload, headers })
-// }
-
 export async function postRequest(
   endpoint,
   payloadPath,
+  world,
   options = {},
   headers = {}
 ) {
   const payloadData = await fs.readFile(payloadPath, 'utf-8')
   const originalPayload = JSON.parse(payloadData)
 
-  const { payload, clientRef } = requestPayload(originalPayload, options)
+  // Preserve the original application reference for amendments
+  console.log('Response body:', options.isAmend)
+  console.log('AMENDED TRU??')
+  if (options.isAmend) {
+    setPreviousClientRef(world.originalClientRef)
+  }
+
+  const { payload, clientRef } = requestPayload(originalPayload, world, options)
 
   const url = buildUrl(endpoint)
 
@@ -111,12 +105,15 @@ export function generateRandomClientRef() {
   return generatedClientRef
 }
 
-export function setPreviousClientRef() {
-  if (!generatedClientRef) {
-    throw new Error('generatedClientRef is not set')
+export function setPreviousClientRef(clientRef) {
+  if (!clientRef) {
+    throw new Error('Original client reference is not set')
   }
 
-  previousClientRef = generatedClientRef
+  previousClientRef = clientRef
+
+  console.log('Previous Client Ref:', previousClientRef)
+
   return previousClientRef
 }
 
@@ -133,9 +130,9 @@ export function resetClientRefs() {
   previousClientRef = ''
 }
 
-function requestPayload(payload, { isAmend = false } = {}) {
+function requestPayload(payload, world, { isAmend = false } = {}) {
   if (isAmend) {
-    setPreviousClientRef()
+    setPreviousClientRef(world.originalClientRef)
   }
 
   const stringifies = JSON.stringify(payload)
