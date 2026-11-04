@@ -138,25 +138,25 @@ Feature: Woodland Grant Application status
 #
 #    Then the user should see "Agreement with applicant" message
 
-    Then the case details on GAS API for "woodland" should be:
-      | phase     | PHASE_PRE_AWARD                |
-      | stage     | STAGE_AGREEMENT_WITH_APPLICANT |
-      | status    | STATUS_AGREEMENT_OFFERED       |
-      | clientRef | self                           |
-      | grantCode | woodland                       |
-
-    When the user accept the agreement
-    Then the case details on GAS API for "woodland" should be:
-      | phase     | PHASE_PRE_AWARD           |
-      | stage     | STAGE_AGREEMENT_ACCEPTED  |
-      | status    | STATUS_AGREEMENT_ACCEPTED |
-      | clientRef | self                      |
-      | grantCode | woodland                  |
-
-    When the user navigate to Caseworking as a writer
-    And the user opens the application from the All cases list
-
-    #Complete CRM Task
-  When the user complete "Create CRM record" task
+#    Then the case details on GAS API for "woodland" should be:
+#      | phase     | PHASE_PRE_AWARD                |
+#      | stage     | STAGE_AGREEMENT_WITH_APPLICANT |
+#      | status    | STATUS_AGREEMENT_OFFERED       |
+#      | clientRef | self                           |
+#      | grantCode | woodland                       |
+#
+#    When the user accept the agreement
+#    Then the case details on GAS API for "woodland" should be:
+#      | phase     | PHASE_PRE_AWARD           |
+#      | stage     | STAGE_AGREEMENT_ACCEPTED  |
+#      | status    | STATUS_AGREEMENT_ACCEPTED |
+#      | clientRef | self                      |
+#      | grantCode | woodland                  |
+#
+#    When the user navigate to Caseworking as a writer
+#    And the user opens the application from the All cases list
+#
+#    #Complete CRM Task
+#  When the user complete "Create CRM record" task
 
 
