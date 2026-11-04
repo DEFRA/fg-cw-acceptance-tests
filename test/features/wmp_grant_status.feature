@@ -37,9 +37,9 @@ Feature: Woodland Grant Application status
       | clientRef | self                                 |
       | grantCode | woodland                             |
 
-    And the user select "Sent" to complete "Notify customer that draft agreement is ready" task
+    And the user select "Sent to customer" to complete "Notify customer that draft agreement is ready" task
     Then the user should see below "woodland" tasks details
-      | Notify customer that draft agreement is ready | Sent to customer |
+      | Notify customer that draft agreement is ready | Sent |
 
     And the user enter "Action Confirm Agreement Sent" comment
     And the user click the "Confirm agreement sent" button
