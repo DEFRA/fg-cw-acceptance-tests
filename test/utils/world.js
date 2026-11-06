@@ -8,6 +8,7 @@ class CustomWorld {
     this.previousClientRef = null
     this.response = null
     this.originalClientRef = null
+    this.sbi = null
   }
 }
 
