@@ -3,7 +3,7 @@
     "clientRef": "{{random_client_ref}}",
     "code": "woodland",
     "submittedAt": "{{current_datetime}}",
-    "sbi": "1234567890",
+    "sbi": "{{random_sbi}}",
     "frn": "{{random_frn}}",
     "crn": "1234567890",
     "configVersion": "1.0.0"

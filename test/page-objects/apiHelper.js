@@ -141,11 +141,16 @@ function requestPayload(payload, world, { isAmend = false } = {}) {
 
   console.log('API CLIENT REF:', clientRef)
 
+  if (!isAmend) {
+    world.sbi = generateSBI()
+  }
+
   const replaced = stringifies
     .replace(/{{random_client_ref}}/g, clientRef)
     .replace(/{{previous_client_ref}}/g, isAmend ? getPreviousClientRef() : '')
     .replace(/{{current_datetime}}/g, getCurrentDatetimeISO())
     .replace(/{{random_frn}}/g, generateFRN())
+    .replace(/{{random_sbi}}/g, world.sbi)
 
   return {
     payload: JSON.parse(replaced),
@@ -155,6 +160,10 @@ function requestPayload(payload, world, { isAmend = false } = {}) {
 
 function getCurrentDatetimeISO() {
   return new Date().toISOString()
+}
+
+function generateSBI() {
+  return Math.floor(100_000_000 + Math.random() * 900_000_000).toString()
 }
 
 function generateFRN() {
