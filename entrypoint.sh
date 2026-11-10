@@ -1,7 +1,14 @@
 #!/bin/sh
 
 echo "run_id: $RUN_ID"
-npm test
+
+echo "Environment: ${ENV:-dev}"
+
+if [ "$ENV" = "test" ]; then
+    npm run test:test-env
+else
+    npm test
+fi
 
 npm run report:publish
 publish_exit_code=$?

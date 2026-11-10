@@ -16,6 +16,7 @@
   "scripts": {
     "clean": "rm -rf allure-results allure-report reports/accessibility reports",
     "test": "npm run clean && wdio run wdio.conf.js --logLevel trace --cucumberOpts.tags='@cw'",
+    "test:test-env": "npm run clean && ENV=test wdio run wdio.conf.js --logLevel trace --cucumberOpts.tags='@cw and @test-env-only'",
     "test:local-env": "npm run clean && wdio run wdio.local.env.conf.js --cucumberOpts.tags='@test'",
     "test:local": "npm run clean && wdio run wdio.local.conf.js --cucumberOpts.tags='@test'",
     "test:tags": "npm run clean && SELECTED_TAGS='@cw' wdio run wdio.local.conf.js --cucumberOpts.tags='@test'",
