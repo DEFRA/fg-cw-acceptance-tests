@@ -14,6 +14,7 @@ import AgreementsPage from '../page-objects/agreements.page.js'
 import CalculationsPage from '../page-objects/calculations.page.js'
 import CaseDetailsPage from '../page-objects/caseDetails.page.js'
 import { getCaseworkingUrl } from '../support/serviceUrls.js'
+import woodlandHomePage from '../page-objects/grant-ui/woodland.home.page.js'
 
 let apiResponse
 
@@ -73,6 +74,7 @@ When('the user click the {string} button', async (buttonText) => {
   await AllcasesPage.clickButtonByText(buttonText)
 })
 Then('the {string} page should be displayed', async (pageTitle) => {
+  await browser.pause(1000)
   const actualAssignPageTitle = await AssignCasePage.getHeaderText()
   await expect(actualAssignPageTitle).toEqual(pageTitle)
 })
@@ -420,6 +422,7 @@ Then(
   }
 )
 Then(/^the user should see "([^"]*)" message$/, async function (message) {
+  browser.pause(1000)
   expect(await TasksPage.headerH2()).toEqual(message)
 })
 Then(
@@ -738,4 +741,16 @@ When(/^the user navigate to Caseworking as a writer$/, async function () {
   browser.options.baseUrl = url
   console.log('URL IS: ' + url)
   await browser.url(url)
+})
+When(/^the user navigate to grant ui$/, async function () {
+  await woodlandHomePage.open()
+})
+Then(/^the user should see submitted claim details$/, async function () {
+  await browser.pause(1000)
+  const cells = await $$('tbody > tr > td')
+  await expect(cells[0]).toHaveText(this.generatedClientRef + '-c01')
+  await expect(cells[1]).toHaveText('PA3 Woodland Management Plan')
+  await expect(cells[3]).toHaveText('Submitted')
+  await expect(cells[4]).toHaveText('105 ha')
+  await expect(cells[5]).toHaveText('£3075.00')
 })

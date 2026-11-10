@@ -31,3 +31,13 @@ export function getAgreementUrl() {
 
   return `https://grants-ui.${environment}.cdp-int.defra.cloud/agreement`
 }
+
+export function getGpaUrl(clientRef) {
+  const environment = getEnvironment()
+
+  if (environment === 'localhost') {
+    return 'http://localhost:3000/start'
+  }
+
+  return `https://fg-grants-platform-admin.${environment}.cdp-int.defra.cloud/grant-ops/grants/woodland/applications/${clientRef}/claims`
+}

@@ -3,6 +3,7 @@ import { grantsLogin } from '../support/auth/grantsLogin.js'
 import {
   getAgreementUrl,
   getCaseworkingUrl,
+  getGpaUrl,
   getGrantsUrl
 } from './serviceUrls.js'
 import {
@@ -60,6 +61,24 @@ export async function loginToGrants(role = 'applicant') {
 
 export async function loginToAgreement(role = 'applicant') {
   const url = getAgreementUrl()
+  const { username } = getGrantsCredentials()
+
+  await browser.url(url)
+  browser.options.baseUrl = url
+
+  await rememberCurrentUser({
+    username,
+    role: 'Grants user',
+    loginType: role,
+    service: 'grants'
+  })
+
+  console.log(`Logging into Agreement as: ${username}`)
+  // await grantsLogin(username, password)
+}
+
+export async function loginToGrantAdminPlatform(role = 'applicant') {
+  const url = getGpaUrl()
   const { username } = getGrantsCredentials()
 
   await browser.url(url)
