@@ -58,7 +58,7 @@ Given(/^the user submit the application using grants ui$/, async function () {
   const { username, password } = testUser
 
   // Clear application state
-  const sbi = '123456789'
+  const sbi = process.env.SBI
   await clearState(username, sbi, 'woodland')
   console.log('Woodland application state cleared')
 
