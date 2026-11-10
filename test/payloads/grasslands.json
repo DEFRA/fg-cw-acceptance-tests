@@ -1,7 +1,7 @@
 {
   "metadata": {
     "clientRef": "gld-9b2-bws",
-    "sbi": "1234567890",
+    "sbi": "{{random_sbi}}",
     "frn": "{{random_frn}}",
     "crn": "1234567890",
     "configVersion": "1.0.0",
